@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
+Route::domain('happypaws.test')->group(function () {
+  Route::get('/', function () {
+        return view('client/homepage');
+  })->name('homepage');
+});
 Route::domain('admin.happypaws.test')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Welcome', [
