@@ -166,11 +166,12 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-background text-foreground font-geologica;
     }
 }
 
 @layer utilities {
+    /*Buttons*/
     .button-yellow {
         @apply bg-honeyyellow border border-transparent relative;
         overflow: hidden;
@@ -179,7 +180,7 @@
     }
 
     .button-yellow:before {
-        @apply bg-lighthoneyyellow border-2 border-honeyyellow;
+        @apply bg-lighthoneyyellow border-2 border-honeyyellow rounded-md;
         content: "";
         position: absolute;
         top: 0;
@@ -189,14 +190,69 @@
         transition: all 0.35s ease;
     }
 
-    .button-yellow-animation:before {
+    .button-orange {
+        @apply bg-sweetorange border border-transparent relative;
+        overflow: hidden;
+        transition: 1s all ease;
+        z-index: 1;
+    }
+
+    .button-orange:before {
+        @apply bg-lightsweetorange border-2 border-sweetorange rounded-md;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0%, 0%);
+        z-index: -1;
+        transition: all 0.35s ease;
+    }
+
+    .button-green {
+        @apply bg-greenmint border border-transparent relative;
+        overflow: hidden;
+        transition: 1s all ease;
+        z-index: 1;
+    }
+
+    .button-green:before {
+        @apply bg-lightgreenmint border-2 border-greenmint rounded-md;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0%, 0%);
+        z-index: -1;
+        transition: all 0.35s ease;
+    }
+
+    .button-blue {
+        @apply bg-blueslate border border-transparent relative text-white;
+        overflow: hidden;
+        transition: 1s all ease;
+        z-index: 1;
+    }
+
+    .button-blue:before {
+        @apply bg-lightblueslate border-2 border-blueslate text-white rounded-md;
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0%, 0%);
+        z-index: -1;
+        transition: all 0.35s ease;
+    }
+
+    .button-animation:before {
         @apply w-0 h-full
     }
 
-    .button-yellow-animation:hover::before {
+    .button-animation:hover::before {
         @apply w-full
     }
 
+    /*Nav item*/
     .nav-item {
         @apply relative;
         overflow: hidden;
@@ -223,6 +279,19 @@
         @apply w-full
     }
 
+    /*SVG*/
+    .big-logo > path {
+        scale: 3.5;
+        @media (min-width: 1024px) {
+            scale: 5;
+        }
+    }
+    .mid-logo>path{
+        scale: 1;
+        @media (min-width: 1024px) {
+            scale: 2.5;
+        }
+    }
     .svg-black {
 
     }
@@ -231,12 +300,20 @@
 
     }
 
-    .svg-black > path {
-        @apply stroke-blueslate
+    .svg-strokeblack > path {
+        @apply stroke-black
     }
 
-    .svg-white > path {
+    .svg-strokewhite > path {
         @apply stroke-white;
+    }
+
+    .svg-fillblack > path {
+        @apply fill-black
+    }
+
+    .svg-fillwhite > path {
+        @apply fill-white;
     }
 
     /*burgermenu*/
@@ -258,11 +335,11 @@
         position: absolute;
         top: 10px;
         right: 0;
-        z-index: 10;
+        z-index: 20;
     }
 
     .burger-wrapper > span {
-        @apply bg-white;
+        @apply bg-white transition-all;
         display: inline-block;
         min-height: 2px;
         width: 20px;
@@ -290,7 +367,7 @@
     }
 
     .client-nav-list {
-        @apply bg-blueslate py-20 px-5 lg:bg-transparent lg:py-0 lg:px-0 lg:static lg:w-auto lg:translate-x-0;
+        @apply bg-blueslate p-20 lg:bg-transparent lg:py-0 lg:px-0 lg:static lg:w-auto lg:translate-x-0;
         transition: translate 200ms ease-in-out;
         translate: 110%;
         min-height: 300px;
@@ -298,7 +375,7 @@
         top: 0;
         right: 0;
         width: 100%;
-        z-index: 9;
+        z-index: 11;
     }
 
     #burger:checked ~ .client-nav-list {
@@ -314,37 +391,58 @@
             height: fit-content;
             min-height: 0;
         }
-        #burger{
+
+        #burger {
             position: absolute;
             top: -9999px;
         }
     }
+    /*Font sizing*/
+    .title {
+        @apply text-2xl font-bold lg:text-4xl;
+    }
+
+    .subtitle {
+        @apply text-xl font-semibold lg:text-3xl;
+    }
+
+    .text {
+        @apply font-normal lg:text-2xl;
+    }
+
+    .smalltext {
+        @apply font-normal text-sm lg:text-base;
+    }
+
+    .xsmalltext {
+        @apply font-normal text-xs lg:text-sm;
+    }
 }
 
-    @theme{
+@theme{
 
-        /*color*/
-        --color-blueslate: oklch(0.3977 0.053 245.53);
-        --color-sweetorange: oklch(0.783 0.1205 48.25);
-        --color-honeyyellow: oklch(0.8906 0.1333 88.53);
-        --color-greenmint: oklch(0.8742 0.0461 171.94);
-        --color-lightblueslate: #687784;
-        --color-lightsweetorange: #FFC4A4;
-        --color-lighthoneyyellow: #FFEAB4;
-        --color-lightgreenmint: #D3EDE4;
-        --color-lightgray: oklch(0.9642 0 0);
+    /*color*/
+    --color-blueslate: oklch(0.3977 0.053 245.53);
+    --color-sweetorange: oklch(0.783 0.1205 48.25);
+    --color-honeyyellow: oklch(0.8906 0.1333 88.53);
+    --color-greenmint: oklch(0.8742 0.0461 171.94);
+    --color-lightblueslate: #687784;
+    --color-lightsweetorange: #FFC4A4;
+    --color-lighthoneyyellow: #FFEAB4;
+    --color-lightgreenmint: #D3EDE4;
+    --color-lightgray: oklch(0.9642 0 0);
 
-        /*Fonts*/
-        --font-quicksand: "Quicksand", sans-serif;
-        --font-geologica: "Geologica", sans-serif;
+    /*Fonts*/
+    --font-quicksand: "Quicksand", sans-serif;
+    --font-geologica: "Geologica", sans-serif;
 
-        /*Spacing*/
-        --spacing-gap20: 20px;
+    /*Spacing*/
+    --spacing-gap20: 20px;
 
-        /*Shaping*/
-        --rounded-sm: 8px;
-        --rounded-md: 12px;
-        --rounded-lg: 16px;
-        --rounded-xl: 20px;
-        --rounded-2xl: 40px;
-    }
+    /*Shaping*/
+    --rounded-sm: 8px;
+    --rounded-md: 12px;
+    --rounded-lg: 16px;
+    --rounded-xl: 20px;
+    --rounded-2xl: 40px;
+}
