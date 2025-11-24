@@ -23,7 +23,7 @@
     <h1 class="sr-only">HappyPaws</h1>
     <x-nav.client_nav/>
 </header>
-<main class="space-y-16 lg:space-y-32  lg:py-10">
+<main class="space-y-16 transition-all lg:space-y-24 ">
 {{$slot}}
 </main>
 <x-footer.footer/>

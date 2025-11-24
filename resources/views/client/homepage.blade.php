@@ -1,5 +1,6 @@
 <x-layouts.client>
-    <section class="p-5 flex flex-col gap-6 leading-9 lg:flex-row-reverse lg:items-center lg:px-28 ">
+    <div class="bg-lightgreenmint/40 shadow-[inset_0_-4px_30px_rgba(0,0,0,0.1)] py-8">
+    <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28 backdrop-blur-md">
         <div class="group-img-homepage relative w-full place-items-center">
             <div class="relative group-img-homepage-1 place-self-end">
                 <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
@@ -36,7 +37,7 @@
                         class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                     />
                 </div>
-                <div class="absolute -bottom-4 -right-4 bg-greenmint rounded-2xl p-4 shadow-lg">
+                <div class="absolute -bottom-4 -right-4 bg-honeyyellow rounded-2xl p-4 shadow-lg">
                     <x-svg.linkedin/>
 
                 </div>
@@ -69,18 +70,30 @@
             </div>
         </div>
     </section>
-    <x-layouts.section title="Quelques chiffres" class="relative ">
-        <x-svg.bluestain class=""/>
-        <div class="flex flex-wrap flex-row justify-center gap-5 lg:justify-between lg:px-14">
-            <x-homepage.stats class="bg-greenmint" text="C’est le nombre d’adoption cette année." number="60"/>
-            <x-homepage.stats class="bg-sweetorange" text="C’est le nombre d’animaux recueillis cette année."
+    </div>
+
+    <x-layouts.section title="Quelques chiffres" class="relative space-y-10">
+        <div class="flex flex-wrap flex-row justify-center gap-5 sm:gap-10 lg:flex-nowrap lg:justify-between lg:px-14">
+            <x-homepage.stats class="bg-lightgreenmint/60 border-2 border-greenmint" text="C’est le nombre d’adoption cette année."
+                              number="60"/>
+            <x-homepage.stats class="bg-lightsweetorange/60 border-2 border-sweetorange" text="C’est le nombre d’animaux recueillis
+            cette année."
                               number="120"/>
-            <x-homepage.stats class="bg-honeyyellow" text="C’est le nombre d’animaux ayant retrouvé une famille."
+            <x-homepage.stats class="bg-lighthoneyyellow/60 border-2 border-honeyyellow" text="C’est le nombre
+            d’animaux ayant
+            retrouvé une famille."
                               number="300"/>
         </div>
+        <p class="text leading-9 max-w-3/4 self-center border border-transparent p-5 rounded-2xl bg-blueslate
+        text-white">
+            Chaque statistique représente bien plus qu’un chiffre : c’est une
+            histoire qui évolue, une vie qui reprend confiance. Grâce à votre soutien, nous pouvons accueillir,
+            soigner et offrir une seconde chance à ceux qui en ont besoin. Ensemble, bâtissons un refuge où chaque
+            animal trouve enfin sa place.
+        </p>
     </x-layouts.section>
-    <x-layouts.section title="Nos pensionnaires prêt à l’adoption">
-        <div class="flex flex-wrap gap-5 items-center justify-center">
+    <x-layouts.section title="Nos pensionnaires prêt à l’adoption" class="relative">
+        <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
             <x-animal.card
                 name="Billy"
                 age="1 an"
@@ -122,23 +135,25 @@
             Voir tous nos pensionnaires
         </x-buttons.button_link_icons>
     </x-layouts.section>
-    <x-layouts.section title="Foire aux questions (FAQ)">
-        <div class="flex flex-col space-y-5 divide-y divide-blueslate">
-            <x-homepage.faq
-                id="1"
-                title="Comment adopter un animal dans votre refuge ?"
-                content="Il suffit de nous rendre visite pendant les horaires d’ouverture, de rencontrer l’animal, puis de remplir un formulaire d’adoption. Un entretien est effectué pour s’assurer que l’adoption correspond bien à votre mode de vie. Une participation aux frais vétérinaires est demandée."
-            />
-            <x-homepage.faq
-                id="2"
-                title="Comment adopter un animal dans votre refuge ?"
-                content="Il suffit de nous rendre visite pendant les horaires d’ouverture, de rencontrer l’animal, puis de remplir un formulaire d’adoption. Un entretien est effectué pour s’assurer que l’adoption correspond bien à votre mode de vie. Une participation aux frais vétérinaires est demandée."
-            />
-            <x-homepage.faq
-                id="3"
-                title="Comment adopter un animal dans votre refuge ?"
-                content="Il suffit de nous rendre visite pendant les horaires d’ouverture, de rencontrer l’animal, puis de remplir un formulaire d’adoption. Un entretien est effectué pour s’assurer que l’adoption correspond bien à votre mode de vie. Une participation aux frais vétérinaires est demandée."
-            />
-        </div>
-    </x-layouts.section>
+    <div class="bg-lighthoneyyellow/40 shadow-inner py-10">
+        <x-layouts.section title="Foire aux questions (FAQ)" class="relative">
+            <div class="flex flex-col space-y-5 divide-y divide-blueslate">
+                <x-homepage.faq
+                    id="1"
+                    title="Comment adopter un animal dans votre refuge ?"
+                    content="Il suffit de nous rendre visite pendant les horaires d’ouverture, de rencontrer l’animal, puis de remplir un formulaire d’adoption. Un entretien est effectué pour s’assurer que l’adoption correspond bien à votre mode de vie. Une participation aux frais vétérinaires est demandée."
+                />
+                <x-homepage.faq
+                    id="2"
+                    title="Comment adopter un animal dans votre refuge ?"
+                    content="Il suffit de nous rendre visite pendant les horaires d’ouverture, de rencontrer l’animal, puis de remplir un formulaire d’adoption. Un entretien est effectué pour s’assurer que l’adoption correspond bien à votre mode de vie. Une participation aux frais vétérinaires est demandée."
+                />
+                <x-homepage.faq
+                    id="3"
+                    title="Comment adopter un animal dans votre refuge ?"
+                    content="Il suffit de nous rendre visite pendant les horaires d’ouverture, de rencontrer l’animal, puis de remplir un formulaire d’adoption. Un entretien est effectué pour s’assurer que l’adoption correspond bien à votre mode de vie. Une participation aux frais vétérinaires est demandée."
+                />
+            </div>
+        </x-layouts.section>
+    </div>
 </x-layouts.client>

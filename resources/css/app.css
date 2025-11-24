@@ -426,34 +426,116 @@
     /*animal card*/
     .animal-card {
         position: relative;
-        transition: all 0.3s ease;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-normal {
         opacity: 1;
-        transition: opacity 0.3s ease;
+        transform: scale(1);
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-hover {
         position: absolute;
         inset: 0;
         opacity: 0;
-        transition: opacity 0.3s ease;
+        transform: scale(0.95);
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
     }
 
     .animal-card:hover .card-normal {
         opacity: 0;
+        transform: scale(1.02);
     }
 
     .animal-card:hover .card-hover {
         opacity: 1;
+        transform: scale(1);
         pointer-events: auto;
     }
 
+    /* Animation des éléments internes */
     .card-hover-content {
         max-height: 8rem;
         overflow-y: auto;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+    }
+
+    .animal-card:hover .card-hover-content {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Animation du titre et des infos */
+    .card-hover .subtitle,
+    .card-hover .xsmalltext {
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animal-card:hover .card-hover .subtitle {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.05s;
+    }
+
+    .animal-card:hover .card-hover .xsmalltext {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.1s;
+    }
+
+    /* Animation du bouton */
+    .card-hover .button-orange {
+        opacity: 0;
+        transform: translateY(15px);
+        transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s,
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.15s;
+    }
+
+    .animal-card:hover .card-hover .button-orange {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Effet de fondu sur l'overlay */
+    .card-hover-animal .bg-black\/50 {
+        opacity: 0;
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .animal-card:hover .card-hover-animal .bg-black\/50 {
+        opacity: 1;
+    }
+
+    /* Scrollbar style pour card-hover-content */
+    .container::before,
+    .container::after {
+        content: '';
+        display: block;
+        position: sticky;
+        left: 0;
+        right: 0;
+        height: 0.75rem;
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .container::before {
+        top: 0;
+        background: radial-gradient(farthest-side at 50% 0, rgb(0 0 0 / 0.25), rgb(0 0 0 / 0));
+    }
+
+    .container::after {
+        bottom: 0;
+        background: radial-gradient(farthest-side at 50% 100%, rgb(0 0 0 / 0.25), rgb(0 0 0 / 0));
     }
 
     .card-hover-animal {
@@ -518,7 +600,6 @@
         margin-left: 1rem;
     }
 
-    /* Chevron pointant vers le bas par défaut */
     .faq-icon > path {
         fill: none;
         stroke: #000;
