@@ -13,7 +13,7 @@
                 <span></span>
             </div>
             <div class="client-nav-list flex flex-col items-center h-full p-10 mt-6 lg:h-fit lg:mt-0 ">
-                <ul class="flex flex-col gap-10 justify-center text-lightgray w-fit lg:flex-row
+                <ul class="flex flex-col gap-5 justify-center text-lightgray w-fit lg:flex-row
                 lg:justify-between lg:space-x-5">
                     <x-nav.nav_item
                         href="{{route('homepage')}}"

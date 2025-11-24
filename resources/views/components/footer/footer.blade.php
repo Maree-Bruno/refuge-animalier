@@ -1,4 +1,4 @@
-<footer class="bg-blueslate text-lightgray grid grid-cols-2 gap-5 py-5 px-2.5 md:grid-cols-4 md:p-10 md:gap-10">
+<footer class="bg-blueslate text-lightgray grid grid-cols-2 gap-7 py-5 px-2.5 md:grid-cols-4 md:p-10 md:gap-10">
     <h2 class="sr-only">Bas de page</h2>
     <div class="flex flex-col gap-2.5 lg:justify-center lg:items-center">
         <a href="{{route('homepage')}}" class=" w-fit h-auto">
@@ -18,7 +18,7 @@
     </div>
     <div class="flex flex-col gap-2.5">
         <h3 class="subtitle">Nos informations</h3>
-        <div class="flex flex-col gap-1.5">
+        <div class="flex flex-col">
             <div>
                 <p class="text-small">Rue de Genville <span class="text-small">334</span></p>
                 <p class="flex gap-[10px] text-sm"><span class="text-small">8980</span>Passendale</p>
