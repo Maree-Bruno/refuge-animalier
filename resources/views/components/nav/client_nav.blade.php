@@ -24,21 +24,21 @@
                         Accueil
                     </x-nav.nav_item>
                     <x-nav.nav_item
-                        href="{{route('homepage')}}"
+                        href="{{route('about')}}"
                         icon="paws"
                         class="p-2 font-semibold"
                     >
                         HappyPaws
                     </x-nav.nav_item>
                     <x-nav.nav_item
-                        href="{{route('homepage')}}"
+                        href="{{route('animals')}}"
                         icon="dog"
                         class="p-2 font-semibold"
                     >
                         Nos pensionnaires
                     </x-nav.nav_item>
                     <x-nav.nav_item
-                        href="{{route('homepage')}}"
+                        href="{{route('volunteer')}}"
                         icon="volunteer"
                         class="p-2 font-semibold"
                     >
@@ -48,7 +48,7 @@
                         <x-buttons.button_link_icons class="button-yellow"
                                                      icon="contact"
                                                      :color="false"
-                                                     href="{{route('homepage')}}">
+                                                     href="{{route('contact')}}">
                             Contactez-nous !
                         </x-buttons.button_link_icons>
                     </li>
