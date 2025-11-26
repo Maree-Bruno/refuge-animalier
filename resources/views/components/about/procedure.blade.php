@@ -1,6 +1,6 @@
 @props(['src', 'alt', 'step', 'title', 'text', 'icon', 'link'=>null, 'icon', 'button_class', 'label',
-'reverse'=>false])
-<article {{ $attributes->class(['flex flex-col lg:p-10 xl:max-w-[90%]' ]) }}>
+'reverse'=>false, 'showArrow'=>true])
+<article {{ $attributes->class(['flex flex-col lg:p-10 xl:max-w-[90%] relative' ]) }}>
     <div class="flex flex-col sm:flex-row gap-10 lg:gap-24 {{$reverse ? 'sm:flex-row-reverse' : 'sm:flex-row'}} ">
         <img
             src="{{$src}}"
@@ -34,6 +34,9 @@
             </x-buttons.button_link_icons>
         </div>
     @endif
-
-
+    @if($showArrow)
+        <x-svg.curvedarrow class="absolute {{$reverse ? 'right-10 rotate-90' : 'left-10 -scale-x-100 -rotate-45'}}
+        -bottom-60
+         hidden md:block"/>
+    @endif
 </article>

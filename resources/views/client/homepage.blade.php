@@ -1,5 +1,5 @@
 <x-layouts.client>
-    <div class="bg-lightgreenmint/40 shadow-[inset_0_-4px_30px_rgba(0,0,0,0.1)] py-8">
+    <div class="bg-lightgreenmint/40 shadow-[inset_2px_-4px_30px_rgba(0,0,0,0.1)] py-8">
         <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28 backdrop-blur-md">
             <div class="group-img-homepage relative w-full place-items-center">
                 <div class="relative group-img-homepage-1 place-self-end">
@@ -122,7 +122,7 @@
         </x-buttons.button_link_icons>
     </x-layouts.section>
 
-    <div class="bg-lighthoneyyellow/40 shadow-inner py-10">
+    <div class="bg-lighthoneyyellow/40 shadow-[inset_2px_4px_30px_rgba(0,0,0,0.1)] py-10">
         <x-layouts.section title="{{__('homepage.faq_section.title')}}" class="relative">
             <div class="flex flex-col space-y-5 divide-y divide-blueslate">
                 @foreach(trans('homepage.faq_section.items') as $id => $item)
