@@ -314,6 +314,10 @@
         @apply fill-black
     }
 
+    .svg-fillblue > path {
+        @apply fill-lightblueslate
+    }
+
     .svg-fillwhite > path {
         @apply fill-white;
     }
@@ -400,7 +404,7 @@
     }
     /*Font sizing*/
     .title {
-        @apply text-2xl font-bold lg:text-4xl;
+        @apply text-2xl font-black lg:text-4xl text-blueslate;
     }
 
     .subtitle {
@@ -622,6 +626,17 @@
 
     .faq-toggle:checked ~ .faq-header .faq-icon {
         transform: rotate(90deg);
+    }
+
+    /*about card*/
+    @media (min-width: 640px) {
+        .about-card-display > article:nth-child(odd) {
+            justify-self: end;
+        }
+
+        .about-card-display > article:nth-child(even) {
+            justify-self: start;
+        }
     }
 
 }

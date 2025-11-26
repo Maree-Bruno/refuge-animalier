@@ -37,7 +37,7 @@
                 </div>
             </div>
             <x-buttons.button_link_icons href="#" icon="arrow_right" class="button-orange self-center">
-                Voir l'animal
+                {{__('homepage.animals_section.see_animal')}}
             </x-buttons.button_link_icons>
         </div>
     </div>
