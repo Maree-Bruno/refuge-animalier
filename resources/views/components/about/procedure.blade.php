@@ -1,6 +1,6 @@
 @props(['src', 'alt', 'step', 'title', 'text', 'icon', 'link'=>null, 'icon', 'button_class', 'label',
 'reverse'=>false])
-<article {{ $attributes->class(['flex flex-col lg:p-10 xl:max-w-[70%]' ]) }}>
+<article {{ $attributes->class(['flex flex-col lg:p-10 xl:max-w-[90%]' ]) }}>
     <div class="flex flex-col sm:flex-row gap-10 lg:gap-24 {{$reverse ? 'sm:flex-row-reverse' : 'sm:flex-row'}} ">
         <img
             src="{{$src}}"

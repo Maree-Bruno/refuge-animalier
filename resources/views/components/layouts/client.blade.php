@@ -20,7 +20,7 @@
     <span class="hidden 2xl:block">2XL ( ≥ 1536px )</span>
 </div>
 <header>
-    <h1 class="sr-only">HappyPaws</h1>
+    <h1 class="sr-only">{{ config('app.name') }}</h1>
     <x-nav.client_nav/>
 </header>
 <main class="space-y-10 transition-all lg:space-y-20 ">

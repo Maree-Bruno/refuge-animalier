@@ -1,4 +1,3 @@
-@php use Illuminate\Support\Facades\URL; @endphp
 <nav class="w-full bg-blueslate lg:h-fit lg:py-5">
     <div class="flex justify-between w-full py-4 px-5 items-center lg:h-fit lg:gap-8">
         <a href="{{ route('homepage') }}" class="z-20">
