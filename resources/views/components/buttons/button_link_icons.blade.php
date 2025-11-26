@@ -1,7 +1,7 @@
 @props(['href'=>'#','icon'=>null,'color' => false])
 
 <a href="{{ $href }}"
-    {{ $attributes->class(['flex p-3 items-center gap-2.5 rounded-md text-black button-animation w-fit']) }}>
+    {{ $attributes->class(['flex p-3 items-center justify-center gap-2.5 rounded-md text-black button-animation w-fit']) }}>
 
     @if($icon)
         <x-dynamic-component
