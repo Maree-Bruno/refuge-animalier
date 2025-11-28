@@ -12,7 +12,7 @@
 <div {{ $attributes->merge(['class' => 'flex flex-col gap-1 w-full mb-5']) }}>
     <label
         for="{{ $id }}"
-        class="{{ $hidden ? 'hidden' : '' }} text-black font-bold sm:text-lg leading-9"
+        class="{{ $hidden ? 'hidden' : '' }} text-black font-semibold sm:text-lg leading-9"
     >
         {{ $label }}
         @if($required)
@@ -27,8 +27,7 @@
             name="{{ $name }}"
             value="{{ old($name, $value) }}"
             placeholder="{{ $placeholder }}"
-            class="w-full p-2.5 bg-blueslate text-white rounded-xl outline-2 outline-offset-[-2px]
-                   outline-white leading-6 placeholder:text-gray-400"
+            class="w-full p-2.5 bg-blueslate text-white rounded-xl leading-6 placeholder:text-gray-400"
         />
 
         @error($name)
