@@ -3,7 +3,7 @@
     <input type="checkbox" id="{{$id}}" class="faq-toggle">
     <label for="{{$id}}" class="faq-header">
         <div class="subsubtitle">{{$title}}</div>
-        <x-svg.arrow_right class="faq-icon"/>
+        <x-svg.chevron_right class="faq-icon"/>
     </label>
     <div class="faq-content mb-4">
         <p class="smalltext">

@@ -1,7 +1,8 @@
 @props(['name', 'src', 'age', 'gender', 'species', 'description'])
 
 <article
-    class="animal-card group w-72 h-fit p-5 bg-transparent rounded-[40px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.05)]">
+    class="animal-card group w-72 h-fit p-5 bg-transparent rounded-[40px] shadow-[0px_4px_30px_0px_rgba(0,0,0,0.05)]
+    2xl:scale-105">
     <div
         class="card-normal flex flex-col justify-center items-center gap-5 group-hover:opacity-0 transition-opacity duration-300">
         <img

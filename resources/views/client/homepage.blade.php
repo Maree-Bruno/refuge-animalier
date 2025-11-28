@@ -75,19 +75,17 @@
     <x-layouts.section :title="__('homepage.stats_section.title')" class="relative space-y-10">
         <div class="flex flex-wrap flex-row justify-center gap-5 sm:gap-10 lg:flex-nowrap lg:justify-between lg:px-14">
             <x-homepage.stats
-                class="bg-lightgreenmint/60 border-2 border-greenmint"
-                text="{{ __('homepage.stats_section.adoptions_number_text') }}"
-                number="60"
-            />
-
-            <x-homepage.stats
-                class="bg-lightsweetorange/60 border-2 border-sweetorange"
+                class="bg-lightsweetorange/30 border-4 border-sweetorange"
                 text="{{ __('homepage.stats_section.rescued_number_text') }}"
                 number="120"
             />
-
             <x-homepage.stats
-                class="bg-lighthoneyyellow/60 border-2 border-honeyyellow"
+                class="bg-lightgreenmint/20 border-4 border-greenmint"
+                text="{{ __('homepage.stats_section.adoptions_number_text') }}"
+                number="60"
+            />
+            <x-homepage.stats
+                class="bg-lighthoneyyellow/20 border-4 border-honeyyellow"
                 text="{{ __('homepage.stats_section.found_family_number_text') }}"
                 number="300"
             />
@@ -100,8 +98,6 @@
 
     <x-layouts.section :title="__('homepage.animals_section.title')" class="relative">
         <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
-
-            {{-- CARTE ANIMAL - BILLY --}}
             @foreach ([1,2,3] as $i)
                 <x-animal.card
                     :name="__('homepage.animals_section.animals.billy.name')"
