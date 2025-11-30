@@ -14,6 +14,9 @@ Route::domain('happypaws.test')->group(function () {
     Route::get('/animals', function () {
         return view('client/animals');
     })->name('animals');
+    Route::get('/animals/show', function () {
+        return view('client/animals_show');
+    })->name('animals_show');
     Route::get('/contact', function () {
         return view('client/contact');
     })->name('contact');

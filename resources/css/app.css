@@ -166,7 +166,7 @@
     }
 
     body {
-        @apply bg-background text-foreground font-geologica;
+        @apply bg-background text-foreground font-['geologica'];
     }
 }
 
@@ -305,9 +305,11 @@
     .svg-strokeblack > path {
         @apply stroke-black
     }
+
     .svg-strokeblue > path {
         @apply stroke-lightblueslate
     }
+
     .svg-strokewhite > path {
         @apply stroke-white;
     }
@@ -418,7 +420,8 @@
     }
 
     .text {
-        @apply font-normal lg:text-xl;
+        @apply text-base lg:text-lg;
+        font-weight: 300;
     }
 
     .smalltext {
@@ -426,7 +429,8 @@
     }
 
     .xsmalltext {
-        @apply font-normal text-xs lg:text-sm;
+        @apply text-xs lg:text-sm;
+        font-weight: 300;
     }
 
     /*animal card*/
@@ -678,3 +682,42 @@
     /*shadow-box*/
 
 }
+
+@font-face {
+    font-family: Geologica;
+    font-style: normal;
+    font-weight: 700;
+    src: url("/public/fonts/Geologica-Bold.ttf");
+}
+
+@font-face {
+    font-family: Geologica;
+    font-style: normal;
+    font-weight: 300;
+    src: url("/public/fonts/Geologica-Light.ttf");
+}
+@font-face {
+    font-family: Geologica;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/Geologica-Regular.ttf");
+}
+@font-face {
+    font-family: Geologica;
+    font-style: normal;
+    font-weight: 600;
+    src: url("/public/fonts/Geologica-SemiBold.ttf");
+}
+@font-face {
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/Geologica-Regular.ttf");
+}
+@font-face {
+    font-family: Quicksand;
+    font-style: normal;
+    font-weight: 700;
+    src: url("/public/fonts/Geologica-Bold.ttf");
+}
+

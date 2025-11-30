@@ -1,6 +1,6 @@
 <x-layouts.client>
     <div class="bg-lightgreenmint/40 shadow-[inset_2px_-4px_30px_rgba(0,0,0,0.1)] py-8">
-        <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28 backdrop-blur-md">
+        <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28">
             <div class="group-img-homepage relative w-full place-items-center">
                 <div class="relative group-img-homepage-1 place-self-end">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
