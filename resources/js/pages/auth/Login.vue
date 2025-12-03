@@ -51,6 +51,7 @@ defineProps<{
                         :tabindex="1"
                         autocomplete="email"
                         placeholder="email@example.com"
+                        class="focus-visible:border-honeyyellow focus-visible:ring-honeyyellow/50"
                     />
                     <InputError :message="errors.email" />
                 </div>
@@ -61,8 +62,9 @@ defineProps<{
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
-                            class="text-sm"
+                            class="text-sm text-white"
                             :tabindex="5"
+
                         >
                             Forgot password?
                         </TextLink>
@@ -75,35 +77,29 @@ defineProps<{
                         :tabindex="2"
                         autocomplete="current-password"
                         placeholder="Password"
+                        class="focus-visible:border-honeyyellow focus-visible:ring-honeyyellow/50"
                     />
                     <InputError :message="errors.password" />
                 </div>
 
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" :tabindex="3" />
+                        <Checkbox id="remember" name="remember" :tabindex="3"
+                                  class="data-[state=checked]:bg-greenmint data-[state=checked]:border-greenmint data-[state=checked]:text-blueslate "/>
                         <span>Remember me</span>
                     </Label>
                 </div>
 
                 <Button
                     type="submit"
-                    class="mt-4 w-full"
+                    class="mt-4 w-full button-animation button-yellow text-blueslate"
                     :tabindex="4"
                     :disabled="processing"
                     data-test="login-button"
                 >
-                    <Spinner v-if="processing" />
+                    <Spinner v-if="processing" class="svg-strokeblue"/>
                     Log in
                 </Button>
-            </div>
-
-            <div
-                class="text-center text-sm text-muted-foreground"
-                v-if="canRegister"
-            >
-                Don't have an account?
-                <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
             </div>
         </Form>
     </AuthBase>
