@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'home' => 'Home',
+    'home' => 'HomeIcon',
     'about' => 'HappyPaws',
     'animals' => 'Our Animals',
     'volunteer' => 'Become a Volunteer!',

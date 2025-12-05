@@ -1,0 +1,31 @@
+<script setup lang="ts">
+import type {HTMLAttributes} from "vue";
+
+defineOptions({
+    inheritAttrs: false,
+});
+
+interface Props {
+    className?: HTMLAttributes['class'];
+}
+
+defineProps<Props>();
+</script>
+
+<template>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 24 24"
+         :class="className"
+         v-bind="$attrs"
+         fill="none"
+    >
+        <path d="M20 6H4C2.89543 6 2 6.89543 2 8V16C2 17.1046 2.89543 18 4 18H20C21.1046 18 22 17.1046 22 16V8C22 6.89543 21.1046 6 20 6Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 12H12.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M17 12H17.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M7 12H7.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+</template>
+
+<style scoped>
+
+</style>

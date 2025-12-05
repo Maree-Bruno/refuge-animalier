@@ -1,13 +1,24 @@
 <?php
 
+use App\Http\Controllers\AdoptionRequestController;
+use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DatabaseController;
+use App\Http\Controllers\EmailController;
+use App\Http\Controllers\NoteController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\VolunteerController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::domain('happypaws.test')->group(function () {
-  Route::get('/', function () {
+    Route::get('/', function () {
         return view('client/homepage');
-  })->name('homepage');
+    })->name('homepage');
     Route::get('/happypaws', function () {
         return view('client/about');
     })->name('about');
@@ -25,15 +36,41 @@ Route::domain('happypaws.test')->group(function () {
     })->name('volunteer');
 });
 Route::domain('admin.happypaws.test')->group(function () {
+    require __DIR__.'/settings.php';
+
     Route::get('/', function () {
-        return Inertia::render('Welcome', [
+        return Inertia::render('auth/Login', [
             'canRegister' => Features::enabled(Features::registration()),
         ]);
-    })->name('home');
+    })->middleware(['guest', 'verified'])->name('home');
 
-    Route::get('dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
-    require __DIR__.'/settings.php';
+    Route::middleware(['auth', 'verified'])->group(function () {
+        //dashboard
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        //animals
+        Route::get('/animals', [AnimalController::class, 'index'])
+            ->name('animals.index');
+
+
+        //adoption request
+        Route::get('/adoption', [AdoptionRequestController::class, 'index'])->name('adoption_requests.index');
+
+        //notes
+        Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
+
+        //reports
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+
+        //db
+        Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');
+
+        //email
+        Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
+
+        //volunteer
+        Route::get('/volunteers',[VolunteerController::class, 'index'])->name('volunteers.index');
+
+    });
 });
 
