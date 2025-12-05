@@ -35,8 +35,8 @@ import DogIcon from "@/components/widgets/svg/DogIcon.vue";
             <div class="flex justify-between">
                 <h3 class="subsubtitle">Animaux</h3>
                 <div class="flex gap-4">
-                    <p>Ajouter un animal</p>
-                    <p>Ajouter une note</p>
+                    <p class="button-yellow button-animation rounded-md p-2 font-semibold">Ajouter un animal</p>
+                    <p class="button-green button-animation rounded-md p-2 font-semibold">Ajouter une note</p>
                 </div>
             </div>
             <div class="flex gap-4">
@@ -46,7 +46,7 @@ import DogIcon from "@/components/widgets/svg/DogIcon.vue";
             </div>
             <table class="">
                 <thead class="bg-blueslate text-white border border-transparent">
-                <tr class="">
+                <tr class="font-semibold">
                     <td class="p-2"><input type="checkbox" name="all" id="all"> <label for="all"></label></td>
                     <td class="p-2"><span>Photo</span></td>
                     <td class="p-2"><span>Nom</span></td>
@@ -82,7 +82,7 @@ import DogIcon from "@/components/widgets/svg/DogIcon.vue";
             <h3 class="subsubtitle">Demande d'adoption</h3>
             <table class="">
                 <thead class="bg-blueslate text-white border border-transparent">
-                <tr class="">
+                <tr class="font-semibold">
                     <td class="p-2"><input type="checkbox" name="all" id="all"> <label for="all"></label></td>
                     <td class="p-2"><span>Nom</span></td>
                     <td class="p-2"><span>Email</span></td>
@@ -112,7 +112,7 @@ import DogIcon from "@/components/widgets/svg/DogIcon.vue";
         </section>
         <section class="flex flex-col gap-5">
             <h3 class="subsubtitle">Emails</h3>
-            <table class="">
+            <table class="font-semibold">
                 <thead class="bg-blueslate text-white border border-transparent">
                 <tr class="">
                     <td class="p-2"><input type="checkbox" name="all" id="all"> <label for="all"></label></td>
