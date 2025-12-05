@@ -85,6 +85,12 @@
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
     }
+    ul {
+        list-style-type: none;
+    }
+    li {
+        list-style-type: none;
+    }
 }
 
 :root {
@@ -278,6 +284,9 @@
     .nav-item-animation:hover::before {
         @apply w-full
     }
+    .nav-item:active{
+        @apply bg-lightblueslate;
+    }
 
     /*SVG*/
     .big-logo > path {
@@ -465,6 +474,12 @@
         opacity: 1;
         transform: scale(1);
         pointer-events: auto;
+    }
+
+    .placeholder_nav_admin{
+        @apply bg-gray-300 w-full h-0.5 block;
+        content: '';
+
     }
 
     /* Animation des éléments internes */
