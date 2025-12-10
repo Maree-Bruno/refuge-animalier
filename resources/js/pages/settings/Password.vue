@@ -21,7 +21,6 @@ const breadcrumbItems: BreadcrumbItem[] = [
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbItems">
         <Head title="Password settings" />
 
         <SettingsLayout>
@@ -110,5 +109,4 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 </Form>
             </div>
         </SettingsLayout>
-    </AppLayout>
 </template>

@@ -7,10 +7,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+    font-family: GoogleSansCode;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/GoogleSansCode-Regular.ttf");
+}
+
 @theme inline {
     --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
+
+    --font-monospace: GoogleSansCode;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
@@ -315,7 +324,10 @@
         @apply stroke-black
     }
 
-    .svg-strokeblue > path {
+    .svg-strokeblue > path{
+        @apply stroke-lightblueslate
+    }
+    .svg-strokeblue > circle{
         @apply stroke-lightblueslate
     }
 

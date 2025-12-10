@@ -7,8 +7,5 @@
 </script>
 
 <template>
-  <AppLayout>
-    <Head title="EmailIndexView" />
 
-  </AppLayout>
 </template>

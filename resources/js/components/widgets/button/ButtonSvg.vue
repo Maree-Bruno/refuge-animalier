@@ -6,6 +6,7 @@ const props = defineProps({
     title: String,
     method: {type: String, default: 'get'},
     collapsed: Boolean,
+    as:String,
 });
 
 </script>
@@ -19,6 +20,7 @@ const props = defineProps({
                 'flex items-center gap-2.5 rounded-md cursor-pointer text-blueslate py-2 px-4 transition-all button-animation button-yellow w-full justify-center',
                 collapsed ? 'justify-center' : '',
             ]"
+            :as="as"
         >
             <div class="flex-shrink-0">
                 <slot name="icon"/>
