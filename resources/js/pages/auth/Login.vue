@@ -17,6 +17,7 @@ defineProps<{
     canResetPassword: boolean;
     canRegister: boolean;
 }>();
+
 </script>
 
 <template>

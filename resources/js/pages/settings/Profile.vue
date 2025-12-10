@@ -33,7 +33,6 @@ const user = page.props.auth.user;
 </script>
 
 <template>
-    <AppLayout>
         <Head title="Profile settings"/>
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
@@ -124,5 +123,4 @@ const user = page.props.auth.user;
 
             <DeleteUser/>
         </SettingsLayout>
-    </AppLayout>
 </template>

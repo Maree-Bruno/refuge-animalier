@@ -7,8 +7,6 @@
 </script>
 
 <template>
-  <AppLayout>
     <Head title="AdoptionRequestsIndexView" />
 
-  </AppLayout>
 </template>

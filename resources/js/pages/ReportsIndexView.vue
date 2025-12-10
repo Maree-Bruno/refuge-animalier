@@ -7,8 +7,5 @@
 </script>
 
 <template>
-  <AppLayout>
-    <Head title="ReportsIndexView" />
 
-  </AppLayout>
 </template>

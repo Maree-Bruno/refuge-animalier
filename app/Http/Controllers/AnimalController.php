@@ -9,7 +9,7 @@ class AnimalController extends Controller
 {
     public function index()
     {
-        return Inertia::render('AnimalsIndexView');
+        return Inertia::render('AnimalsIndexView', ['title' => 'Animals']);
     }
 
     public function create()

@@ -7,8 +7,6 @@ use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\Settings\ProfileController;
-use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VolunteerController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
