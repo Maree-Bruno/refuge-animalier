@@ -37,6 +37,11 @@ class Animal extends Model
         return $this->belongsTo(Specie::class);
     }
 
+    public function race(): BelongsTo
+    {
+        return $this->specie->race(); // ou via accessor
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

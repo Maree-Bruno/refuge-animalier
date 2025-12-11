@@ -183,6 +183,9 @@
     body {
         @apply bg-background text-foreground font-['geologica'];
     }
+    input[type="checkbox"] {
+        @apply accent-lightblueslate cursor-pointer;
+    }
 }
 
 @layer utilities {
@@ -324,7 +327,10 @@
         @apply stroke-black
     }
 
-    .svg-strokeblue > path{
+    .svg-strokeblue >path{
+        @apply stroke-lightblueslate
+    }
+    .svg-strokeblue > g >path{
         @apply stroke-lightblueslate
     }
     .svg-strokeblue > circle{

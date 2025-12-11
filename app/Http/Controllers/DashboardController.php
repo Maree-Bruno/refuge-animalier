@@ -2,35 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Concerns\FilterablePaginate;
 use App\Models\Animal;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
+    use FilterablePaginate;
+
     public function index(Request $request)
     {
-        $orderBy = request('orderby', 'name');
-        $dir = request('dir', 'asc');
-        $search = request('search', '');
-        $query = Animal::query();
-        $animals = $query
-            ->when($search, function ($query, $search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('chip', 'like', "%{$search}%")
-                    ->orWhere('status', 'like', "%{$search}%");
-            })
-            ->orderBy($orderBy, $dir)
-            ->paginate(5)
-            ->withQueryString();
-
+        $animals = $this->filterAndPaginate(Animal::class, $request, ['coat', 'specie.race']);
         return Inertia::render('Dashboard', [
             'title' => 'Dashboard',
             'animals' => $animals,
-            'filters' => [
-                'search' => $search
-            ]
+            'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
         ]);
     }
 
