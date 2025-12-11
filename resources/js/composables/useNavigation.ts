@@ -73,7 +73,7 @@ export type Locale = keyof typeof translations;
 
 export function useNavigation(locale: Locale | Ref<Locale> = 'fr') {
     const t = computed(() => translations[unref(locale)]);
-
+//@ts-ignore
     const navigation = computed<NavigationSection[]>(() => [
         {
             label: null,

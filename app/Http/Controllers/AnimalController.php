@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Concerns\FilterablePaginate;
+use App\Models\Animal;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AnimalController extends Controller
 {
-    public function index()
+    use FilterablePaginate;
+    public function index(Request $request)
     {
-        return Inertia::render('AnimalsIndexView', ['title' => 'Animals']);
+        $animals = $this->filterAndPaginate(Animal::class, $request, ['coat', 'specie.race']);
+        return Inertia::render('AnimalsIndexView', [
+            'title' => 'Animals',
+            'animals' => $animals,
+            'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
+        ]);
     }
 
     public function create()
@@ -20,8 +28,9 @@ class AnimalController extends Controller
     {
     }
 
-    public function show($id)
+    public function show(Animal $animal)
     {
+
     }
 
     public function edit($id)

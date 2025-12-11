@@ -1,32 +1,17 @@
 <script setup lang="ts">
 
 import {edit as ProfileEdit} from "@/routes/profile";
-import {logout} from "@/routes";
+
 import NavItem from "@/components/widgets/nav/NavItem.vue";
 import {Link, usePage} from "@inertiajs/vue3";
-import AppLogoIcon from "@/components/AppLogoIcon.vue";
-import ButtonSvg from "@/components/widgets/button/ButtonSvg.vue";
-import LogoutIcon from "@/components/widgets/svg/LogoutIcon.vue";
-import SidebarIcon from "@/components/widgets/svg/SidebarIcon.vue";
 import {computed, ref} from "vue";
-import {index as Dashboard} from "@/actions/App/Http/Controllers/DashboardController";
-import HomeIcon from "@/components/widgets/svg/HomeIcon.vue";
-import {index as AnimalsIndexView} from "@/actions/App/Http/Controllers/AnimalController";
-import DogIcon from "@/components/widgets/svg/DogIcon.vue";
-import {index as AdoptionRequestsIndexView} from "@/actions/App/Http/Controllers/AdoptionRequestController";
-import FormInputIcon from "@/components/widgets/svg/FormInputIcon.vue";
-import {index as NotesIndexView} from "@/actions/App/Http/Controllers/NoteController";
-import NotesIcon from "@/components/widgets/svg/NotesIcon.vue";
-import {index as ReportsIndexView} from "@/actions/App/Http/Controllers/ReportController";
-import ReportsIcon from "@/components/widgets/svg/ReportsIcon.vue";
-import {index as DatabaseIndexView} from "@/actions/App/Http/Controllers/DatabaseController";
-import DatabaseIcon from "@/components/widgets/svg/DatabaseIcon.vue";
-import {index as EmailsIndexView} from "@/actions/App/Http/Controllers/EmailController";
-import EmailsIcon from "@/components/widgets/svg/EmailsIcon.vue";
-import {index as VolunteersIndexView} from "@/actions/App/Http/Controllers/VolunteerController";
-import VolunteerIcon from "@/components/widgets/svg/VolunteerIcon.vue";
 import {useSidebar} from "@/composables/useIsSidebar";
 import {Locale, useNavigation} from "@/composables/useNavigation";
+import LogoutIcon from "@/components/widgets/svg/LogoutIcon.vue";
+
+import {logout} from "@/routes";
+import AppLogoIcon from "@/components/AppLogoIcon.vue";
+import SidebarIcon from "@/components/widgets/svg/SidebarIcon.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user || null);
@@ -182,21 +167,6 @@ const changeLocale = (newLocale: Locale) => {
                                     >
                                     {{ initials }}
                                 </span>
-                                    <Transition
-                                        enter-active-class="transition-all duration-200 ease-out"
-                                        leave-active-class="transition-all duration-150 ease-in"
-                                        enter-from-class="opacity-0 -translate-x-2"
-                                        enter-to-class="opacity-100 translate-x-0"
-                                        leave-from-class="opacity-100 translate-x-0"
-                                        leave-to-class="opacity-0 -translate-x-2"
-                                    >
-                                        <div
-                                            v-if="isCollapsed"
-                                            class="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-gray-900 text-white text-sm rounded-md opacity-0 group-hover/avatar:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 shadow-lg"
-                                        >
-                                            {{ user.name }}
-                                        </div>
-                                    </Transition>
                                 </div>
 
                                 <Transition
@@ -236,23 +206,41 @@ const changeLocale = (newLocale: Locale) => {
 
                         <div
                             :class="[
-                            'py-4 border-t mb-4 border-white/10 flex justify-center items-center w-full',
+                            'py-2 border-t mb-4 border-white/10 flex justify-center items-center w-full',
                             isCollapsed ? 'px-2' : 'px-2'
                         ]"
                         >
-                            <ButtonSvg
-                                title="Se déconnecter"
-                                :href="logout()"
-                                method="post"
-                                :collapsed="isCollapsed"
-                                class="w-full transition-all duration-300 hover:scale-105"
-                                as="button"
+                            <div
+                                :class="[
+                            'border-t mb-4 button-yellow button-animation rounded-lg flex justify-center items-center w-full',
+                            isCollapsed ? 'px-2' : 'px-2'
+                        ]"
                             >
-                                <template #icon>
+                                <Link
+                                    :href="logout()"
+                                    method="post"
+                                    as="button"
+                                    :class="[
+                                    'flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 ease-in-out group w-full',
+                                    isCollapsed ? 'justify-center' : 'justify-start'
+                                ]"
+                                    :title="isCollapsed ? 'Se déconnecter' : undefined"
+                                >
                                     <LogoutIcon
-                                        class="svg-strokeblue w-6 h-6 transition-transform duration-300 group-hover:translate-x-1"/>
-                                </template>
-                            </ButtonSvg>
+                                        class="svg-strokewhite w-6 h-6 transition-transform duration-300 group-hover:translate-x-1"
+                                    />
+                                    <Transition
+                                        enter-active-class="transition-all duration-300 ease-out delay-75"
+                                        leave-active-class="transition-all duration-200 ease-in"
+                                        enter-from-class="opacity-0 -translate-x-4"
+                                        enter-to-class="opacity-100 translate-x-0"
+                                        leave-from-class="opacity-100 translate-x-0"
+                                        leave-to-class="opacity-0 -translate-x-4"
+                                    >
+                                        <span v-if="!isCollapsed" class="text-white">Se déconnecter</span>
+                                    </Transition>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </nav>
