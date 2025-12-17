@@ -8,6 +8,7 @@ import {computed, ref, watch} from "vue";
 import {Head, router, usePage} from "@inertiajs/vue3";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
 import TopModal from "@/components/widgets/modals/TopModal.vue";
+import Toaster from "@/components/widgets/Toaster.vue";
 
 
 // USER DATA
@@ -70,4 +71,5 @@ const showSearchBar = ref(false);
             </button>
         </div>
     </TopModal>
+    <Toaster/>
 </template>

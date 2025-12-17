@@ -25,7 +25,7 @@ class AnimalFactory extends Factory
             'status' => $this->faker->randomElement(['Validated', 'In progress', 'Adopted']),
             'suitable' => $this->faker->randomElement(['Dog', 'Cat', 'Child', 'Baby']),
             'outside' => $this->faker->boolean(),
-            'pictures' => $this->faker->image(),
+            'pictures' => 'test.jpg',
             'published' => $this->faker->boolean(),
             'admission_date' => $this->faker->date(),
             'coat_id' => Coat::factory(),

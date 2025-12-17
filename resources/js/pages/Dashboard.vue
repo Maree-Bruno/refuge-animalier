@@ -6,7 +6,20 @@ import GenericTable from "@/components/widgets/table/GenericTable.vue";
 import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
 import ExternalIcon from "@/components/widgets/svg/ExternalIcon.vue";
 import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
+import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
 
+
+defineProps({
+    species:{
+        type:Object,
+    },
+    races:{
+        type:Object,
+    },
+    coats:{
+        type:Object,
+    },
+})
 const page = usePage();
 const animals = computed(() => page.props.animals);
 const filters = computed(() => page.props.filters || {});
@@ -108,6 +121,7 @@ const handleEmailRowSelect = (selected) => {
         :animals="animals"
         :filters="filters"
         :showTitle="true"
+        :species :races :coats
     />
 
     <section class="flex flex-col gap-5">

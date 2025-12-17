@@ -15,7 +15,6 @@ import SidebarIcon from "@/components/widgets/svg/SidebarIcon.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user || null);
-
 const initials = computed(() => {
     if (!user.value?.name) return '';
     return user.value.name
@@ -44,6 +43,7 @@ const changeLocale = (newLocale: Locale) => {
 
 <template>
     <header v-if="user">
+        <h1 class="sr-only">Happypaws</h1>
         <Transition
             enter-active-class="transition-all duration-300 ease-out"
             leave-active-class="transition-all duration-300 ease-in"
@@ -61,6 +61,7 @@ const changeLocale = (newLocale: Locale) => {
                 @mouseleave="handleMouseLeave"
                 aria-label="Sidebar"
             >
+                <h2 class="sr-only">Navigation</h2>
                 <nav class="h-full flex flex-col mt-4 shadow-xl">
                     <div class="flex items-center justify-between mb-4 border-b border-b-white/20 mx-2 pb-3">
                         <Transition
@@ -92,7 +93,6 @@ const changeLocale = (newLocale: Locale) => {
                                 :class="{ 'rotate-360': isPinned }"
                             />
                         </button>
-                        <h2 class="sr-only">Navigation</h2>
                     </div>
 
                     <div class="px-4 py-6 space-y-6 overflow-y-scroll flex-1">
@@ -221,13 +221,12 @@ const changeLocale = (newLocale: Locale) => {
                                     method="post"
                                     as="button"
                                     :class="[
-                                    'flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 ease-in-out group w-full',
-                                    isCollapsed ? 'justify-center' : 'justify-start'
+                                    'flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 transition-all duration-300 ease-in-out group w-full justify-center',
                                 ]"
                                     :title="isCollapsed ? 'Se déconnecter' : undefined"
                                 >
                                     <LogoutIcon
-                                        class="svg-strokewhite w-6 h-6 transition-transform duration-300 group-hover:translate-x-1"
+                                        class="svg-strokeblack w-6 h-6 transition-transform duration-300 group-hover:translate-x-1"
                                     />
                                     <Transition
                                         enter-active-class="transition-all duration-300 ease-out delay-75"
@@ -237,7 +236,7 @@ const changeLocale = (newLocale: Locale) => {
                                         leave-from-class="opacity-100 translate-x-0"
                                         leave-to-class="opacity-0 -translate-x-4"
                                     >
-                                        <span v-if="!isCollapsed" class="text-white">Se déconnecter</span>
+                                        <span v-if="!isCollapsed" class="text-black">Se déconnecter</span>
                                     </Transition>
                                 </Link>
                             </div>

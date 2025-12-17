@@ -14,14 +14,30 @@ class Animal extends Model
     use HasFactory;
 
     public $fillable = [
-        'name', 'sex', 'age', 'description', 'outside', 'published', 'status', 'suitable', 'admission_date', 'coat_id',
+        'name',
+        'sex',
+        'age',
+        'chip',
+        'description',
+        'outside',
+        'published',
+        'status',
+        'suitable',
+        'admission_date',
+        'coat_id',
         'note_id',
-        'specie_id', 'user_id'
+        'specie_id', 'user_id',
+        'pictures',
     ];
 
     protected $casts = [
-        'admission_date' => 'datetime:d-m-Y',
+        'suitable' => 'array',
+        'pictures' => 'array',
+        'outside' => 'boolean',
+        'published' => 'boolean',
     ];
+
+
     public function coat(): BelongsTo
     {
         return $this->belongsTo(Coat::class);
@@ -37,11 +53,17 @@ class Animal extends Model
         return $this->belongsTo(Specie::class);
     }
 
-    public function race(): BelongsTo
+    public function race(): HasOneThrough
     {
-        return $this->specie->race(); // ou via accessor
+        return $this->hasOneThrough(
+            Race::class,
+            Specie::class,
+            'id',
+            'id',
+            'specie_id',
+            'race_id'
+        );
     }
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

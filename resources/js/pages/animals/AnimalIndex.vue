@@ -28,14 +28,14 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    species:{
-        type:Object,
+    species: {
+        type: Object,
     },
-    races:{
-        type:Object,
+    races: {
+        type: Object,
     },
-    coats:{
-        type:Object,
+    coats: {
+        type: Object,
     },
 })
 
@@ -77,12 +77,35 @@ const switchTab = (tabValue) => {
 
 const showCreateAnimal = ref(false);
 const showCreateNote = ref(false);
+const showDeleteConfirm = ref(false);
+const animalToDelete = ref(null);
 let isShowModalOpen = ref(false)
 let selectedRow = ref(null)
 
 const openShowModal = (row) => {
     selectedRow.value = row;
     isShowModalOpen.value = true;
+}
+
+const openDeleteConfirm = (animal) => {
+    animalToDelete.value = animal;
+    showDeleteConfirm.value = true;
+}
+
+const destroyAnimal = () => {
+    if (!animalToDelete.value) return;
+
+    router.delete(`/animals/${animalToDelete.value.id}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            showDeleteConfirm.value = false;
+            animalToDelete.value = null;
+        },
+        onError: (errors) => {
+            console.error('Erreur lors de la suppression:', errors);
+            // Optionnel: afficher un message d'erreur
+        }
+    });
 }
 
 const animalColumns = [
@@ -104,10 +127,9 @@ const animalActions = [
     {
         label: 'Archiver',
         icon: ArchiveIcon,
-        handler: (row) => {
-            // Handler pour archiver
-        },
-    }
+        handler: (row) => openDeleteConfirm(row),
+        class: 'text-red-600 hover:text-red-700'
+    },
 ];
 
 const handleSort = ({key, order}) => {
@@ -126,8 +148,30 @@ const handleSort = ({key, order}) => {
 const handleAnimalRowSelect = (selected) => {
     // Handler pour la sélection
 };
+const getAnimalImageUrl = (animal, size = 'md') => {
+    if (!animal.pictures || !animal.pictures[0]) {
+        return '/images/billy.webp'; // Image par défaut
+    }
+    const filename = animal.pictures[0];
+    const sizeMap = {
+        'sm': '300x300',
+        'md': '600x600',
+        'lg': '900x900'
+    };
+    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
+}
 
-
+const getAnimalImageSrcset = (animal) => {
+    if (!animal.pictures || !animal.pictures[0]) {
+        return '';
+    }
+    const filename = animal.pictures[0];
+    return [
+        `/images/animals/variants/300x300/${filename} 300w`,
+        `/images/animals/variants/600x600/${filename} 600w`,
+        `/images/animals/variants/900x900/${filename} 900w`
+    ].join(', ');
+}
 </script>
 
 <template>
@@ -192,9 +236,12 @@ const handleAnimalRowSelect = (selected) => {
             >
                 <div class="flex gap-3">
                     <img
-                        src="/images/billy.webp"
+                        :src="getAnimalImageUrl(animal, 'sm')"
+                        :srcset="getAnimalImageSrcset(animal)"
+                        sizes="64px"
                         :alt="animal.name"
                         class="w-16 h-16 object-cover rounded-full flex-shrink-0"
+                        loading="lazy"
                     >
 
                     <div class="flex-1 min-w-0">
@@ -248,12 +295,14 @@ const handleAnimalRowSelect = (selected) => {
             >
                 <template #cell-photo="{ row }">
                     <img
-                        src="/images/billy.webp"
+                        :src="getAnimalImageUrl(row, 'sm')"
+                        :srcset="getAnimalImageSrcset(row)"
+                        sizes="32px"
                         :alt="row.name"
                         class="w-8 h-8 object-cover rounded-full"
+                        loading="lazy"
                     >
                 </template>
-
                 <template #cell-sex="{ row }">
                     <span v-if="row.sex === 'male'">
                         <MarsIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/>
@@ -281,12 +330,14 @@ const handleAnimalRowSelect = (selected) => {
         <Pagination :links="props.animals?.links"/>
     </section>
 
-    <RightModal v-model="showCreateAnimal">
-        <template #header>
-            <h2 class="subsubtitle">Ajouter un animal</h2>
-        </template>
-        <AnimalCreate :species :races :coats/>
-    </RightModal>
+    <KeepAlive>
+        <RightModal v-model="showCreateAnimal">
+            <template #header>
+                <h2 class="subsubtitle">Ajouter un animal</h2>
+            </template>
+            <AnimalCreate :species :races :coats/>
+        </RightModal>
+    </KeepAlive>
 
     <CenterModal v-model="isShowModalOpen">
         <AnimalShow :animal="selectedRow"/>
@@ -297,5 +348,38 @@ const handleAnimalRowSelect = (selected) => {
             <h2 class="subsubtitle">Ajouter une note</h2>
         </template>
     </RightModal>
-</template>
 
+    <!-- Modal de confirmation de suppression -->
+    <CenterModal v-model="showDeleteConfirm">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+                <TrashIcon class="w-6 h-6 text-red-600"/>
+            </div>
+
+            <h3 class="text-lg font-semibold text-center mb-2">
+                Confirmer la suppression
+            </h3>
+
+            <p class="text-gray-600 text-center mb-6">
+                Êtes-vous sûr de vouloir supprimer
+                <span class="font-semibold">{{ animalToDelete?.name }}</span> ?
+                Cette action est irréversible et supprimera également toutes les photos associées.
+            </p>
+
+            <div class="flex gap-3 justify-end">
+                <button
+                    @click="showDeleteConfirm = false"
+                    class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                    Annuler
+                </button>
+                <button
+                    @click="destroyAnimal"
+                    class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </CenterModal>
+</template>

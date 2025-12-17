@@ -27,12 +27,11 @@ class DatabaseSeeder extends Seeder
 
         Coat::factory(20)->create();
 
-        // Create animals and assign them to the user
-        Animal::factory(20)
-            ->for($user) // Use 'for' instead of 'hasAttached'
+        /*Animal::factory(20)
+            ->for($user)
             ->create([
                 'specie_id' => Specie::inRandomOrder()->first()->id,
                 'coat_id' => Coat::inRandomOrder()->first()->id,
-            ]);
+            ]);*/
     }
 }
