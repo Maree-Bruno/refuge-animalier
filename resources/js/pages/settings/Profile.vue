@@ -85,8 +85,8 @@ const getProfileImageSrcset = () => {
     <SettingsLayout>
         <div class="flex flex-col space-y-6">
             <HeadingSmall
-                title="Profile information"
-                description="Update your name and email address"
+                title="Information du profil"
+                description="Changer votre nom, adresse mail et photo de profil"
             />
 
             <Form
@@ -98,15 +98,14 @@ const getProfileImageSrcset = () => {
                 <div class="space-y-2">
                     <Label>Photo de profil</Label>
                     <div class="flex gap-4 items-center justify-center">
-                        <div class="relative w-32">
+                        <div class="relative w-32 h-28">
                             <img
                                 :src="getProfileImageUrl('md')"
                                 :srcset="getProfileImageSrcset()"
                                 sizes="(max-width: 640px) 150px, 300px"
-                                class="w-32 h-32 object-cover aspect-square rounded-lg border"
+                                class="w-32 h-28 object-cover aspect-square rounded-lg border"
                                 :alt="`Photo de profil de ${form.name}`"
                             />
-
                             <button
                                 v-if="previewPicture"
                                 type="button"
@@ -116,8 +115,6 @@ const getProfileImageSrcset = () => {
                                 &times;
                             </button>
                         </div>
-
-
                         <input
                             type="file"
                             name="picture"
@@ -127,17 +124,18 @@ const getProfileImageSrcset = () => {
                         />
                     </div>
                     <InputError :message="form.errors.picture"/>
+                    <p class="text-sm text-muted-foreground">
+                        Les formats supportés sont le PNG, JPEG et WEBp.
+                    </p>
                 </div>
-
-
                 <div class="grid gap-2">
-                    <Label for="name">Name</Label>
+                    <Label for="name">Nom</Label>
                     <Input id="name" name="name" v-model="form.name"/>
                     <InputError :message="form.errors.name"/>
                 </div>
 
                 <div class="grid gap-2">
-                    <Label for="email">Email</Label>
+                    <Label for="email">Adresse email</Label>
                     <Input id="email" name="email" v-model="form.email"/>
                     <InputError :message="form.errors.email"/>
                 </div>
@@ -152,7 +150,10 @@ const getProfileImageSrcset = () => {
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <Button :disabled="form.processing">Save</Button>
+                    <button
+                        class="flex items-center gap-2.5 rounded-md cursor-pointer text-blueslate py-2 px-4 transition-all button-animation button-yellow w-full justify-center"
+                        :disabled="form.processing">Sauvegarder
+                    </button>
                     <p v-if="form.recentlySuccessful" class="text-sm text-green-600">
                         Saved.
                     </p>
