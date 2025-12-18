@@ -15,6 +15,7 @@ import SidebarIcon from "@/components/widgets/svg/SidebarIcon.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user || null);
+
 const initials = computed(() => {
     if (!user.value?.name) return '';
     return user.value.name
@@ -39,6 +40,25 @@ const {navigation} = useNavigation(locale.value);
 const changeLocale = (newLocale: Locale) => {
     locale.value = newLocale;
 };
+const profileImageVariants = {
+    xs: '64x64',
+    sm: '128x128',
+    md: '256x256',
+    lg: '512x512',
+};
+
+const getProfileImageUrl = (size: 'xs' | 'sm' | 'md' | 'lg' = 'md') => {
+    if (!user.value.picture) return '/images/billy.webp';
+
+    return `/images/users/variants/${profileImageVariants[size]}/${user.value.picture}`;
+};
+
+const getProfileImageSrcset = () => {
+    return Object.entries(profileImageVariants)
+        .map(([key, size]) => `/images/users/variants/${size}/${user.value.picture} ${size.split('x')[0]}w`)
+        .join(', ');
+};
+
 </script>
 
 <template>
@@ -156,9 +176,11 @@ const changeLocale = (newLocale: Locale) => {
                             <div class="flex gap-2 min-w-0">
                                 <div class="relative group/avatar">
                                     <img
-                                        v-if="user.avatar"
-                                        :src="user.avatar"
-                                        :alt="`Avatar de ${user.name}`"
+                                        v-if="user.picture"
+                                        :src="getProfileImageUrl('xs')"
+                                        :srcset="getProfileImageSrcset()"
+                                        sizes="(max-width: 128px)"
+                                        :alt="`Photo de ${user.name}`"
                                         class="w-10 aspect-square rounded-full object-cover transition-transform duration-300 group-hover:scale-110 group-hover:ring-2 group-hover:ring-white/30"
                                     />
                                     <span

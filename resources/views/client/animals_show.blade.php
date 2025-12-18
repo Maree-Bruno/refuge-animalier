@@ -105,7 +105,7 @@
 
                         <p class="flex flex-col">
                             <span class="font-quicksand font-bold">{{ __('animals/client_show.features.admission_date') }}</span>
-                            <span class="xsmalltext">{{ $animal->admission_date->format('d/m/Y') }}</span>
+                            <span class="xsmalltext">{{ $animal->admission_date }}</span>
                         </p>
                     </div>
 

@@ -67,6 +67,14 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'userimages' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/images'),
+            'url' => env('APP_URL').'/images',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
 
 
     ],

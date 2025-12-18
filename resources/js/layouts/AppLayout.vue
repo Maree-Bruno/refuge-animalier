@@ -21,7 +21,7 @@ const {
 const props = defineProps({'title': String,})
 let search = ref('');
 watch(search, value => {
-    router.get('/dashboard', {search: value}, {
+    router.get(window.location.pathname, {search: value}, {
         preserveState: true,
         replace:true
     })

@@ -186,16 +186,7 @@ class AnimalController extends Controller
 
     public function show(Animal $animal)
     {
-        $otherAnimals = Animal::where('id', '!=', $animal->id)
-            ->whereIn('status', [
-                AnimalStatus::VALIDATED,
-                AnimalStatus::IN_PROGRESS
-            ])
-            ->inRandomOrder()
-            ->limit(3)
-            ->get();
 
-        return view('client.animals_show', compact('animal', 'otherAnimals'));
     }
 
     public function edit(Animal $animal)

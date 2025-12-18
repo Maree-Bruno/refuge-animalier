@@ -21,6 +21,7 @@
             $sizes['lg']['width']
         );
     };
+
 @endphp
 
 <x-layouts.client>

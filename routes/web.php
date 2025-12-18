@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\PublicAnimalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VolunteerController;
 use App\Models\Animal;
@@ -21,11 +22,8 @@ Route::domain('happypaws.test')->group(function () {
     Route::get('/happypaws', function () {
         return view('client/about');
     })->name('about');
-    Route::get('/animals', function () {
-        $animals = Animal::all();
-        return view('client/animals', ['animals' => $animals]);
-    })->name('animals');
-    Route::get('/animals/{animal}', [AnimalController::class, 'show'])->name('animals_show');
+    Route::get('/animals', [PublicAnimalController::class, 'index'])->name('animals');
+    Route::get('/animals/{animal}', [PublicAnimalController::class, 'show'])->name('animals_show');
     Route::get('/contact', function () {
         return view('client/contact');
     })->name('contact');
