@@ -7,6 +7,7 @@ import Select from "@/components/widgets/form/Select.vue";
 import TabbableTextarea from "@/components/widgets/form/TabbableTextarea.vue";
 import SaveIcon from "@/components/widgets/svg/SaveIcon.vue";
 import {useToasterStore} from "@/stores/useToasterStore.ts";
+import InputError from "@/components/InputError.vue";
 
 const props = defineProps({
     species: Object,
@@ -50,7 +51,7 @@ const handlePictures = (event) => {
 }
 
 const filteredRaces = computed(() => {
-    if (!formAnimal.specie_id || !races) {
+    if (!formAnimal.specie_id) {
         return races || []
     }
     return races.filter(race => race.specie_id === parseInt(formAnimal.specie_id));
@@ -80,9 +81,9 @@ const submitAnimal = () => {
     formAnimal.post(store(), {
         forceFormData: true,
         preserveScroll: true,
-        preserveState: false,
         onSuccess: () => {
             toast.success({text: 'Animal ajouté avec succès'});
+            formAnimal.preserveState = false;
             formAnimal.reset();
             previewPictures.value = [];
             emit('close');
@@ -121,12 +122,14 @@ const submitAnimal = () => {
                 >
                     Âge de l'animal
                 </InputLabel>
-
-                <Select nameId="sex" v-model="formAnimal.sex" label="Sexe de l'animal">
-                    <option value="" selected>-- Choisissez le sexe de l'animal --</option>
-                    <option value="male">Mâle</option>
-                    <option value="female">Femelle</option>
-                </Select>
+                <div class="flex flex-col gap-2 w-full">
+                    <Select nameId="sex" v-model="formAnimal.sex" label="Sexe de l'animal">
+                        <option value="" selected>-- Choisissez le sexe de l'animal --</option>
+                        <option value="male">Mâle</option>
+                        <option value="female">Femelle</option>
+                    </Select>
+                    <InputError :message="formAnimal.errors.sex"/>
+                </div>
             </div>
 
             <InputLabel
@@ -140,32 +143,41 @@ const submitAnimal = () => {
             </InputLabel>
 
             <div class="flex gap-4">
-                <Select nameId="specie" v-model="formAnimal.specie_id" label="Espèce de l'animal">
-                    <option value="">-- Choisissez une espèce --</option>
-                    <option v-for="specie in species" :key="specie.id" :value="specie.id">
-                        {{ specie.name }}
-                    </option>
-                </Select>
+                <div class="flex flex-col gap-2 w-full">
+                    <Select nameId="specie" v-model="formAnimal.specie_id" label="Espèce de l'animal">
+                        <option value="">-- Choisissez une espèce --</option>
+                        <option v-for="specie in species" :key="specie.id" :value="specie.id">
+                            {{ specie.name }}
+                        </option>
+                    </Select>
+                    <InputError :message="formAnimal.errors.specie_id"/>
+                </div>
+                <div class="flex flex-col gap-2 w-full" v-if="formAnimal.specie_id">
+                    <Select nameId="race"  v-model="formAnimal.race_id" label="Race de l'animal">
+                        <option value="">-- Choisissez la race --</option>
+                        <option v-for="race in filteredRaces" :key="race.id" :value="race.id">
+                            {{ race.name }}
+                        </option>
+                    </Select>
+                    <InputError :message="formAnimal.errors.race_id"/>
+                </div>
 
-                <Select nameId="race" v-model="formAnimal.race_id" label="Race de l'animal" v-if="formAnimal.specie_id">
-                    <option value="">-- Choisissez la race --</option>
-                    <option v-for="race in filteredRaces" :key="race.id" :value="race.id">
-                        {{ race.name }}
-                    </option>
-                </Select>
-
-                <Select nameId="coat" v-model="formAnimal.coat_id" label="Pelage de l'animal" v-if="formAnimal.specie_id">
-                    <option value="">-- Choisissez le pelage --</option>
-                    <option v-for="coat in coats" :key="coat.id" :value="coat.id">
-                        {{ coat.name }}
-                    </option>
-                </Select>
+                <div class="flex flex-col gap-2 w-full" v-if="formAnimal.specie_id">
+                    <Select nameId="coat" v-model="formAnimal.coat_id" label="Pelage de l'animal">
+                        <option value="">-- Choisissez le pelage --</option>
+                        <option v-for="coat in coats" :key="coat.id" :value="coat.id">
+                            {{ coat.name }}
+                        </option>
+                    </Select>
+                    <InputError :message="formAnimal.errors.coat_id"/>
+                </div>
             </div>
 
             <div class="space-y-1" v-if="formAnimal.specie_id">
                 <p class="text-black font-semibold sm:text-lg leading-9">Vaccins</p>
                 <div class="grid grid-cols-3 gap-5">
-                    <label :for="`vaccine-${vaccine.id}`" class="space-x-1" v-for="vaccine in filteredVaccines" :key="vaccine.id">
+                    <label :for="`vaccine-${vaccine.id}`" class="space-x-1" v-for="vaccine in filteredVaccines"
+                           :key="vaccine.id">
                         <input
                             :id="`vaccine-${vaccine.id}`"
                             type="checkbox"
@@ -173,6 +185,8 @@ const submitAnimal = () => {
                             v-model="formAnimal.vaccine_id">
                         <span>{{ vaccine.name }}</span>
                     </label>
+                    <InputError :message="formAnimal.errors.vaccine_id"/>
+
                 </div>
             </div>
 
@@ -196,6 +210,8 @@ const submitAnimal = () => {
                         Bébé
                     </label>
                 </div>
+                <InputError :message="formAnimal.errors.suitable"/>
+
             </div>
 
             <div class="flex justify-between gap-5">
@@ -207,6 +223,8 @@ const submitAnimal = () => {
                         <option value="In progress">En cours</option>
                         <option value="Validated">Validé</option>
                     </Select>
+                    <InputError :message="formAnimal.errors.status"/>
+
                 </div>
                 <div class="space-y-1 w-full">
                     <p class="text-black font-semibold sm:text-lg leading-9">Sortir</p>
@@ -215,6 +233,7 @@ const submitAnimal = () => {
                         <span v-if="formAnimal.outside">Autorisée</span>
                         <span v-else>Pas autorisée</span>
                     </label>
+                    <InputError :message="formAnimal.errors.outside"/>
                 </div>
                 <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted'">
                     <p class="text-black font-semibold sm:text-lg leading-9">Publié</p>
@@ -227,6 +246,7 @@ const submitAnimal = () => {
                         <span v-if="formAnimal.published">Publié</span>
                         <span v-else>Pas publié</span>
                     </label>
+                    <InputError :message="formAnimal.errors.published"/>
                 </div>
             </div>
 
@@ -261,7 +281,8 @@ const submitAnimal = () => {
                                 class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100"
                                 title="Supprimer cette image"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                     fill="currentColor">
                                     <path fill-rule="evenodd"
                                           d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
                                           clip-rule="evenodd"/>
@@ -276,9 +297,11 @@ const submitAnimal = () => {
                 v-model="formAnimal.description"
                 nameId="Description"
                 classTextarea="h-[200px]"
+                :message="formAnimal.errors.description"
             >
                 Description
             </TabbableTextarea>
+
 
         </div>
         <button

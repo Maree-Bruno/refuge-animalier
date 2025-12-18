@@ -1,4 +1,6 @@
 <script setup>
+import InputError from "@/components/InputError.vue";
+
 defineProps({
     nameId: String,
     type: String,
@@ -46,5 +48,6 @@ function update(e) {
     :class="classTextarea"
 
   />
+        <InputError :message="message"/>
     </div>
 </template>
