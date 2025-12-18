@@ -19,6 +19,9 @@ defineProps({
     coats:{
         type:Object,
     },
+    vaccines:{
+        type:Object,
+    },
 })
 const page = usePage();
 const animals = computed(() => page.props.animals);
@@ -121,7 +124,7 @@ const handleEmailRowSelect = (selected) => {
         :animals="animals"
         :filters="filters"
         :showTitle="true"
-        :species :races :coats
+        :species :races :coats :vaccines
     />
 
     <section class="flex flex-col gap-5">

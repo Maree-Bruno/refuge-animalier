@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Race extends Model
 {
     use HasFactory;
-    protected $fillable = ['name'];
+
+    protected $fillable = ['name', 'specie_id'];
+
     protected function casts(): array
     {
         return [
@@ -17,9 +19,8 @@ class Race extends Model
         ];
     }
 
-    public function specie(): HasOne
+    public function specie(): BelongsTo
     {
-        return $this->hasOne(Specie::class);
+        return $this->belongsTo(Specie::class);
     }
-
 }

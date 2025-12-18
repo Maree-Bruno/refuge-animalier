@@ -37,7 +37,11 @@ const props = defineProps({
     coats: {
         type: Object,
     },
+    vaccines: {
+        type: Object,
+    },
 })
+
 
 let search = ref(props.filters.search || '');
 let activeTab = ref(props.filters.status || 'all');
@@ -97,13 +101,13 @@ const destroyAnimal = () => {
 
     router.delete(`/animals/${animalToDelete.value.id}`, {
         preserveScroll: true,
+        preserveState: false,
         onSuccess: () => {
             showDeleteConfirm.value = false;
             animalToDelete.value = null;
         },
         onError: (errors) => {
             console.error('Erreur lors de la suppression:', errors);
-            // Optionnel: afficher un message d'erreur
         }
     });
 }
@@ -335,12 +339,12 @@ const getAnimalImageSrcset = (animal) => {
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
-            <AnimalCreate :species :races :coats/>
+            <AnimalCreate :species :races :coats :vaccines/>
         </RightModal>
     </KeepAlive>
 
     <CenterModal v-model="isShowModalOpen">
-        <AnimalShow :animal="selectedRow"/>
+        <AnimalShow :animal="selectedRow" :races :coats :vaccines/>
     </CenterModal>
 
     <RightModal v-model="showCreateNote">

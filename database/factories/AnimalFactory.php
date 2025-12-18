@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Animal;
 use App\Models\Coat;
 use App\Models\Note;
+use App\Models\Race;
 use App\Models\Specie;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -30,7 +31,7 @@ class AnimalFactory extends Factory
             'admission_date' => $this->faker->date(),
             'coat_id' => Coat::factory(),
             'note_id' => null,
-            'specie_id' => Specie::factory(),
+            'race_id' => Race::factory(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

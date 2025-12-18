@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Race;
+use App\Models\Specie;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 

@@ -1,7 +1,7 @@
 <script setup>
 import InputLabel from "@/components/widgets/form/InputLabel.vue";
 import {useForm, router} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import Select from "@/components/widgets/form/Select.vue";
 import TabbableTextarea from "@/components/widgets/form/TabbableTextarea.vue";
 import SaveIcon from "@/components/widgets/svg/SaveIcon.vue";
@@ -12,9 +12,13 @@ const props = defineProps({
     species: Object,
     coats: Object,
     races: Object,
+    vaccines: Object,
 });
 
 const toast = useToasterStore();
+
+const races = props.races;
+const vaccines = props.vaccines;
 
 let formAnimal = useForm({
     name: props.animal?.name || '',
@@ -22,9 +26,10 @@ let formAnimal = useForm({
     chip: props.animal?.chip || '',
     sex: props.animal?.sex || '',
     specie_id: props.animal?.specie_id || '',
-    race_id: props.animal?.race_id || '',
-    coat_id: props.animal?.coat_id || '',
+    race_id: props.animal?.race_id || [],
+    coat_id: props.animal?.coat_id || [],
     suitable: props.animal?.suitable || [],
+    vaccine_id: props.animal?.vaccine_id || [],
     status: props.animal?.status || '',
     outside: props.animal?.outside || false,
     published: props.animal?.published || false,
@@ -33,6 +38,22 @@ let formAnimal = useForm({
     _method: 'PATCH'
 });
 
+const filteredRaces = computed(() => {
+    if (!formAnimal.specie_id) {
+        return races
+    }
+    return races.filter(race => race.specie_id === parseInt(formAnimal.specie_id));
+});
+const filteredVaccines = computed(() => {
+    if (!formAnimal.specie_id || !vaccines) {
+        return vaccines || []
+    }
+    return vaccines.filter(vaccine => vaccine.specie_id === parseInt(formAnimal.specie_id));
+});
+
+const selectedVaccines = computed(() => {
+    return vaccines.filter(vaccine => formAnimal.vaccine_id.includes(vaccine.id));
+})
 let previewPictures = ref([]);
 let existingPictures = ref(props.animal?.pictures || []);
 let deletingImage = ref(null);
@@ -43,10 +64,13 @@ watch(() => props.animal, (newAnimal) => {
         formAnimal.age = newAnimal.age || '';
         formAnimal.chip = newAnimal.chip || '';
         formAnimal.sex = newAnimal.sex || '';
-        formAnimal.specie_id = newAnimal.specie_id || '';
-        formAnimal.race_id = newAnimal.race_id || '';
-        formAnimal.coat_id = newAnimal.coat_id || '';
+        formAnimal.specie_id = newAnimal.specie.id || '';
+        formAnimal.race_id = newAnimal.race_id || [];
+        formAnimal.coat_id = newAnimal.coat_id || [];
         formAnimal.suitable = newAnimal.suitable || [];
+        formAnimal.vaccine_id = newAnimal.vaccines
+            ? newAnimal.vaccines.map(vaccine => vaccine.id)
+            : [];
         formAnimal.status = newAnimal.status || '';
         formAnimal.outside = newAnimal.outside || false;
         formAnimal.published = newAnimal.published || false;
@@ -55,7 +79,7 @@ watch(() => props.animal, (newAnimal) => {
         previewPictures.value = [];
         formAnimal.pictures = [];
     }
-}, { immediate: true, deep: true });
+}, {immediate: true, deep: true});
 
 const handlePictures = (event) => {
     const files = Array.from(event.target.files);
@@ -72,41 +96,43 @@ const getImageUrl = (filename, size = 'sm') => {
 };
 
 const deleteImage = (filename) => {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
-        return;
-    }
 
     deletingImage.value = filename;
 
     router.delete(`/animals/${props.animal.id}/images`, {
-        data: { filename },
+        data: {filename},
         preserveScroll: true,
         onSuccess: () => {
-            toast.success({ text: 'Image supprimée avec succès' });
+            toast.success({text: 'Image supprimée avec succès'});
             existingPictures.value = existingPictures.value.filter(pic => pic !== filename);
             deletingImage.value = null;
         },
         onError: (errors) => {
-            toast.error({ text: 'Erreur lors de la suppression de l\'image' });
+            toast.error({text: 'Erreur lors de la suppression de l\'image'});
             console.error(errors);
             deletingImage.value = null;
         }
     });
 };
-
+const emit = defineEmits(
+    'update'
+)
 const showEditAnimal = ref(false);
 const submitAnimal = () => {
     const updateUrl = `/animals/${props.animal.id}`;
+    formAnimal._method = 'PATCH';
     formAnimal.post(updateUrl, {
         forceFormData: true,
         preserveScroll: true,
+        preserveState: false,
         onSuccess: () => {
-            toast.success({ text: 'Animal mis à jour avec succès' });
+            toast.success({text: 'Animal mis à jour avec succès'});
             previewPictures.value = [];
             showEditAnimal.value = false;
+            emit('update');
         },
         onError: (errors) => {
-            toast.error({ text: 'Une erreur est apparue lors de la mise à jour' });
+            toast.error({text: 'Une erreur est apparue lors de la mise à jour'});
             console.error(errors);
         }
     });
@@ -140,7 +166,8 @@ const submitAnimal = () => {
                     Âge de l'animal
                 </InputLabel>
 
-                <Select nameId="sex-edit" v-model="formAnimal.sex" label="Sexe de l'animal" :modelValue="formAnimal.sex">
+                <Select nameId="sex-edit" v-model="formAnimal.sex" label="Sexe de l'animal"
+                        :modelValue="formAnimal.sex">
                     <option value="">-- Choisissez le sexe de l'animal --</option>
                     <option value="male">Mâle</option>
                     <option value="female">Femelle</option>
@@ -161,7 +188,7 @@ const submitAnimal = () => {
                 <Select nameId="specie-edit" v-model="formAnimal.specie_id" label="Espèce de l'animal"
                         :modelValue="formAnimal.specie_id">
                     <option value="">-- Choisissez une espèce --</option>
-                    <option v-for="specie in species" :key="specie.id" :value="specie.id" >
+                    <option v-for="specie in species" :key="specie.id" :value="specie.id">
                         {{ specie.name }}
                     </option>
                 </Select>
@@ -169,7 +196,7 @@ const submitAnimal = () => {
                 <Select nameId="race-edit" v-model="formAnimal.race_id" label="Race(s) de l'animal"
                         :modelValue="formAnimal.race_id">
                     <option value="">-- Choisissez la/les race(s) --</option>
-                    <option v-for="race in races" :key="race.id" :value="race.id">
+                    <option v-for="race in filteredRaces" :key="race.id" :value="race.id">
                         {{ race.name }}
                     </option>
                 </Select>
@@ -182,14 +209,18 @@ const submitAnimal = () => {
                     </option>
                 </Select>
             </div>
-
             <div class="space-y-1">
                 <p class="text-black font-semibold sm:text-lg leading-9">Vaccins</p>
-                <div class="flex gap-5">
-                    <label for="vaccins-rubella-edit" class="space-x-1">
-                        <input id="vaccins-rubella-edit" name="vaccins" type="checkbox" value="rubella"
-                               v-model="formAnimal.vaccin_id">
-                        Rubéole
+                <div class="grid grid-cols-3 gap-5">
+                    <label :for="`vaccine-${vaccine.id}`" class="space-x-1"
+                           v-for="vaccine in filteredVaccines"
+                           :key="vaccine.id">
+                        <input
+                            :id="`vaccine-${vaccine.id}`"
+                            type="checkbox"
+                            :value="vaccine.id"
+                            v-model="formAnimal.vaccine_id">
+                        <span>{{ vaccine.name }}</span>
                     </label>
                 </div>
             </div>
@@ -238,10 +269,14 @@ const submitAnimal = () => {
                         <span v-else>Pas autorisée</span>
                     </label>
                 </div>
-                <div class="space-y-1 w-full">
+                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted'">
                     <p class="text-black font-semibold sm:text-lg leading-9">Publié</p>
-                    <label for="published-edit" class="space-x-1">
-                        <input id="published-edit" name="published" type="checkbox" v-model="formAnimal.published">
+                    <label for="published-edit" class="space-x-1"
+                           :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed' ">
+                        <input id="published-edit" name="published" type="checkbox" v-model="formAnimal.published"
+                               :disabled="formAnimal.status !== 'Validated'"
+                               :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed' "
+                        >
                         <span v-if="formAnimal.published">Publié</span>
                         <span v-else>Pas publié</span>
                     </label>
@@ -256,7 +291,7 @@ const submitAnimal = () => {
                             <img
                                 :src="getImageUrl(picture, 'sm')"
                                 :alt="`Image ${index + 1}`"
-                                class="w-full h-32 object-cover rounded-lg"
+                                class="w-full h-32 object-cover rounded-lg border-2 border-honeyyellow"
                                 :class="{ 'opacity-50': deletingImage === picture }"
                             >
                             <button
@@ -266,8 +301,11 @@ const submitAnimal = () => {
                                 class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
                                 title="Supprimer cette image"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                     fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                          clip-rule="evenodd"/>
                                 </svg>
                             </button>
                         </div>
@@ -310,11 +348,13 @@ const submitAnimal = () => {
                 Description
             </TabbableTextarea>
 
+
         </div>
 
         <div class="mt-6 flex justify-center">
             <button type="submit"
                     :disabled="formAnimal.processing"
+                    @click="close()"
                     class="button-yellow flex p-3 items-center justify-center gap-2.5 rounded-md button-animation w-fit font-bold disabled:opacity-50 disabled:cursor-not-allowed">
                 <SaveIcon class="w-6 h-6 svg-strokeblack"/>
                 {{ formAnimal.processing ? 'Mise à jour...' : `Mettre à jour ${formAnimal.name || 'l\'animal'}` }}

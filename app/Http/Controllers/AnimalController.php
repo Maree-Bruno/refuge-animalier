@@ -10,6 +10,7 @@ use App\Models\Animal;
 use App\Models\Coat;
 use App\Models\Race;
 use App\Models\Specie;
+use App\Models\Vaccine;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -25,14 +26,15 @@ class AnimalController extends Controller
         $species = Specie::all();
         $races = Race::all();
         $coats = Coat::all();
-        $animals = $this->filterAndPaginate(Animal::class, $request, ['coat', 'specie.race']);
-
+        $vaccines = Vaccine::all();
+        $animals = $this->filterAndPaginate(Animal::class, $request, ['coat', 'race', 'specie', 'vaccines']);
         return Inertia::render('AnimalsIndexView', [
             'title' => 'Animals',
             'animals' => $animals,
             'species' => $species,
             'races' => $races,
             'coats' => $coats,
+            'vaccines' => $vaccines,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
         ]);
     }
@@ -52,20 +54,22 @@ class AnimalController extends Controller
             'race_id' => 'nullable|exists:races,id',
             'coat_id' => 'required|exists:coats,id',
             'description' => 'required|string',
-            'status' => 'required|in:' . implode(',', AnimalStatus::values()),
+            'status' => 'required|in:'.implode(',', AnimalStatus::values()),
             'outside' => 'boolean',
             'published' => 'boolean',
             'suitable' => 'nullable|array',
-            'suitable.*' => 'string|in:' . implode(',', SuitableFor::values()),
+            'suitable.*' => 'string|in:'.implode(',', SuitableFor::values()),
             'pictures' => 'nullable|array',
             'pictures.*' => 'image|mimes:jpeg,png,jpg,webp|max:4096',
+            'vaccine_id' => 'nullable|array',
+            'vaccine_id.*' => 'exists:vaccines,id',
         ]);
 
         $storedImages = [];
 
         if ($request->hasFile('pictures')) {
             foreach ($request->file('pictures') as $image) {
-                $filename = Str::uuid() . '.webp';
+                $filename = Str::uuid().'.webp';
 
                 $originalPath = Storage::disk(
                     config('images.disk')
@@ -85,13 +89,12 @@ class AnimalController extends Controller
                 }
             }
         }
-
         $animal = Animal::create([
             'name' => $validated['name'],
             'age' => $validated['age'],
             'chip' => $validated['chip'],
             'sex' => $validated['sex'],
-            'specie_id' => $validated['specie_id'],
+            'race_id' => $validated['race_id'],
             'coat_id' => $validated['coat_id'],
             'description' => $validated['description'],
             'status' => $validated['status'],
@@ -100,8 +103,13 @@ class AnimalController extends Controller
             'suitable' => $validated['suitable'] ?? [],
             'user_id' => auth()->id(),
             'admission_date' => Carbon::now()->format('d-m-Y'),
-            'pictures' => $storedImages
+            'pictures' => $storedImages,
         ]);
+        $vaccines = $request['vaccine_id'];
+        if ($vaccines) {
+            $animal->vaccines()->sync($vaccines);
+        }
+
         return back();
     }
 
@@ -116,14 +124,16 @@ class AnimalController extends Controller
             'race_id' => 'nullable|exists:races,id',
             'coat_id' => 'required|exists:coats,id',
             'description' => 'required|string',
-            'status' => 'required|in:' . implode(',', AnimalStatus::values()),
+            'status' => 'required|in:'.implode(',', AnimalStatus::values()),
             'outside' => 'boolean',
             'published' => 'boolean',
             'suitable' => 'nullable|array',
-            'suitable.*' => 'string|in:' . implode(',', SuitableFor::values()),
+            'suitable.*' => 'string|in:'.implode(',', SuitableFor::values()),
             'pictures' => 'nullable|array',
             'pictures.*' => 'image|mimes:jpeg,png,jpg,webp|max:4096',
             'admission_date' => 'nullable|date=>format("d-m-Y")',
+            'vaccine_id' => 'nullable|array',
+            'vaccine_id.*' => 'exists:vaccines,id',
         ]);
 
         $animal->update([
@@ -131,7 +141,7 @@ class AnimalController extends Controller
             'age' => $validated['age'],
             'chip' => $validated['chip'],
             'sex' => $validated['sex'],
-            'specie_id' => $validated['specie_id'],
+            'race_id' => $validated['race_id'],
             'coat_id' => $validated['coat_id'],
             'description' => $validated['description'],
             'status' => $validated['status'],
@@ -144,7 +154,7 @@ class AnimalController extends Controller
             $storedImages = is_array($animal->pictures) ? $animal->pictures : [];
 
             foreach ($request->file('pictures') as $image) {
-                $filename = Str::uuid() . '.webp';
+                $filename = Str::uuid().'.webp';
 
                 $originalPath = Storage::disk(
                     config('images.disk')
@@ -165,6 +175,10 @@ class AnimalController extends Controller
             }
 
             $animal->update(['pictures' => $storedImages]);
+        }
+        $vaccines = $request['vaccine_id'];
+        if ($vaccines) {
+            $animal->vaccines()->sync($vaccines);
         }
 
         return back();
@@ -206,6 +220,38 @@ class AnimalController extends Controller
         }
 
         $animal->delete();
+
+        return back();
+    }
+
+    public function deleteImage(Request $request, Animal $animal)
+    {
+        $validated = $request->validate([
+            'filename' => 'required|string'
+        ]);
+
+        $filename = $validated['filename'];
+
+        if (!is_array($animal->pictures) || !in_array($filename, $animal->pictures)) {
+            return back()->withErrors(['message' => 'Image non trouvée']);
+        }
+
+        Storage::disk(config('images.disk'))->delete(
+            config('images.original_path') . '/' . $filename
+        );
+
+        $sizes = ['300x300', '600x600', '900x900'];
+        foreach ($sizes as $size) {
+            Storage::disk(config('images.disk'))->delete(
+                "images/animals/variants/{$size}/{$filename}"
+            );
+        }
+
+        $pictures = array_values(array_filter($animal->pictures, function($pic) use ($filename) {
+            return $pic !== $filename;
+        }));
+
+        $animal->update(['pictures' => $pictures]);
 
         return back();
     }

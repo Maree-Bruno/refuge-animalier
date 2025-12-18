@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use DateTimeInterface;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Animal extends Model
@@ -26,7 +25,8 @@ class Animal extends Model
         'admission_date',
         'coat_id',
         'note_id',
-        'specie_id', 'user_id',
+        'race_id',
+        'user_id',
         'pictures',
     ];
 
@@ -36,7 +36,6 @@ class Animal extends Model
         'outside' => 'boolean',
         'published' => 'boolean',
     ];
-
 
     public function coat(): BelongsTo
     {
@@ -48,20 +47,20 @@ class Animal extends Model
         return $this->belongsTo(Note::class);
     }
 
-    public function specie(): BelongsTo
+    public function race(): BelongsTo
     {
-        return $this->belongsTo(Specie::class);
+        return $this->belongsTo(Race::class);
     }
 
-    public function race(): HasOneThrough
+    public function specie(): HasOneThrough
     {
         return $this->hasOneThrough(
-            Race::class,
             Specie::class,
+            Race::class,
             'id',
             'id',
-            'specie_id',
-            'race_id'
+            'race_id',
+            'specie_id'
         );
     }
     public function user(): BelongsTo
@@ -69,5 +68,8 @@ class Animal extends Model
         return $this->belongsTo(User::class);
     }
 
-
+    public function vaccines(): BelongsToMany
+    {
+        return $this->belongsToMany(Vaccine::class, 'animal_vaccine', 'animal_id', 'vaccine_id');
+    }
 }

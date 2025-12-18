@@ -10,6 +10,7 @@
   const species = computed(()=>page.props.species);
   const races = computed(()=>page.props.races);
   const coats = computed(()=>page.props.coats);
+  const vaccines = computed(()=>page.props.vaccines);
 </script>
 
 <template>
@@ -19,5 +20,6 @@
         :species="species"
         :races="races"
         :coats="coats"
+        :vaccines = "vaccines"
     />
 </template>

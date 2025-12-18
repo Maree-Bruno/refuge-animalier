@@ -16,13 +16,16 @@ const props = defineProps({
     coats: {
         type: Object,
     },
+    vaccines: {
+        type: Object,
+    },
 });
 
 const page = usePage();
-const species = computed(() => page.props.species || []);
-const races = computed(() => page.props.races || []);
-const coats = computed(() => page.props.coats || []);
-
+const species = computed(() => page.props.species );
+const races = computed(() => page.props.races);
+const coats = computed(() => page.props.coats);
+const vaccines = computed(() => page.props.vaccines);
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);
@@ -195,12 +198,14 @@ const outsideText = computed(() => {
 
                             <div class="flex flex-col">
                                 <span class="font-quicksand font-bold text-sm sm:text-base">Espèce</span>
-                                <span class="text-xs sm:text-sm">{{ props.animal.specie?.name || 'Non spécifié' }}</span>
+                                <span class="text-xs sm:text-sm">{{ props.animal.specie?.name || 'Non spécifié'
+                                    }}</span>
                             </div>
 
                             <div class="flex flex-col">
                                 <span class="font-quicksand font-bold text-sm sm:text-base">Race</span>
-                                <span class="text-xs sm:text-sm">{{ props.animal.specie?.race?.name || 'Non spécifié' }}</span>
+                                <span class="text-xs sm:text-sm">{{ props.animal.race?.name || 'Non spécifié'
+                                    }}</span>
                             </div>
 
                             <div class="flex flex-col">
@@ -244,7 +249,7 @@ const outsideText = computed(() => {
 
                 <div class="space-y-2 sm:space-y-3">
                     <h3 class="font-quicksand font-bold text-lg sm:text-xl">Description</h3>
-                    <p class="text-sm sm:text-base leading-relaxed">
+                    <p class="text-sm sm:text-base leading-relaxed break-words overflow-hidden">
                         {{ props.animal.description || 'Aucune description disponible.' }}
                     </p>
                 </div>
@@ -267,6 +272,7 @@ const outsideText = computed(() => {
             :species="species"
             :races="races"
             :coats="coats"
+            :vaccines="vaccines"
             @close="handleCloseEditModal"
         />
     </RightModal>
