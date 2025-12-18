@@ -12,11 +12,11 @@ import { Link } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
+        title: 'Profil',
         href: editProfile(),
     },
     {
-        title: 'Password',
+        title: 'Mot de passe',
         href: editPassword(),
     },
     /*{
@@ -30,6 +30,7 @@ const sidebarNavItems: NavItem[] = [
 ];
 
 const currentPath = typeof window !== undefined ? window.location.pathname : '';
+
 </script>
 
 <template>
@@ -43,7 +44,6 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
                         variant="ghost"
                         :class="[
                             'w-full justify-start',
-                            { 'bg-muted': urlIsActive(item.href, currentPath) },
                         ]"
                         as-child
                     >
