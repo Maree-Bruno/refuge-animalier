@@ -7,15 +7,14 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('species', function (Blueprint $table) {
-            $table->id();
-            $table->json('name');
-            $table->timestamps();
+        Schema::create('animal_vaccine', function (Blueprint $table) {
+            $table->foreignId('animal_id')->constrained('animals');
+            $table->foreignId('vaccine_id')->constrained('vaccines');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('species');
+        Schema::dropIfExists('animal_vaccine');
     }
 };

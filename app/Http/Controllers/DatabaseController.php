@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vaccine;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -9,7 +10,8 @@ class DatabaseController extends Controller
 {
     public function index()
     {
-        return Inertia::render('DatabaseIndexView');
+        $vaccines = Vaccine::all();
+        return Inertia::render('DatabaseIndexView', ['vaccines'=>$vaccines]);
     }
 
     public function create()

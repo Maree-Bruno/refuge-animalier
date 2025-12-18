@@ -8,6 +8,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VolunteerController;
+use App\Models\Animal;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -21,11 +22,10 @@ Route::domain('happypaws.test')->group(function () {
         return view('client/about');
     })->name('about');
     Route::get('/animals', function () {
-        return view('client/animals');
+        $animals = Animal::all();
+        return view('client/animals', ['animals' => $animals]);
     })->name('animals');
-    Route::get('/animals/show', function () {
-        return view('client/animals_show');
-    })->name('animals_show');
+    Route::get('/animals/{animal}', [AnimalController::class, 'show'])->name('animals_show');
     Route::get('/contact', function () {
         return view('client/contact');
     })->name('contact');
@@ -48,8 +48,10 @@ Route::domain('admin.happypaws.test')->group(function () {
 
         //animals
         Route::get('/animals', [AnimalController::class, 'index'])->name('animals.index');
-        Route::get('/animals/create', [AnimalController::class, 'create'])->name('animals.create');
-        Route::get('/animals/{animal}', [AnimalController::class, 'show'])->name('animals.show');
+        Route::post('/animals', [AnimalController::class, 'store'])->name('animals.store');
+        Route::patch('/animals/{animal}', [AnimalController::class, 'update'])->name('animals.update');
+        Route::delete('/animals/{animal}', [AnimalController::class, 'destroy'])->name('animals.destroy');
+        Route::delete('/animals/{animal}/images', [AnimalController::class, 'deleteImage'])->name('animals.deleteImage');
 
         //adoption request
         Route::get('/adoption', [AdoptionRequestController::class, 'index'])->name('adoption_requests.index');

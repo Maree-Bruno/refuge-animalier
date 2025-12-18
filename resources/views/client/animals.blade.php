@@ -1,3 +1,28 @@
+@php
+    $sizes = config('images.sizes');
+    $buildSrcset = function($photo) use ($sizes) {
+        $srcset = [];
+        foreach($sizes as $key => $size) {
+            $path = sprintf('images/animals/variants/%sx%s/%s',
+                $size['width'],
+                $size['height'],
+                $photo
+            );
+            $srcset[] = asset($path) . ' ' . $size['width'] . 'w';
+        }
+        return implode(', ', $srcset);
+    };
+
+    $buildSizes = function() use ($sizes) {
+        return sprintf(
+            '(max-width: 640px) %spx, (max-width: 1024px) %spx, %spx',
+            $sizes['sm']['width'],
+            $sizes['md']['width'],
+            $sizes['lg']['width']
+        );
+    };
+@endphp
+
 <x-layouts.client>
     <x-layouts.section :title="__('animals/client_index.title')">
         <div class="">
@@ -76,18 +101,19 @@
 
         <div class="flex flex-col items-center gap-5 sm:grid sm:grid-cols-2 sm:justify-items-center
                 lg:grid-cols-3 lg:gap-10 2xl:grid-cols-4 2xl:gap-20">
-
-            @foreach ([1,2,3,4,5,6,7,8,9] as $i)
+            @foreach($animals as $animal)
                 <x-animal.card
-                    :name="__('homepage.animals_section.animals.billy.name')"
-                    :age="__('homepage.animals_section.animals.billy.age')"
-                    :gender="__('homepage.animals_section.animals.billy.gender')"
-                    :species="__('homepage.animals_section.animals.billy.species')"
-                    src="{{ URL('images/billy.webp') }}"
-                    :description="__('homepage.animals_section.animals.billy.description')"
+                    name="{{ $animal->name }}"
+                    src="{{ asset('images/animals/originals/'.$animal->pictures[0]) }}"
+                    srcset="{{ $buildSrcset($animal->pictures[0]) }}"
+                    sizes="{{ $buildSizes() }}"
+                    age="{{ $animal->age }}"
+                    gender="{{ $animal->gender }}"
+                    species="{{ $animal->species }}"
+                    description="{{ $animal->description }}"
+                    href="{{ route('animals_show', $animal) }}"
                 />
             @endforeach
-
         </div>
     </x-layouts.section>
 </x-layouts.client>

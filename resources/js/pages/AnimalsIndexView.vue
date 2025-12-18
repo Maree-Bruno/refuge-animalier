@@ -7,11 +7,19 @@
   const page = usePage();
   const animals = computed(() => page.props.animals);
   const filters = computed(() => page.props.filters || {});
+  const species = computed(()=>page.props.species);
+  const races = computed(()=>page.props.races);
+  const coats = computed(()=>page.props.coats);
+  const vaccines = computed(()=>page.props.vaccines);
 </script>
 
 <template>
     <AnimalIndex
         :animals="animals"
         :filters="filters"
+        :species="species"
+        :races="races"
+        :coats="coats"
+        :vaccines = "vaccines"
     />
 </template>

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Concerns\FilterablePaginate;
 use App\Models\Animal;
+use App\Models\Coat;
+use App\Models\Race;
+use App\Models\Specie;
+use App\Models\Vaccine;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,10 +17,18 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        $animals = $this->filterAndPaginate(Animal::class, $request, ['coat', 'specie.race']);
+        $species = Specie::all();
+        $races = Race::all();
+        $coats = Coat::all();
+        $vaccines = Vaccine::all();
+        $animals = $this->filterAndPaginate(Animal::class, $request,['coat', 'race', 'specie', 'vaccines']);
         return Inertia::render('Dashboard', [
             'title' => 'Dashboard',
             'animals' => $animals,
+            'species' => $species,
+            'races' => $races,
+            'coats' => $coats,
+            'vaccines' => $vaccines,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
         ]);
     }

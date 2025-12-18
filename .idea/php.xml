@@ -163,7 +163,7 @@
       <path value="$PROJECT_DIR$/vendor/php-debugbar/php-debugbar" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.4" />
   <component name="PhpStan">
     <PhpStan_settings>
       <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="31b15b3e-5a6e-4862-b6ac-0faafbd7ed60" timeout="60000" />

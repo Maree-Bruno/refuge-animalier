@@ -40,19 +40,13 @@ class ImageService
         $config = config($this->configKey);
         $disk = Storage::disk($config['disk']);
 
-        // Supprime l'original
         $disk->delete($config['original_path'] . '/' . $fileName);
 
-        // Supprime les variantes
         foreach ($config['sizes'] as $size) {
             $path = sprintf($config['reformat_path'], $size['width'], $size['height']);
             $disk->delete($path . '/' . $fileName);
         }
     }
-
-    /**
-     * Retourne l'URL d'une variante spécifique
-     */
     public function getUrl(string $fileName, string $size = 'md'): string
     {
         $config = config($this->configKey);
