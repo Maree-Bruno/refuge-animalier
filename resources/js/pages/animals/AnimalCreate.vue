@@ -14,6 +14,7 @@ const props = defineProps({
     coats: Object,
     races: Object,
     vaccines: Object,
+    can:Object,
 });
 
 const emit = defineEmits(['close']);
@@ -23,6 +24,8 @@ const vaccines = props.vaccines;
 
 const page = usePage();
 const animals = computed(() => page.props.animals);
+const role = page.props.auth.role;
+console.log(role)
 
 let formAnimal = useForm({
     name: '',
@@ -235,10 +238,10 @@ const submitAnimal = () => {
                     </label>
                     <InputError :message="formAnimal.errors.outside"/>
                 </div>
-                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted'">
+                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted' && can.publish">
                     <p class="text-black font-semibold sm:text-lg leading-9">Publié</p>
                     <label for="published-edit" class="space-x-1"
-                           :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed' ">
+                           :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed'">
                         <input id="published-edit" name="published" type="checkbox" v-model="formAnimal.published"
                                :disabled="formAnimal.status !== 'Validated'"
                                :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed' "

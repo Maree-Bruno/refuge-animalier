@@ -13,6 +13,7 @@ use App\Models\Specie;
 use App\Models\Vaccine;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -36,6 +37,9 @@ class AnimalController extends Controller
             'coats' => $coats,
             'vaccines' => $vaccines,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
+            'can' => [
+                'publish' => Auth::user()->can('publish', Animal::class),
+            ]
         ]);
     }
 

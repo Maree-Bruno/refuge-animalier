@@ -22,6 +22,7 @@ defineProps({
     vaccines:{
         type:Object,
     },
+    can:Object,
 })
 const page = usePage();
 const animals = computed(() => page.props.animals);
@@ -124,7 +125,7 @@ const handleEmailRowSelect = (selected) => {
         :animals="animals"
         :filters="filters"
         :showTitle="true"
-        :species :races :coats :vaccines
+        :species :races :coats :vaccines :can
     />
 
     <section class="flex flex-col gap-5">

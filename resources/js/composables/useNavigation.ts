@@ -15,8 +15,9 @@ import ReportsIcon from "@/components/widgets/svg/ReportsIcon.vue";
 import DatabaseIcon from "@/components/widgets/svg/DatabaseIcon.vue";
 import EmailsIcon from "@/components/widgets/svg/EmailsIcon.vue";
 import VolunteerIcon from "@/components/widgets/svg/VolunteerIcon.vue";
+import {usePage} from "@inertiajs/vue3";
 
-// Types
+
 export interface NavigationItem {
     title: string;
     href: () => string;
@@ -27,9 +28,10 @@ export interface NavigationItem {
 export interface NavigationSection {
     label: string | null;
     items: NavigationItem[];
+    requiresRole?: string
 }
 
-// Translations
+
 const translations = {
     fr: {
         dashboard: "Dashboard",
@@ -71,76 +73,103 @@ const translations = {
 
 export type Locale = keyof typeof translations;
 
-export function useNavigation(locale: Locale | Ref<Locale> = 'fr') {
+function useNavigation(locale: Locale | Ref<Locale> = 'fr') {
     const t = computed(() => translations[unref(locale)]);
-//@ts-ignore
-    const navigation = computed<NavigationSection[]>(() => [
-        {
-            label: null,
-            items: [
-                {
-                    title: t.value.dashboard,
-                    href: Dashboard,
-                    icon: HomeIcon,
-                    component: "Dashboard"
+    const page = usePage();
+    const user = computed(() => page.props.auth?.user);
+
+/*@ts-ignore*/
+    const navigation = computed<NavigationSection[]>(() => {
+        const allSections = [
+            {
+                label: null,
+                items: [
+                    {
+                        title: t.value.dashboard,
+                        href: Dashboard,
+                        icon: HomeIcon,
+                        component: "Dashboard"
+                    }
+                ]
+            },
+            {
+                label: t.value.refuge,
+                items: [
+                    {
+                        title: t.value.animals,
+                        href: AnimalsIndexView,
+                        icon: DogIcon,
+                        component: "AnimalsIndexView"
+                    },
+                    {
+                        title: t.value.adoptionRequests,
+                        href: AdoptionRequestsIndexView,
+                        icon: FormInputIcon,
+                        component: "AdoptionRequestsIndexView"
+                    },
+                    {
+                        title: t.value.notes,
+                        href: NotesIndexView,
+                        icon: NotesIcon,
+                        component: "NotesIndexView"
+                    }
+                ]
+            },
+            {
+                label: t.value.admin,
+                items: [
+                    {
+                        title: t.value.reports,
+                        href: ReportsIndexView,
+                        icon: ReportsIcon,
+                        component: "ReportsIndexView",
+                        requiresRole: 'admin'
+                    },
+                    {
+                        title: t.value.database,
+                        href: DatabaseIndexView,
+                        icon: DatabaseIcon,
+                        component: "DatabaseIndexView",
+                        requiresRole: 'admin'
+                    },
+                    {
+                        title: t.value.emails,
+                        href: EmailsIndexView,
+                        icon: EmailsIcon,
+                        component: "EmailsIndexView",
+                        requiresRole: 'admin'
+                    },
+                    {
+                        title: t.value.volunteers,
+                        href: VolunteersIndexView,
+                        icon: VolunteerIcon,
+                        component: "VolunteersIndexView",
+                        requiresRole: 'admin'
+                    }
+                ]
+            }
+        ];
+
+        return allSections.map(section => ({
+            ...section,
+            items: section.items.filter(item => {
+                if (!item.requiresRole) return true;
+
+                const userRole = user.value?.role;
+                if (!userRole) return false;
+
+                if (Array.isArray(item.requiresRole)) {
+                    return item.requiresRole.includes(userRole);
                 }
-            ]
-        },
-        {
-            label: t.value.refuge,
-            items: [
-                {
-                    title: t.value.animals,
-                    href: AnimalsIndexView,
-                    icon: DogIcon,
-                    component: "AnimalsIndexView"
-                },
-                {
-                    title: t.value.adoptionRequests,
-                    href: AdoptionRequestsIndexView,
-                    icon: FormInputIcon,
-                    component: "AdoptionRequestsIndexView"
-                },
-                {
-                    title: t.value.notes,
-                    href: NotesIndexView,
-                    icon: NotesIcon,
-                    component: "NotesIndexView"
-                }
-            ]
-        },
-        {
-            label: t.value.admin,
-            items: [
-                {
-                    title: t.value.reports,
-                    href: ReportsIndexView,
-                    icon: ReportsIcon,
-                    component: "ReportsIndexView"
-                },
-                {
-                    title: t.value.database,
-                    href: DatabaseIndexView,
-                    icon: DatabaseIcon,
-                    component: "DatabaseIndexView"
-                },
-                {
-                    title: t.value.emails,
-                    href: EmailsIndexView,
-                    icon: EmailsIcon,
-                    component: "EmailsIndexView"
-                },
-                {
-                    title: t.value.volunteers,
-                    href: VolunteersIndexView,
-                    icon: VolunteerIcon,
-                    component: "VolunteersIndexView"
-                }
-            ]
-        }
-    ]);
+
+                return userRole === item.requiresRole;
+            })
+        })).filter(section => section.items.length > 0);
+    });
 
     return {
         navigation
     };
 }
+
+export default useNavigation
