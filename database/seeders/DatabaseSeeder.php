@@ -34,11 +34,5 @@ class DatabaseSeeder extends Seeder
 
         Coat::factory(20)->create();
 
-        /*Animal::factory(20)
-            ->for($user)
-            ->create([
-                'race_id' => Race::inRandomOrder()->first()->id,
-                'coat_id' => Coat::inRandomOrder()->first()->id,
-            ]);*/
     }
 }

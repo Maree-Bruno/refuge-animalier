@@ -23,6 +23,7 @@
     };
 
 @endphp
+@php use function PHPUnit\Framework\isNull; @endphp
 
 <x-layouts.client>
     <x-layouts.section :title="__('animals/client_index.title')">
@@ -102,6 +103,7 @@
 
         <div class="flex flex-col items-center gap-5 sm:grid sm:grid-cols-2 sm:justify-items-center
                 lg:grid-cols-3 lg:gap-10 2xl:grid-cols-4 2xl:gap-20">
+            @if(!isNull($animals))
             @foreach($animals as $animal)
                 <x-animal.card
                     name="{{ $animal->name }}"
@@ -115,6 +117,9 @@
                     href="{{ route('animals_show', $animal) }}"
                 />
             @endforeach
+            @else
+                <p>Aucun animal de disponible</p>
+            @endif
         </div>
     </x-layouts.section>
 </x-layouts.client>
