@@ -1,3 +1,4 @@
+@php use function PHPUnit\Framework\isNull; @endphp
 <x-layouts.client>
     <div class="bg-lightgreenmint/40 shadow-[inset_2px_-4px_30px_rgba(0,0,0,0.1)] py-8">
         <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28">
@@ -5,26 +6,26 @@
                 <div class="relative group-img-homepage-1 place-self-end">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/billy.webp') }}"
+                            src="{{ URL('images/hamster.webp') }}"
                             alt="Hamster"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
                     </div>
                     <div class="absolute -top-4 -left-4 bg-sweetorange rounded-2xl p-4 shadow-lg">
-                        <x-svg.linkedin />
+                        <x-svg.smileyface class="w-6 h-6"/>
                     </div>
                 </div>
 
                 <div class="relative group-img-homepage-2 place-self-start">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/billy.webp') }}"
+                            src="{{ URL('images/cat.webp') }}"
                             alt="Chat"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
                     </div>
                     <div class="absolute -top-4 -right-4 bg-blueslate rounded-2xl p-4 shadow-lg">
-                        <x-svg.linkedin />
+                        <x-svg.paws_about class="svg-fillwhite svg-strokewhite w-6 h-6"/>
                     </div>
                 </div>
 
@@ -37,7 +38,7 @@
                         />
                     </div>
                     <div class="absolute -bottom-4 -right-4 bg-honeyyellow rounded-2xl p-4 shadow-lg">
-                        <x-svg.linkedin />
+                        <x-svg.heart class="svg-fillblue svg-strokeblue w-6 h-6"/>
                     </div>
                 </div>
             </div>
@@ -98,24 +99,30 @@
 
     <x-layouts.section :title="__('homepage.animals_section.title')" class="relative">
         <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
-            @foreach ([1,2,3] as $i)
-                <x-animal.card
-                    :name="__('homepage.animals_section.animals.billy.name')"
-                    :age="__('homepage.animals_section.animals.billy.age')"
-                    :gender="__('homepage.animals_section.animals.billy.gender')"
-                    :species="__('homepage.animals_section.animals.billy.species')"
-                    src="{{ URL('images/billy.webp') }}"
-                    :description="__('homepage.animals_section.animals.billy.description')"
-                />
-            @endforeach
+            @if(!isNull($animals))
+                @foreach($animals as $animal)
+                    <x-animal.card
+                        name="{{ $animal->name }}"
+                        src="{{ asset('images/animals/originals/'.$animal->pictures[0]) }}"
+                        srcset="{{ $buildSrcset($animal->pictures[0]) }}"
+                        sizes="{{ $buildSizes() }}"
+                        age="{{ $animal->age }}"
+                        gender="{{ $animal->gender }}"
+                        species="{{ $animal->species }}"
+                        description="{{ $animal->description }}"
+                        href="{{ route('animals_show', $animal) }}"
+                    />
+                @endforeach
         </div>
-
         <x-buttons.button_link_icons
             icon="arrow_right"
             class="button-green flex-row-reverse self-end"
         >
             {{ __('homepage.animals_section.see_all') }}
         </x-buttons.button_link_icons>
+        @else
+            <p>Aucun animal de disponible</p>
+        @endif
     </x-layouts.section>
 
     <div class="bg-lighthoneyyellow/40 shadow-[inset_2px_4px_30px_rgba(0,0,0,0.1)] py-10">

@@ -4,7 +4,7 @@
         lg:gap-20">
             <div class="aspect-square max-h-80 place-self-center sm:max-h-none">
                 <img
-                    src="{{URL('images/billy.webp')}}"
+                    src="{{URL('images/cat_dog.webp')}}"
                     alt="{{ __('about.hero.title') }}"
                     class="h-full aspect-square rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[500px]
                     rounded-br-[500px] object-cover object-top object-fit-fill lg:max-h-[500px]">
@@ -31,29 +31,29 @@
             <x-about.value-card
                 :title="__('about.values.kindness.title')"
                 :text="__('about.values.kindness.text')"
-                icon="linkedin"
-                iconclass="lg:scale-200"
+                icon="heart"
+                iconclass="lg:scale-200 w-6 h-6 svg-strokeblue"
                 bg="bg-honeyyellow"/>
 
             <x-about.value-card
                 :title="__('about.values.transparency.title')"
                 :text="__('about.values.transparency.text')"
-                icon="linkedin"
-                iconclass="lg:scale-200"
+                icon="bookopen"
+                iconclass="lg:scale-200 svg-strokeblue w-6 h-6"
                 bg="bg-greenmint"/>
 
             <x-about.value-card
                 :title="__('about.values.commitment.title')"
                 :text="__('about.values.commitment.text')"
-                icon="linkedin"
-                iconclass="lg:scale-200"
+                icon="handshake"
+                iconclass="lg:scale-200 svg-strokeblue w-6 h-6"
                 bg="bg-sweetorange"/>
 
             <x-about.value-card
                 :title="__('about.values.community.title')"
                 :text="__('about.values.community.text')"
-                icon="linkedin"
-                iconclass="svg-fillwhite lg:scale-200"
+                icon="community"
+                iconclass="svg-fillwhite w-6 h-6 lg:scale-200"
                 bg="bg-blueslate"/>
         </div>
     </x-layouts.section>

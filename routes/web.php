@@ -9,13 +9,15 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PublicAnimalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VolunteerController;
+use App\Models\Animal;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::domain('happypaws.test')->group(function () {
     Route::get('/', function () {
-        return view('client/homepage');
+       $animals = Animal::where('published', 1)->get();
+        return view('client/homepage', ['animals' => $animals]);
     })->name('homepage');
     Route::get('/happypaws', function () {
         return view('client/about');
