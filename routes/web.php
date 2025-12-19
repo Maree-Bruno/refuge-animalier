@@ -9,11 +9,9 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PublicAnimalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VolunteerController;
-use App\Models\Animal;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::domain('happypaws.test')->group(function () {
     Route::get('/', function () {
@@ -49,7 +47,8 @@ Route::domain('admin.happypaws.test')->group(function () {
         Route::post('/animals', [AnimalController::class, 'store'])->name('animals.store');
         Route::patch('/animals/{animal}', [AnimalController::class, 'update'])->name('animals.update');
         Route::delete('/animals/{animal}', [AnimalController::class, 'destroy'])->name('animals.destroy');
-        Route::delete('/animals/{animal}/images', [AnimalController::class, 'deleteImage'])->name('animals.deleteImage');
+        Route::delete('/animals/{animal}/images',
+            [AnimalController::class, 'deleteImage'])->name('animals.deleteImage');
 
         //adoption request
         Route::get('/adoption', [AdoptionRequestController::class, 'index'])->name('adoption_requests.index');
@@ -57,17 +56,19 @@ Route::domain('admin.happypaws.test')->group(function () {
         //notes
         Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
 
-        //reports
-        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::middleware('role:admin')->group(function () {
+            //reports
+            Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 
-        //db
-        Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');
+            //db
+            Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');
 
-        //email
-        Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
+            //email
+            Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
 
-        //volunteer
-        Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
+            //volunteer
+            Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
+        });
 
     });
 });

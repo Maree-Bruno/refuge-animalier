@@ -40,6 +40,7 @@ const props = defineProps({
     vaccines: {
         type: Object,
     },
+    can:Object,
 })
 
 
@@ -339,7 +340,7 @@ const getAnimalImageSrcset = (animal) => {
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
-            <AnimalCreate :species :races :coats :vaccines/>
+            <AnimalCreate :species :races :coats :vaccines :can/>
         </RightModal>
     </KeepAlive>
 

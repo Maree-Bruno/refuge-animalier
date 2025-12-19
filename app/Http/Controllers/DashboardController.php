@@ -8,7 +8,10 @@ use App\Models\Coat;
 use App\Models\Race;
 use App\Models\Specie;
 use App\Models\Vaccine;
+use App\Policies\AnimalPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -30,6 +33,9 @@ class DashboardController extends Controller
             'coats' => $coats,
             'vaccines' => $vaccines,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
+            'can' => [
+                'publish' => Auth::user()->can('publish', Animal::class),
+            ]
         ]);
     }
 

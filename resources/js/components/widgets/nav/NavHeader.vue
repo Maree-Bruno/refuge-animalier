@@ -6,7 +6,7 @@ import NavItem from "@/components/widgets/nav/NavItem.vue";
 import {Link, usePage} from "@inertiajs/vue3";
 import {computed, ref} from "vue";
 import {useSidebar} from "@/composables/useIsSidebar";
-import {Locale, useNavigation} from "@/composables/useNavigation";
+import useNavigation, {Locale} from "@/composables/useNavigation";
 import LogoutIcon from "@/components/widgets/svg/LogoutIcon.vue";
 
 import {logout} from "@/routes";
