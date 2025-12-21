@@ -151,11 +151,11 @@ const handleSort = ({key, order}) => {
 }
 
 const handleAnimalRowSelect = (selected) => {
-    // Handler pour la sélection
+
 };
 const getAnimalImageUrl = (animal, size = 'md') => {
     if (!animal.pictures || !animal.pictures[0]) {
-        return '/images/billy.webp'; // Image par défaut
+        return '/images/billy.webp';
     }
     const filename = animal.pictures[0];
     const sizeMap = {
