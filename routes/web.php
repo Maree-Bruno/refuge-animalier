@@ -72,7 +72,9 @@ Route::domain('admin.happypaws.test')->group(function () {
             //volunteer
             Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
             Route::post('/volunteers', [VolunteerController::class, 'store'])->name('volunteers.store');
-
+            Route::patch('/volunteers/{volunteer}', [VolunteerController::class, 'update'])->name('volunteers.update');
+            Route::delete('/volunteers/{volunteer}/image',
+                [VolunteerController::class, 'deleteImage'])->name('volunteers.deleteImage');
         });
 
     });

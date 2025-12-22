@@ -2,6 +2,9 @@
 import {computed, ref} from "vue";
 import {useUserHelpers} from "@/composables/useUserHelpers";
 import GenericTable from "@/components/widgets/table/GenericTable.vue";
+import AnimalEdit from "@/pages/animals/AnimalEdit.vue";
+import RightModal from "@/components/widgets/modals/RightModal.vue";
+import VolunteerEdit from "@/pages/volunteers/VolunteerEdit.vue";
 
 const props = defineProps({
     volunteer: Object,
@@ -10,6 +13,7 @@ const props = defineProps({
 
 const selectedVolunteer = computed(() => props.volunteer);
 const {getInitials, getUserImageUrl, getUserImageSrcset} = useUserHelpers();
+const showEdit = ref(false);
 
 const availabilityColumns = [
     { key: 'period', label: '', sortable: false, class: 'font-semibold bg-blueslate text-white' },
@@ -178,6 +182,16 @@ const availabilityData = [
             </div>
         </div>
     </section>
+    <RightModal v-model="showEdit" @update:modelValue="showEdit = $event">
+        <template #header>
+            <h2 class="subsubtitle">Modifier {{ volunteer?.name }}</h2>
+        </template>
+        <VolunteerEdit
+            :volunteer="volunteer"
+            :roles="roles"
+            @close="showEdit = false"
+        />
+    </RightModal>
 </template>
 
 <style scoped>
