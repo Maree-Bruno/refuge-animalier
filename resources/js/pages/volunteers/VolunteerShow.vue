@@ -16,14 +16,14 @@ const {getInitials, getUserImageUrl, getUserImageSrcset} = useUserHelpers();
 const showEdit = ref(false);
 
 const availabilityColumns = [
-    { key: 'period', label: '', sortable: false, class: 'font-semibold bg-blueslate text-white' },
-    { key: 'monday', label: 'Lundi', sortable: false },
-    { key: 'tuesday', label: 'Mardi', sortable: false },
-    { key: 'wednesday', label: 'Mercredi', sortable: false },
-    { key: 'thursday', label: 'Jeudi', sortable: false },
-    { key: 'friday', label: 'Vendredi', sortable: false },
-    { key: 'saturday', label: 'Samedi', sortable: false },
-    { key: 'sunday', label: 'Dimanche', sortable: false },
+    {key: 'period', label: '', sortable: false, class: 'font-semibold bg-blueslate text-white'},
+    {key: 'monday', label: 'Lundi', sortable: false},
+    {key: 'tuesday', label: 'Mardi', sortable: false},
+    {key: 'wednesday', label: 'Mercredi', sortable: false},
+    {key: 'thursday', label: 'Jeudi', sortable: false},
+    {key: 'friday', label: 'Vendredi', sortable: false},
+    {key: 'saturday', label: 'Samedi', sortable: false},
+    {key: 'sunday', label: 'Dimanche', sortable: false},
 ];
 
 const availabilityData = [
@@ -61,6 +61,7 @@ const availabilityData = [
         sunday: true,
     },
 ];
+
 </script>
 
 <template>
@@ -104,20 +105,50 @@ const availabilityData = [
 
                     <div class="flex-1 space-y-4">
                         <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                            <div class="flex flex-col">
-                                <span class="font-quicksand font-bold text-sm sm:text-base">Rôle</span>
-                                <span class="text-xs sm:text-sm">{{ selectedVolunteer.role }}</span>
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Rôle</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.role }}</span>
+                                </div>
+
+                                <div class="flex flex-col col-span-2">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Email</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.email }}</span>
+                                </div>
+
+                                <div class="flex flex-col col-span-2">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Téléphone</span>
+                                    <span class="text-xs sm:text-sm">{{
+                                            selectedVolunteer.phone || 'Non renseigné'
+                                        }}</span>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col col-span-2">
-                                <span class="font-quicksand font-bold text-sm sm:text-base">Email</span>
-                                <span class="text-xs sm:text-sm">{{ selectedVolunteer.email }}</span>
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Rue</span>
+                                    <span class="text-xs sm:text-sm">{{
+                                            selectedVolunteer.address || 'Non renseignée'
+                                        }}</span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Numéro</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.number || '-' }}</span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Code Postal</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.cp || '-' }}</span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Ville</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.city || '-' }}</span>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col col-span-2">
-                                <span class="font-quicksand font-bold text-sm sm:text-base">Téléphone</span>
-                                <span class="text-xs sm:text-sm">{{ selectedVolunteer.phone }}</span>
-                            </div>
                         </div>
                     </div>
                 </div>

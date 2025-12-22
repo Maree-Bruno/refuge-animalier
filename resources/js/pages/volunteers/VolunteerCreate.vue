@@ -16,10 +16,14 @@ const emit = defineEmits(['close']);
 const { previewUrl, handleSingleImage, removeSinglePreview, cleanup } = useImagePreview();
 
 let formVolunteer = useForm({
-    name: faker.person.fullName(),
+    name:'',
     picture: null,
-    phone: faker.phone.number(),
-    email: faker.internet.email(),
+    phone: '',
+    email: '',
+    address: '',
+    city: '',
+    number: '',
+    cp: '',
     role: '',
     preserveState: false,
 });
@@ -35,6 +39,10 @@ const seedForm = () => {
     formVolunteer.name = faker.person.fullName();
     formVolunteer.email = faker.internet.email();
     formVolunteer.phone = faker.phone.number();
+    formVolunteer.address = faker.location.streetAddress();
+    formVolunteer.number = faker.location.buildingNumber();
+    formVolunteer.city = faker.location.city();
+    formVolunteer.cp = faker.location.zipCode();
     if (availableRoles.value && availableRoles.value.length > 0) {
         const randomRole = availableRoles.value[Math.floor(Math.random() * availableRoles.value.length)];
         formVolunteer.role = randomRole.value;
@@ -119,6 +127,49 @@ onUnmounted(() => {
             >
                 Téléphone
             </InputLabel>
+            <div class="space-y-8">
+                <div class="flex gap-8">
+                    <InputLabel
+                        nameId="address"
+                        type="text"
+                        placeholder="Rue de la paix"
+                        :message="formVolunteer.errors.address"
+                        v-model="formVolunteer.address"
+                    >
+                        Adresse
+                    </InputLabel>
+                    <InputLabel
+                        nameId="number"
+                        type="text"
+                        placeholder="23"
+                        :message="formVolunteer.errors.number"
+                        v-model="formVolunteer.number"
+                    >
+                        Numéro
+                    </InputLabel>
+                </div>
+                <div class="flex gap-8">
+                    <InputLabel
+                        nameId="city"
+                        type="text"
+                        placeholder="Liège"
+                        :message="formVolunteer.errors.city"
+                        v-model="formVolunteer.city"
+                    >
+                        Localité
+                    </InputLabel>
+                    <InputLabel
+                        nameId="cp"
+                        type="text"
+                        placeholder="4000"
+                        :message="formVolunteer.errors.cp"
+                        v-model="formVolunteer.cp"
+                    >
+                        Code Postale
+                    </InputLabel>
+                </div>
+
+            </div>
 
             <div class="flex flex-col gap-2">
                 <Select nameId="role" v-model="formVolunteer.role" label="Rôle du bénévole"

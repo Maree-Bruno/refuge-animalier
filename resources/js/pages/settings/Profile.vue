@@ -12,6 +12,7 @@ import {Label} from '@/components/ui/label'
 import SettingsLayout from '@/layouts/settings/Layout.vue'
 import {useUserHelpers} from "@/composables/useUserHelpers";
 import {useImagePreview} from "@/composables/useImagePreview";
+import InputLabel from "@/components/widgets/form/InputLabel.vue";
 
 interface Props {
     mustVerifyEmail: boolean
@@ -28,9 +29,15 @@ const picture = page.props.picture;
 const form = useForm({
     name: user.name,
     email: user.email,
+    phone: user.phone,
+    address: user.address,
+    city: user.city,
+    number: user.number,
+    cp: user.cp,
+    availability: user.availability ?? null,
     picture: null,
 });
-
+console.log('Form initial:', form);
 const handlePicture = (event: Event) => {
     const file = handleSingleImage(event);
     if (file) {
@@ -144,6 +151,60 @@ onUnmounted(() => {
                             Resend
                         </Link>
                     </p>
+                </div>
+
+                <InputLabel
+                    nameId="phone"
+                    type="tel"
+                    placeholder="Téléphone"
+                    :message="form.errors.phone"
+                    v-model="form.phone"
+                >
+                    Téléphone
+                </InputLabel>
+
+                <div class="space-y-8">
+                    <div class="flex gap-8">
+                        <InputLabel
+                            nameId="address"
+                            type="text"
+                            placeholder="Rue de la paix"
+                            :message="form.errors.address"
+                            v-model="form.address"
+                        >
+                            Adresse
+                        </InputLabel>
+                        <InputLabel
+                            nameId="number"
+                            type="text"
+                            placeholder="23"
+                            :message="form.errors.number"
+                            v-model="form.number"
+                        >
+                            Numéro
+                        </InputLabel>
+                    </div>
+                    <div class="flex gap-8">
+                        <InputLabel
+                            nameId="city"
+                            type="text"
+                            placeholder="Liège"
+                            :message="form.errors.city"
+                            v-model="form.city"
+                        >
+                            Localité
+                        </InputLabel>
+                        <InputLabel
+                            nameId="cp"
+                            type="text"
+                            placeholder="4000"
+                            :message="form.errors.cp"
+                            v-model="form.cp"
+                        >
+                            Code Postale
+                        </InputLabel>
+                    </div>
+
                 </div>
 
                 <div class="flex items-center gap-4">

@@ -21,7 +21,6 @@ class VolunteerRequest extends FormRequest
      */
     public function rules(): array
     {
-        // Récupérer l'ID de l'utilisateur si on est en mode édition
         $userId = $this->route('volunteer') ? $this->route('volunteer')->id : null;
 
         return [
@@ -39,6 +38,13 @@ class VolunteerRequest extends FormRequest
             ],
             'role' => 'required|in:admin,volunteer',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+            'address' => 'nullable|string',
+            'number' => 'nullable|string',
+            'city' => 'nullable|string',
+            'cp' => 'nullable|string',
+            'availability' => 'array',
+            'availability.*' => 'array|nullable',
+            'availability.*.*' => 'bool'
         ];
     }
 }
