@@ -8,26 +8,38 @@ import {useToasterStore} from "@/stores/useToasterStore";
 import {store} from "@/routes/volunteers";
 import {useImagePreview} from "@/composables/useImagePreview.ts";
 import Select from "@/components/widgets/form/Select.vue";
+import { faker } from '@faker-js/faker';
+
+faker.seed(123);
 
 const emit = defineEmits(['close']);
 const { previewUrl, handleSingleImage, removeSinglePreview, cleanup } = useImagePreview();
 
 let formVolunteer = useForm({
-    name: '',
+    name: faker.person.fullName(),
     picture: null,
-    phone: '',
-    email: '',
+    phone: faker.phone.number(),
+    email: faker.internet.email(),
     role: '',
     preserveState: false,
 });
+
 const props = defineProps({
     roles: Object
 })
-console.log(props.roles)
+
 const availableRoles = computed(() => props.roles);
 
-
 const toast = useToasterStore();
+const seedForm = () => {
+    formVolunteer.name = faker.person.fullName();
+    formVolunteer.email = faker.internet.email();
+    formVolunteer.phone = faker.phone.number();
+    if (availableRoles.value && availableRoles.value.length > 0) {
+        const randomRole = availableRoles.value[Math.floor(Math.random() * availableRoles.value.length)];
+        formVolunteer.role = randomRole.value;
+    }
+};
 
 const handlePicture = (event) => {
     const file = handleSingleImage(event);
@@ -66,6 +78,14 @@ onUnmounted(() => {
 <template>
     <form @submit.prevent="submitVolunteer" enctype="multipart/form-data">
         <div class="space-y-6 flex flex-col justify-center">
+            <button
+                type="button"
+                @click="seedForm"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-fit self-end text-sm"
+            >
+                🎲 Remplir avec Faker
+            </button>
+
             <InputLabel
                 nameId="name"
                 type="text"
