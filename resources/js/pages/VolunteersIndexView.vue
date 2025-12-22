@@ -11,6 +11,7 @@ import {useUserHelpers} from "@/composables/useUserHelpers.ts";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
 import RightModal from "@/components/widgets/modals/RightModal.vue";
 import VolunteerShow from "@/pages/volunteers/VolunteerShow.vue";
+import {useToasterStore} from "@/stores/useToasterStore.ts";
 
 const props = defineProps({
     volunteers: Object,
@@ -23,7 +24,7 @@ const props = defineProps({
 
 let search = ref(props.filters.search || '');
 let timeout = null;
-
+const toast = useToasterStore();
 const showCreateVolunteer = ref(false);
 const showVolunteerDetail = ref(false);
 const selectedVolunteer = ref(null);
@@ -87,6 +88,7 @@ const openShowModal = (volunteer) => {
 
 const openDeleteConfirm = (volunteer) => {
     if (confirm(`Êtes-vous sûr de vouloir archiver ${volunteer.name} ?`)) {
+        toast.success({text: 'Suppression effectuée'});
         router.delete(`/volunteers/${volunteer.id}`);
     }
 }

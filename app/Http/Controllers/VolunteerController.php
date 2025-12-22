@@ -23,7 +23,7 @@ class VolunteerController extends Controller
         $search = $request->get('search', '');
         $orderby = $request->get('orderby', 'name');
         $dir = $request->get('dir', 'asc');
-        $roles = collect(UserRole::cases())->map(fn ($role) => [
+        $roles = collect(UserRole::cases())->map(fn($role) => [
             'value' => $role->value,
             'label' => $role->label(),
         ]);
@@ -99,9 +99,16 @@ class VolunteerController extends Controller
         return back();
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, User $volunteer)
     {
+        if (!empty($volunteer->pictures)) {
+            $this->deleteImage($request, $volunteer);
+        }
+        $volunteer->delete();
+
+        return back();
     }
+
 
     private function handleImageUpload(Request $request): ?string
     {
@@ -110,7 +117,7 @@ class VolunteerController extends Controller
         }
 
         $image = $request->file('picture');
-        $filename = Str::uuid() . '.webp';
+        $filename = Str::uuid().'.webp';
 
         $config = config('userimage');
         $disk = $config['disk'];
@@ -134,6 +141,7 @@ class VolunteerController extends Controller
 
         return $filename;
     }
+
     public function deleteImage(Request $request, User $volunteer)
     {
         $validated = $request->validate([
@@ -144,7 +152,7 @@ class VolunteerController extends Controller
 
 
         Storage::disk(config('userimage.disk'))->delete(
-            config('userimage.original_path') . '/' . $filename
+            config('userimage.original_path').'/'.$filename
         );
 
         $sizes = ['64x64', '128x128', '256x256', '512x512'];
