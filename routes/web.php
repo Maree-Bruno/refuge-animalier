@@ -9,6 +9,7 @@ use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PublicAnimalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\VolunteerController;
+use App\Http\Middleware\UserIsAdminMiddleware;
 use App\Models\Animal;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -58,7 +59,7 @@ Route::domain('admin.happypaws.test')->group(function () {
         //notes
         Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
 
-        Route::middleware('role:admin')->group(function () {
+        Route::middleware(UserIsAdminMiddleware::class)->group(function () {
             //reports
             Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 
@@ -70,6 +71,8 @@ Route::domain('admin.happypaws.test')->group(function () {
 
             //volunteer
             Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
+            Route::post('/volunteers', [VolunteerController::class, 'store'])->name('volunteers.store');
+
         });
 
     });

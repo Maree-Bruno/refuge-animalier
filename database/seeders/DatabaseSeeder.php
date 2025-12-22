@@ -15,17 +15,23 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $userAdmin = User::factory()->create([
-            'name' => 'Test User',
+            'name' => 'Admin',
             'email' => 'test@example.com',
+            'phone' => '0495793947',
+
             'role'=>'admin',
             'password' => bcrypt('password')
         ]);
         $userVolunteer = User::factory()->create([
-            'name' => 'Test User',
+            'name' => 'Volunteer',
             'email' => 'test@test.com',
+            'phone' => '0498283383',
+
             'role'=>'volunteer',
             'password' => bcrypt('password')
         ]);
+       // $userVolunteers = User::factory(20)->create();
+
 
         Specie::factory(5)
             ->has(Race::factory()->count(2))

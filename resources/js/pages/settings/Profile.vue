@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue'
+import {ref, computed, onUnmounted} from 'vue'
 import {Head, Link, usePage, useForm} from '@inertiajs/vue3'
 import {send} from '@/routes/verification'
 
@@ -10,72 +10,62 @@ import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 import SettingsLayout from '@/layouts/settings/Layout.vue'
+import {useUserHelpers} from "@/composables/useUserHelpers";
+import {useImagePreview} from "@/composables/useImagePreview";
 
 interface Props {
     mustVerifyEmail: boolean
     status?: string
 }
 
-defineProps<Props>()
+const {previewUrl, handleSingleImage, removeSinglePreview, cleanup} = useImagePreview();
+const {getInitials, getUserImageUrl, getUserImageSrcset} = useUserHelpers();
 
-const page = usePage()
-const user = page.props.auth.user
-const picture = page.props.picture
+const page = usePage();
+const user = page.props.auth.user;
+const picture = page.props.picture;
 
-const previewPicture = ref<string | null>(null)
-
-const form = useForm<{
-    name: string
-    email: string
-    picture: File | null
-}>({
+const form = useForm({
     name: user.name,
     email: user.email,
     picture: null,
-})
+});
 
 const handlePicture = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    if (!target.files || !target.files[0]) return
-
-    const file: File = target.files[0]
-    form.picture = file
-    previewPicture.value = URL.createObjectURL(file)
-}
+    const file = handleSingleImage(event);
+    if (file) {
+        form.picture = file;
+    }
+};
 
 const removePicture = () => {
-    form.picture = null
-    previewPicture.value = null
-}
+    removeSinglePreview();
+    form.picture = null;
+};
+
+const getProfileImageUrl = (size: 'xs' | 'sm' | 'md' | 'lg' = 'md') => {
+    if (previewUrl.value) return previewUrl.value;
+    return getUserImageUrl(picture, size);
+};
+
+const getProfileImageSrcset = () => {
+    if (previewUrl.value || !picture) return '';
+    return getUserImageSrcset(picture);
+};
 
 const submit = () => {
     form.patch('/settings/profile', {
         forceFormData: true,
         preserveScroll: true,
-    })
-}
-const profileImageVariants = {
-    xs: '64x64',
-    sm: '128x128',
-    md: '256x256',
-    lg: '512x512',
+        onSuccess: () => {
+            removeSinglePreview();
+        }
+    });
 };
 
-const getProfileImageUrl = (size: 'xs' | 'sm' | 'md' | 'lg' = 'md') => {
-    if (previewPicture.value) return previewPicture.value;
-    if (!picture) return '/images/billy.webp';
-
-    return `/images/users/variants/${profileImageVariants[size]}/${picture}`;
-};
-
-const getProfileImageSrcset = () => {
-    if (previewPicture.value || !picture) return '';
-
-    return Object.entries(profileImageVariants)
-        .map(([key, size]) => `/images/users/variants/${size}/${picture} ${size.split('x')[0]}w`)
-        .join(', ');
-};
-
+onUnmounted(() => {
+    cleanup();
+});
 </script>
 
 
@@ -100,14 +90,21 @@ const getProfileImageSrcset = () => {
                     <div class="flex gap-4 items-center justify-center">
                         <div class="relative w-32 h-28">
                             <img
+                                v-if="previewUrl || picture"
                                 :src="getProfileImageUrl('md')"
                                 :srcset="getProfileImageSrcset()"
                                 sizes="(max-width: 640px) 150px, 300px"
                                 class="w-32 h-28 object-cover aspect-square rounded-lg border"
                                 :alt="`Photo de profil de ${form.name}`"
                             />
+                            <span
+                                v-else
+                                class="w-32 h-28 rounded-lg border flex items-center justify-center bg-sweetorange text-white font-semibold text-4xl"
+                            >
+                        {{ getInitials(form.name) }}
+                    </span>
                             <button
-                                v-if="previewPicture"
+                                v-if="previewUrl"
                                 type="button"
                                 @click="removePicture"
                                 class="absolute top-1 right-1 bg-red-500 text-white rounded-full px-2"

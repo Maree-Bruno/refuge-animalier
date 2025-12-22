@@ -26,7 +26,7 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'picture'=>'test.png',
+            'phone'=>$this->faker->phoneNumber(),
             'role'=>$this->faker->randomElement(UserRole::cases()),
             'email_verified_at' => now(),
             'password' => static::$password ??= 'password',
