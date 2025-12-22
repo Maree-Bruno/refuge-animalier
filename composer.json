@@ -10,12 +10,14 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
-        "intervention/image-laravel": "^1.5",
         "inertiajs/inertia-laravel": "^2.0",
+        "intervention/image-laravel": "^1.5",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
+        "laravel/horizon": "^5.41",
         "laravel/tinker": "^2.10.1",
-        "laravel/wayfinder": "^0.1.9"
+        "laravel/wayfinder": "^0.1.9",
+        "predis/predis": "^3.3"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16",

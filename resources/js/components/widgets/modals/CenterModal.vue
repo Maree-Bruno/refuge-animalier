@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {watch} from "vue";
+import {onBeforeUnmount, watch} from "vue";
 
 const props = defineProps<{
     modelValue: boolean
@@ -26,6 +26,10 @@ watch(() => props.modelValue, (isOpen) => {
         document.body.style.overflow = ''
     }
 })
+onBeforeUnmount(() => {
+    document.removeEventListener('keydown', handleEscape)
+    document.body.style.overflow = ''
+})
 
 </script>
 
@@ -46,7 +50,7 @@ watch(() => props.modelValue, (isOpen) => {
                 @keydown.esc="close"
                 tabindex="0"
             >
-                <div class="bg-white p-6 rounded-3xl shadow-xl max-w-5xl w-full">
+                <div class="bg-white p-6 rounded-3xl shadow-xl max-w-5xl w-full z-50">
                     <slot />
                 </div>
             </div>

@@ -336,11 +336,11 @@ const getAnimalImageSrcset = (animal) => {
     </section>
 
     <KeepAlive>
-        <RightModal v-model="showCreateAnimal">
+        <RightModal v-model="showCreateAnimal " @update:modelValue="showCreateAnimal = $event">
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
-            <AnimalCreate :species :races :coats :vaccines :can/>
+            <AnimalCreate :species :races :coats :vaccines :can @close="showCreateAnimal = false"/>
         </RightModal>
     </KeepAlive>
 
@@ -354,7 +354,6 @@ const getAnimalImageSrcset = (animal) => {
         </template>
     </RightModal>
 
-    <!-- Modal de confirmation de suppression -->
     <CenterModal v-model="showDeleteConfirm">
         <div class="p-6">
             <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">

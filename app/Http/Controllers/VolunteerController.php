@@ -2,8 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
+use App\Events\VolunteerCreatedEvent;
+use App\Jobs\ProcessUploadedImage;
+use App\Mail\VolunteerCreatedMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class VolunteerController extends Controller
@@ -13,6 +21,11 @@ class VolunteerController extends Controller
         $search = $request->get('search', '');
         $orderby = $request->get('orderby', 'name');
         $dir = $request->get('dir', 'asc');
+        $roles = collect(UserRole::cases())->map(fn ($role) => [
+            'value' => $role->value,
+            'label' => $role->label(),
+        ]);
+
 
         $volunteers = User::query()
             ->when($search, function ($query) use ($search) {
@@ -34,7 +47,8 @@ class VolunteerController extends Controller
                 'search' => $search,
                 'orderby' => $orderby,
                 'dir' => $dir,
-            ]
+            ],
+            'roles'=>$roles,
         ]);
     }
 
@@ -44,7 +58,54 @@ class VolunteerController extends Controller
 
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'phone' => 'required|string|max:20|unique:users,phone',
+            'role' => 'required|in:admin,volunteer',
+            'picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
+        ]);
 
+        $plainPassword = Str::random(12);
+        $storedImage = null;
+
+        if ($request->hasFile('picture')) {
+            $image = $request->file('picture');
+            $filename = Str::uuid().'.webp';
+
+            $config = config('userimage');
+            $disk = $config['disk'];
+            $originalPath = $config['original_path'];
+
+            $storedPath = Storage::disk($disk)->putFileAs(
+                $originalPath,
+                $image,
+                $filename
+            );
+
+            if ($storedPath) {
+                $storedImage = $filename;
+
+                ProcessUploadedImage::dispatch(
+                    $storedPath,
+                    $filename,
+                    'userimage'
+                );
+            }
+        }
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'password' => Hash::make($plainPassword),
+            'role' => $validated['role'],
+            'picture' => $storedImage,
+        ]);
+
+        Mail::to($user->email)->send(new VolunteerCreatedMail($user, $plainPassword));
+
+        return back();
     }
 
     public function show($id)

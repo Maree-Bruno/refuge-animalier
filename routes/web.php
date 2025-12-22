@@ -71,6 +71,8 @@ Route::domain('admin.happypaws.test')->group(function () {
 
             //volunteer
             Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
+            Route::post('/volunteers', [VolunteerController::class, 'store'])->name('volunteers.store');
+
         });
 
     });

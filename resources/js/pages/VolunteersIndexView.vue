@@ -1,13 +1,16 @@
 <script setup>
 import Pagination from "@/components/widgets/pagination/Pagination.vue";
 import LoupeIcon from "@/components/widgets/svg/LoupeIcon.vue";
-import CenterModal from "@/components/widgets/modals/CenterModal.vue";
-import RightModal from "@/components/widgets/modals/RightModal.vue";
 import GenericTable from "@/components/widgets/table/GenericTable.vue";
 import ExternalIcon from "@/components/widgets/svg/ExternalIcon.vue";
 import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
 import {router} from "@inertiajs/vue3";
 import {ref, watch} from "vue";
+import VolunteerCreate from "@/pages/volunteers/VolunteerCreate.vue";
+import {useUserHelpers} from "@/composables/useUserHelpers.ts";
+import CenterModal from "@/components/widgets/modals/CenterModal.vue";
+import RightModal from "@/components/widgets/modals/RightModal.vue";
+import VolunteerShow from "@/pages/volunteers/VolunteerShow.vue";
 
 const props = defineProps({
     volunteers: Object,
@@ -15,6 +18,7 @@ const props = defineProps({
         type: Object,
         default: () => ({})
     },
+    roles: Object,
 })
 
 let search = ref(props.filters.search || '');
@@ -23,6 +27,7 @@ let timeout = null;
 const showCreateVolunteer = ref(false);
 const showVolunteerDetail = ref(false);
 const selectedVolunteer = ref(null);
+const {getInitials, getUserImageUrl, getUserImageSrcset} = useUserHelpers();
 
 watch(search, value => {
     clearTimeout(timeout);
@@ -86,35 +91,6 @@ const openDeleteConfirm = (volunteer) => {
     }
 }
 
-const profileImageVariants = {
-    xs: '64x64',
-    sm: '128x128',
-    md: '256x256',
-    lg: '512x512',
-};
-
-const getVolunteerImageUrl = (picture, size = 'sm') => {
-    if (!picture) return '/images/billy.webp';
-    return `/images/users/variants/${profileImageVariants[size]}/${picture}`;
-};
-
-const getVolunteerImageSrcset = (picture) => {
-    if (!picture) return '';
-    return Object.entries(profileImageVariants)
-        .map(([key, size]) => `/images/users/variants/${size}/${picture} ${size.split('x')[0]}w`)
-        .join(', ');
-};
-
-// Fonction pour générer les initiales à partir d'un nom
-const getInitials = (name) => {
-    if (!name) return '';
-    return name
-        .split(" ")
-        .filter(Boolean)
-        .map(n => n[0])
-        .join("")
-        .toUpperCase();
-};
 </script>
 
 <template>
@@ -143,7 +119,6 @@ const getInitials = (name) => {
             </div>
         </div>
 
-        <!-- Mobile view -->
         <div class="md:hidden flex flex-col gap-3">
             <div
                 v-for="volunteer in props.volunteers?.data"
@@ -154,8 +129,8 @@ const getInitials = (name) => {
                 <div class="flex gap-3">
                     <img
                         v-if="volunteer.picture"
-                        :src="getVolunteerImageUrl(volunteer.picture, 'sm')"
-                        :srcset="getVolunteerImageSrcset(volunteer.picture)"
+                        :src="getUserImageUrl(volunteer.picture, 'sm')"
+                        :srcset="getUserImageSrcset(volunteer.picture)"
                         sizes="64px"
                         :alt="volunteer.name"
                         class="w-16 h-16 object-cover rounded-full"
@@ -183,7 +158,6 @@ const getInitials = (name) => {
             Aucun bénévole enregistré
         </div>
 
-        <!-- Desktop table -->
         <div class="hidden md:block overflow-x-auto">
             <GenericTable
                 v-if="props.volunteers?.data?.length"
@@ -198,8 +172,8 @@ const getInitials = (name) => {
                 <template #cell-picture="{ row }">
                     <img
                         v-if="row.picture"
-                        :src="getVolunteerImageUrl(row.picture, 'sm')"
-                        :srcset="getVolunteerImageSrcset(row.picture)"
+                        :src="getUserImageUrl(row.picture, 'sm')"
+                        :srcset="getUserImageSrcset(row.picture)"
                         sizes="32px"
                         :alt="row.name"
                         class="w-8 h-8 object-cover rounded-full"
@@ -217,39 +191,27 @@ const getInitials = (name) => {
 
         <Pagination :links="props.volunteers?.links"/>
 
-        <!-- Modals -->
-        <RightModal v-model="showCreateVolunteer" v-if="showCreateVolunteer" @close="showCreateVolunteer = false">
+        <RightModal v-model="showCreateVolunteer"
+                    @update:modelValue="showCreateVolunteer = $event">
             <template #header>
                 <h2 class="subsubtitle">Ajouter un bénévole</h2>
             </template>
+            <VolunteerCreate :volunteers="volunteers" :roles="roles" @close="showCreateVolunteer = false"/>
         </RightModal>
 
-        <CenterModal v-model="showVolunteerDetail" v-if="showVolunteerDetail" @close="showVolunteerDetail = false">
-            <h2 class="subsubtitle">Détails du bénévole</h2>
-            <div v-if="selectedVolunteer" class="mt-4">
-                <div class="flex items-center gap-4 mb-4">
-                    <img
-                        v-if="selectedVolunteer.picture"
-                        :src="getVolunteerImageUrl(selectedVolunteer.picture, 'md')"
-                        :alt="selectedVolunteer.name"
-                        class="w-24 h-24 object-cover rounded-full"
-                    >
-                    <span
-                        v-else
-                        class="w-24 h-24 rounded-full flex items-center justify-center bg-sweetorange text-white font-semibold text-3xl"
-                    >
-                        {{ getInitials(selectedVolunteer.name) }}
-                    </span>
-                    <div>
-                        <h3 class="text-xl font-bold">{{ selectedVolunteer.name }}</h3>
-                        <p class="text-gray-600">{{ selectedVolunteer.role }}</p>
-                    </div>
-                </div>
-                <div class="space-y-2">
-                    <p><strong>Email:</strong> {{ selectedVolunteer.email }}</p>
-                    <p><strong>Téléphone:</strong> {{ selectedVolunteer.phone }}</p>
-                </div>
-            </div>
+        <CenterModal v-model="showVolunteerDetail"
+                     @update:modelValue="showVolunteerDetail = $event">
+            <VolunteerShow :volunteer="selectedVolunteer" :roles="roles" @close="showVolunteerDetail = false"/>
         </CenterModal>
     </section>
 </template>
+<style scoped>
+th {
+    background: rgba(73, 73, 73, 0.1);
+}
+
+table * {
+    padding: 10px;
+    border: 1px lightgrey solid;
+}
+</style>

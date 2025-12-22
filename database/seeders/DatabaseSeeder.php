@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'role'=>'volunteer',
             'password' => bcrypt('password')
         ]);
-        $userVolunteers = User::factory(20)->create();
+       // $userVolunteers = User::factory(20)->create();
 
 
         Specie::factory(5)
