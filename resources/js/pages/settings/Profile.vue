@@ -12,6 +12,7 @@ import {Label} from '@/components/ui/label'
 import SettingsLayout from '@/layouts/settings/Layout.vue'
 import {useUserHelpers} from "@/composables/useUserHelpers";
 import {useImagePreview} from "@/composables/useImagePreview";
+import InputLabel from "@/components/widgets/form/InputLabel.vue";
 
 interface Props {
     mustVerifyEmail: boolean
@@ -28,9 +29,15 @@ const picture = page.props.picture;
 const form = useForm({
     name: user.name,
     email: user.email,
+    phone: user.phone,
+    address: user.address,
+    city: user.city,
+    number: user.number,
+    cp: user.cp,
+    availability: user.availability ?? null,
     picture: null,
 });
-
+console.log('Form initial:', form);
 const handlePicture = (event: Event) => {
     const file = handleSingleImage(event);
     if (file) {
@@ -76,7 +83,7 @@ onUnmounted(() => {
         <div class="flex flex-col space-y-6">
             <HeadingSmall
                 title="Information du profil"
-                description="Changer votre nom, adresse mail et photo de profil"
+                description="Changer votre nom, adresse mail, adresse postale, photo de profil"
             />
 
             <Form
@@ -86,7 +93,7 @@ onUnmounted(() => {
                 @submit.prevent="submit"
             >
                 <div class="space-y-2">
-                    <Label>Photo de profil</Label>
+                    <Label class="font-semibold text-gray-700 text-sm sm:text-lg">Photo de profil</Label>
                     <div class="flex gap-4 items-center justify-center">
                         <div class="relative w-32 h-28">
                             <img
@@ -125,17 +132,24 @@ onUnmounted(() => {
                         Les formats supportés sont le PNG, JPEG et WEBp.
                     </p>
                 </div>
-                <div class="grid gap-2">
-                    <Label for="name">Nom</Label>
-                    <Input id="name" name="name" v-model="form.name"/>
-                    <InputError :message="form.errors.name"/>
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="email">Adresse email</Label>
-                    <Input id="email" name="email" v-model="form.email"/>
-                    <InputError :message="form.errors.email"/>
-                </div>
+                <InputLabel
+                    nameId="name"
+                    type="text"
+                    placeholder="John Doe"
+                    :message="form.errors.name"
+                    v-model="form.name"
+                >
+                    Nom
+                </InputLabel>
+                <InputLabel
+                    nameId="email"
+                    type="email"
+                    placeholder="John Doe"
+                    :message="form.errors.email"
+                    v-model="form.email"
+                >
+                    Adresse email
+                </InputLabel>
 
                 <div v-if="mustVerifyEmail && !user.email_verified_at">
                     <p class="text-sm">
@@ -144,6 +158,60 @@ onUnmounted(() => {
                             Resend
                         </Link>
                     </p>
+                </div>
+
+                <InputLabel
+                    nameId="phone"
+                    type="tel"
+                    placeholder="Téléphone"
+                    :message="form.errors.phone"
+                    v-model="form.phone"
+                >
+                    Téléphone
+                </InputLabel>
+
+                <div class="space-y-8">
+                    <div class="flex gap-8">
+                        <InputLabel
+                            nameId="address"
+                            type="text"
+                            placeholder="Rue de la paix"
+                            :message="form.errors.address"
+                            v-model="form.address"
+                        >
+                            Adresse
+                        </InputLabel>
+                        <InputLabel
+                            nameId="number"
+                            type="text"
+                            placeholder="23"
+                            :message="form.errors.number"
+                            v-model="form.number"
+                        >
+                            Numéro
+                        </InputLabel>
+                    </div>
+                    <div class="flex gap-8">
+                        <InputLabel
+                            nameId="city"
+                            type="text"
+                            placeholder="Liège"
+                            :message="form.errors.city"
+                            v-model="form.city"
+                        >
+                            Localité
+                        </InputLabel>
+                        <InputLabel
+                            nameId="cp"
+                            type="text"
+                            placeholder="4000"
+                            :message="form.errors.cp"
+                            v-model="form.cp"
+                        >
+                            Code Postale
+                        </InputLabel>
+                    </div>
+
                 </div>
 
                 <div class="flex items-center gap-4">

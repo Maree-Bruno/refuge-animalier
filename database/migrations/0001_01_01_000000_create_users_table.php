@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->unique();
             $table->string('picture')->nullable();
+            $table->string('address')->nullable();
+            $table->string('number')->nullable();
+            $table->string('city')->nullable();
+            $table->string('cp')->nullable();
+            $table->json('availability')->nullable();
             $table->enum('role', ['admin', 'volunteer'])->default('volunteer');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

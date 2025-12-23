@@ -8,26 +8,46 @@ import {useToasterStore} from "@/stores/useToasterStore";
 import {store} from "@/routes/volunteers";
 import {useImagePreview} from "@/composables/useImagePreview.ts";
 import Select from "@/components/widgets/form/Select.vue";
+import { faker } from '@faker-js/faker';
+
+faker.seed(123);
 
 const emit = defineEmits(['close']);
 const { previewUrl, handleSingleImage, removeSinglePreview, cleanup } = useImagePreview();
 
 let formVolunteer = useForm({
-    name: '',
+    name:'',
     picture: null,
     phone: '',
     email: '',
+    address: '',
+    city: '',
+    number: '',
+    cp: '',
     role: '',
     preserveState: false,
 });
+
 const props = defineProps({
     roles: Object
 })
-console.log(props.roles)
+
 const availableRoles = computed(() => props.roles);
 
-
 const toast = useToasterStore();
+const seedForm = () => {
+    formVolunteer.name = faker.person.fullName();
+    formVolunteer.email = faker.internet.email();
+    formVolunteer.phone = faker.phone.number();
+    formVolunteer.address = faker.location.streetAddress();
+    formVolunteer.number = faker.location.buildingNumber();
+    formVolunteer.city = faker.location.city();
+    formVolunteer.cp = faker.location.zipCode();
+    if (availableRoles.value && availableRoles.value.length > 0) {
+        const randomRole = availableRoles.value[Math.floor(Math.random() * availableRoles.value.length)];
+        formVolunteer.role = randomRole.value;
+    }
+};
 
 const handlePicture = (event) => {
     const file = handleSingleImage(event);
@@ -66,6 +86,14 @@ onUnmounted(() => {
 <template>
     <form @submit.prevent="submitVolunteer" enctype="multipart/form-data">
         <div class="space-y-6 flex flex-col justify-center">
+            <button
+                type="button"
+                @click="seedForm"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-fit self-end text-sm"
+            >
+                🎲 Remplir avec Faker
+            </button>
+
             <InputLabel
                 nameId="name"
                 type="text"
@@ -99,6 +127,49 @@ onUnmounted(() => {
             >
                 Téléphone
             </InputLabel>
+            <div class="space-y-8">
+                <div class="flex gap-8">
+                    <InputLabel
+                        nameId="address"
+                        type="text"
+                        placeholder="Rue de la paix"
+                        :message="formVolunteer.errors.address"
+                        v-model="formVolunteer.address"
+                    >
+                        Adresse
+                    </InputLabel>
+                    <InputLabel
+                        nameId="number"
+                        type="text"
+                        placeholder="23"
+                        :message="formVolunteer.errors.number"
+                        v-model="formVolunteer.number"
+                    >
+                        Numéro
+                    </InputLabel>
+                </div>
+                <div class="flex gap-8">
+                    <InputLabel
+                        nameId="city"
+                        type="text"
+                        placeholder="Liège"
+                        :message="formVolunteer.errors.city"
+                        v-model="formVolunteer.city"
+                    >
+                        Localité
+                    </InputLabel>
+                    <InputLabel
+                        nameId="cp"
+                        type="text"
+                        placeholder="4000"
+                        :message="formVolunteer.errors.cp"
+                        v-model="formVolunteer.cp"
+                    >
+                        Code Postale
+                    </InputLabel>
+                </div>
+
+            </div>
 
             <div class="flex flex-col gap-2">
                 <Select nameId="role" v-model="formVolunteer.role" label="Rôle du bénévole"
