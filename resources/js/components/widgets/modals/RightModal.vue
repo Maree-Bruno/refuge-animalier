@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import {onBeforeUnmount, watch} from "vue";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps<{
     modelValue: boolean
+    routeKey?: string
+    routeValue?: string | number | null
 }>();
 
 const emit = defineEmits<{
@@ -18,15 +21,34 @@ const handleEscape = (e: KeyboardEvent) => {
         close()
     }
 }
-watch(() => props.modelValue, (isOpen) => {
-    if (isOpen) {
-        document.addEventListener('keydown', handleEscape)
-        document.body.style.overflow = 'hidden'
-    } else {
-        document.removeEventListener('keydown', handleEscape)
-        document.body.style.overflow = ''
+watch(
+    () => props.modelValue,
+    (isOpen) => {
+        if (isOpen) {
+            document.addEventListener('keydown', handleEscape)
+            document.body.style.overflow = 'hidden'
+        } else {
+            document.removeEventListener('keydown', handleEscape)
+            document.body.style.overflow = ''
+        }
+        if (!props.routeKey) return
+
+        const url = new URL(window.location.href)
+
+        if (isOpen && props.routeValue != null) {
+            url.searchParams.set(props.routeKey, String(props.routeValue))
+        } else {
+            url.searchParams.delete(props.routeKey)
+        }
+
+        router.replace({
+            url: url.pathname + url.search,
+            preserveState: true,
+            preserveScroll: true,
+        })
     }
-})
+)
+
 onBeforeUnmount(() => {
     document.removeEventListener('keydown', handleEscape)
     document.body.style.overflow = ''

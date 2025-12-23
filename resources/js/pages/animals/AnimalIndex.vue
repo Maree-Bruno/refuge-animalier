@@ -81,7 +81,6 @@ const switchTab = (tabValue) => {
 }
 
 const showCreateAnimal = ref(false);
-const showCreateNote = ref(false);
 const showDeleteConfirm = ref(false);
 const animalToDelete = ref(null);
 let isShowModalOpen = ref(false)
@@ -222,12 +221,6 @@ const getAnimalImageSrcset = (animal) => {
                     >
                         Ajouter un animal
                     </button>
-                    <button
-                        @click="showCreateNote=true"
-                        class="button-green button-animation rounded-md p-2 text-sm sm:text-base font-semibold whitespace-nowrap"
-                    >
-                        Ajouter une note
-                    </button>
                 </div>
             </div>
         </div>
@@ -336,7 +329,8 @@ const getAnimalImageSrcset = (animal) => {
     </section>
 
     <KeepAlive>
-        <RightModal v-model="showCreateAnimal " @update:modelValue="showCreateAnimal = $event">
+        <RightModal v-model="showCreateAnimal " @update:modelValue="showCreateAnimal = $event"   route-key="create"
+                    route-value="create-animal">
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
@@ -344,15 +338,10 @@ const getAnimalImageSrcset = (animal) => {
         </RightModal>
     </KeepAlive>
 
-    <CenterModal v-model="isShowModalOpen">
+    <CenterModal v-model="isShowModalOpen"   route-key="animal"
+                 :route-value="selectedRow?.id">
         <AnimalShow :animal="selectedRow" :races :coats :vaccines/>
     </CenterModal>
-
-    <RightModal v-model="showCreateNote">
-        <template #header>
-            <h2 class="subsubtitle">Ajouter une note</h2>
-        </template>
-    </RightModal>
 
     <CenterModal v-model="showDeleteConfirm">
         <div class="p-6">
