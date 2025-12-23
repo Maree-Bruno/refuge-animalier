@@ -207,7 +207,10 @@ const openDeleteConfirm = (volunteer) => {
         <Pagination :links="props.volunteers?.links"/>
 
         <RightModal v-model="showCreateVolunteer"
-                    @update:modelValue="showCreateVolunteer = $event">
+                    @update:modelValue="showCreateVolunteer = $event"
+                    route-key="create"
+                    route-value="create"
+        >
             <template #header>
                 <h2 class="subsubtitle">Ajouter un bénévole</h2>
             </template>
@@ -215,7 +218,10 @@ const openDeleteConfirm = (volunteer) => {
         </RightModal>
 
         <CenterModal v-model="showVolunteerDetail"
-                     @update:modelValue="showVolunteerDetail = $event">
+                     @update:modelValue="showVolunteerDetail = $event"
+                     route-key="volunteer"
+                     :route-value="selectedVolunteer?.id"
+        >
             <VolunteerShow
                 :volunteer="selectedVolunteer"
                 :roles="roles"
