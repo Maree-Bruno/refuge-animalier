@@ -107,7 +107,7 @@ watch(() => props.data, () => {
                 <td
                     v-for="column in columns"
                     :key="column.key"
-                    class="p-2"
+                    class="px-4 py-3 text-left text-sm font-semibold border-b-2 border-slate-300 bg-slate-700 text-white"
                     :class="[column.class, column.sortable !== false ? 'cursor-pointer select-none hover:bg-slate-600 transition-colors' : '']"
                     @click="column.sortable !== false ? handleSort(column.key) : null"
                 >

@@ -1,6 +1,7 @@
 <script setup>
 import {Input} from '@/components/ui/input/index.js';
 import InputError from "@/components/InputError.vue";
+import {Label} from '@/components/ui/label';
 
 defineProps({
     nameId: String,
@@ -9,15 +10,13 @@ defineProps({
     message: String,
     modelValue: String,
     required: Boolean,
-    inputClass:String,
-    maxlength:String
-
+    inputClass: String,
+    maxlength: String
 });
+
 const emit = defineEmits(['update:modelValue']);
-const updateValue = (event) => {
-    emit('update:modelValue', event.target.value);
-}
 </script>
+
 <template>
     <div class="flex flex-col gap-1 w-full">
         <Label :for="nameId" class="text-black font-semibold sm:text-lg leading-9">
@@ -31,12 +30,11 @@ const updateValue = (event) => {
             :type="type"
             :input-class="inputClass"
             :placeholder="placeholder"
-            :value="modelValue" @input="updateValue" :required="required ? 'required':''"
-            class=""
+            :model-value="modelValue"
+            @update:model-value="emit('update:modelValue', $event)"
+            :required="required ? 'required' : ''"
             :maxlength="maxlength"
         />
         <InputError :message="message"/>
     </div>
 </template>
-
-

@@ -1,69 +1,44 @@
 <script setup>
 import {computed, ref} from "vue";
+import { edit as editAvailability } from '@/routes/availability';
 import {useUserHelpers} from "@/composables/useUserHelpers";
 import GenericTable from "@/components/widgets/table/GenericTable.vue";
+import RightModal from "@/components/widgets/modals/RightModal.vue";
+import VolunteerEdit from "@/pages/volunteers/VolunteerEdit.vue";
+import {Link} from "@inertiajs/vue3";
+import AvailabilityIcon from "@/components/widgets/table/AvailabilityIcon.vue";
 
 const props = defineProps({
     volunteer: Object,
     roles: Object,
+    availability: Object,
 })
 
+console.log(props.availability);
 const selectedVolunteer = computed(() => props.volunteer);
 const {getInitials, getUserImageUrl, getUserImageSrcset} = useUserHelpers();
+const showEdit = ref(false);
 
 const availabilityColumns = [
-    { key: 'period', label: '', sortable: false, class: 'font-semibold bg-blueslate text-white' },
-    { key: 'monday', label: 'Lundi', sortable: false },
-    { key: 'tuesday', label: 'Mardi', sortable: false },
-    { key: 'wednesday', label: 'Mercredi', sortable: false },
-    { key: 'thursday', label: 'Jeudi', sortable: false },
-    { key: 'friday', label: 'Vendredi', sortable: false },
-    { key: 'saturday', label: 'Samedi', sortable: false },
-    { key: 'sunday', label: 'Dimanche', sortable: false },
+    {key: 'period', label: '', sortable: false, class: 'px-4 py-3 text-left text-sm font-semibold border-b-2 border-slate-300 bg-slate-700 text-white'},
+    {key: 'monday', label: 'Lundi', sortable: false},
+    {key: 'tuesday', label: 'Mardi', sortable: false},
+    {key: 'wednesday', label: 'Mercredi', sortable: false},
+    {key: 'thursday', label: 'Jeudi', sortable: false},
+    {key: 'friday', label: 'Vendredi', sortable: false},
+    {key: 'saturday', label: 'Samedi', sortable: false},
+    {key: 'sunday', label: 'Dimanche', sortable: false},
 ];
 
-const availabilityData = [
-    {
-        id: 1,
-        period: 'Matin',
-        monday: true,
-        tuesday: true,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: true,
-        sunday: true,
-    },
-    {
-        id: 2,
-        period: 'Après-Midi',
-        monday: true,
-        tuesday: true,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: true,
-        sunday: true,
-    },
-    {
-        id: 3,
-        period: 'Soir',
-        monday: true,
-        tuesday: true,
-        wednesday: false,
-        thursday: false,
-        friday: false,
-        saturday: true,
-        sunday: true,
-    },
-];
+const availabilityData = computed(() => props.availability || []);
+
 </script>
 
 <template>
     <section v-if="selectedVolunteer" class="w-full h-full">
         <div class="flex flex-col gap-4 sm:gap-6 p-4 sm:p-6 max-h-[80vh] overflow-y-scroll">
 
-            <div class="flex flex-col gap-3 sm:gap-4">
+            <div class="flex justify-between flex-row gap-3 sm:gap-4 mb-4">
                 <h2 class="subtitle text-xl sm:text-2xl">{{ selectedVolunteer.name }}</h2>
 
                 <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
@@ -100,20 +75,50 @@ const availabilityData = [
 
                     <div class="flex-1 space-y-4">
                         <div class="grid grid-cols-2 gap-3 sm:gap-4">
-                            <div class="flex flex-col">
-                                <span class="font-quicksand font-bold text-sm sm:text-base">Rôle</span>
-                                <span class="text-xs sm:text-sm">{{ selectedVolunteer.role }}</span>
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Rôle</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.role }}</span>
+                                </div>
+
+                                <div class="flex flex-col col-span-2">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Email</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.email }}</span>
+                                </div>
+
+                                <div class="flex flex-col col-span-2">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Téléphone</span>
+                                    <span class="text-xs sm:text-sm">{{
+                                            selectedVolunteer.phone || 'Non renseigné'
+                                        }}</span>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col col-span-2">
-                                <span class="font-quicksand font-bold text-sm sm:text-base">Email</span>
-                                <span class="text-xs sm:text-sm">{{ selectedVolunteer.email }}</span>
+                            <div class="grid grid-cols-2 gap-3 sm:gap-4">
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Rue</span>
+                                    <span class="text-xs sm:text-sm">{{
+                                            selectedVolunteer.address || 'Non renseignée'
+                                        }}</span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Numéro</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.number || '-' }}</span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Code Postal</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.cp || '-' }}</span>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <span class="font-quicksand font-bold text-sm sm:text-base">Ville</span>
+                                    <span class="text-xs sm:text-sm">{{ selectedVolunteer.city || '-' }}</span>
+                                </div>
                             </div>
 
-                            <div class="flex flex-col col-span-2">
-                                <span class="font-quicksand font-bold text-sm sm:text-base">Téléphone</span>
-                                <span class="text-xs sm:text-sm">{{ selectedVolunteer.phone }}</span>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,63 +126,64 @@ const availabilityData = [
                 <div class="space-y-2 sm:space-y-3">
                     <h3 class="font-quicksand font-bold text-lg sm:text-xl">Disponibilités</h3>
 
+                    <div v-if="!availabilityData || availabilityData.length === 0" class="text-center py-4 text-gray-500">
+                        Aucune disponibilité renseignée
+                    </div>
+
                     <GenericTable
+                        v-else
                         :columns="availabilityColumns"
                         :data="availabilityData"
                         :selectable="false"
                         :actions="[]"
                         empty-message="Aucune disponibilité"
                     >
-                        <template #cell-period="{ value }" :class="value ? 'bg-lightgreenmint' : 'bg-lightsweetorange'">
+                        <template #cell-period="{ value }">
                             <span class="font-semibold">{{ value }}</span>
                         </template>
 
-                        <template #cell-monday="{ value }" :class="value ? 'bg-lightgreenmint' : 'bg-lightsweetorange'">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                        <template #cell-monday="{ value }">
+                            <AvailabilityIcon :value="value" />
                         </template>
 
                         <template #cell-tuesday="{ value }">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                            <AvailabilityIcon :value="value" />
                         </template>
 
                         <template #cell-wednesday="{ value }">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                            <AvailabilityIcon :value="value" />
                         </template>
 
                         <template #cell-thursday="{ value }">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                            <AvailabilityIcon :value="value" />
                         </template>
 
                         <template #cell-friday="{ value }">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                            <AvailabilityIcon :value="value" />
                         </template>
 
                         <template #cell-saturday="{ value }">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                            <AvailabilityIcon :value="value" />
                         </template>
 
-                        <template #cell-sunday="{ value }" :class="value ? 'bg-lightgreenmint' : 'bg-lightsweetorange'">
-                            <span :class="value ? 'text-green-700' : 'text-red-700'">
-                                {{ value ? 'Oui' : 'Non' }}
-                            </span>
+                        <template #cell-sunday="{ value }">
+                            <AvailabilityIcon :value="value" />
                         </template>
                     </GenericTable>
                 </div>
             </div>
         </div>
     </section>
+    <RightModal v-model="showEdit" @update:modelValue="showEdit = $event">
+        <template #header>
+            <h2 class="subsubtitle">Modifier {{ volunteer?.name }}</h2>
+        </template>
+        <VolunteerEdit
+            :volunteer="volunteer"
+            :roles="roles"
+            @close="showEdit = false"
+        />
+    </RightModal>
 </template>
 
 <style scoped>

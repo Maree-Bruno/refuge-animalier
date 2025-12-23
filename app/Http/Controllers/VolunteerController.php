@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Events\VolunteerCreatedEvent;
+use App\Http\Requests\VolunteerRequest;
 use App\Jobs\ProcessUploadedImage;
 use App\Mail\VolunteerCreatedMail;
 use App\Models\User;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class VolunteerController extends Controller
@@ -21,11 +23,10 @@ class VolunteerController extends Controller
         $search = $request->get('search', '');
         $orderby = $request->get('orderby', 'name');
         $dir = $request->get('dir', 'asc');
-        $roles = collect(UserRole::cases())->map(fn ($role) => [
+        $roles = collect(UserRole::cases())->map(fn($role) => [
             'value' => $role->value,
             'label' => $role->label(),
         ]);
-
 
         $volunteers = User::query()
             ->when($search, function ($query) use ($search) {
@@ -48,7 +49,7 @@ class VolunteerController extends Controller
                 'orderby' => $orderby,
                 'dir' => $dir,
             ],
-            'roles'=>$roles,
+            'roles' => $roles,
         ]);
     }
 
@@ -56,51 +57,22 @@ class VolunteerController extends Controller
     {
     }
 
-    public function store(Request $request)
+    public function store(VolunteerRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|string|max:20|unique:users,phone',
-            'role' => 'required|in:admin,volunteer',
-            'picture' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4096',
-        ]);
-
+        $validated = $request->validated();
         $plainPassword = Str::random(12);
-        $storedImage = null;
-
-        if ($request->hasFile('picture')) {
-            $image = $request->file('picture');
-            $filename = Str::uuid().'.webp';
-
-            $config = config('userimage');
-            $disk = $config['disk'];
-            $originalPath = $config['original_path'];
-
-            $storedPath = Storage::disk($disk)->putFileAs(
-                $originalPath,
-                $image,
-                $filename
-            );
-
-            if ($storedPath) {
-                $storedImage = $filename;
-
-                ProcessUploadedImage::dispatch(
-                    $storedPath,
-                    $filename,
-                    'userimage'
-                );
-            }
-        }
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
+            'address' => $validated['address'],
+            'number' => $validated['number'],
+            'city' => $validated['city'],
+            'cp' => $validated['cp'],
             'password' => Hash::make($plainPassword),
             'role' => $validated['role'],
-            'picture' => $storedImage,
+            'picture' => $this->handleImageUpload($request),
         ]);
 
         Mail::to($user->email)->send(new VolunteerCreatedMail($user, $plainPassword));
@@ -116,11 +88,92 @@ class VolunteerController extends Controller
     {
     }
 
-    public function update(Request $request, $id)
+    public function update(VolunteerRequest $request, User $volunteer)
     {
+        $validated = $request->validated();
+
+        $volunteer->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'address' => $validated['address'],
+            'number' => $validated['number'],
+            'city' => $validated['city'],
+            'cp' => $validated['cp'],
+            'role' => $validated['role'],
+            'picture' => $this->handleImageUpload($request) ?? $volunteer->picture,
+        ]);
+
+        return back();
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, User $volunteer)
     {
+        if (!empty($volunteer->pictures)) {
+            $this->deleteImage($request, $volunteer);
+        }
+        $volunteer->delete();
+
+        return back();
+    }
+
+
+    private function handleImageUpload(Request $request): ?string
+    {
+        if (!$request->hasFile('picture')) {
+            return null;
+        }
+
+        $image = $request->file('picture');
+        $filename = Str::uuid().'.webp';
+
+        $config = config('userimage');
+        $disk = $config['disk'];
+        $originalPath = $config['original_path'];
+
+        $storedPath = Storage::disk($disk)->putFileAs(
+            $originalPath,
+            $image,
+            $filename
+        );
+
+        if (!$storedPath) {
+            return null;
+        }
+
+        ProcessUploadedImage::dispatch(
+            $storedPath,
+            $filename,
+            'userimage'
+        );
+
+        return $filename;
+    }
+
+    public function deleteImage(Request $request, User $volunteer)
+    {
+        $validated = $request->validate([
+            'filename' => 'required|string'
+        ]);
+
+        $filename = $validated['filename'];
+
+
+        Storage::disk(config('userimage.disk'))->delete(
+            config('userimage.original_path').'/'.$filename
+        );
+
+        $sizes = ['64x64', '128x128', '256x256', '512x512'];
+        foreach ($sizes as $size) {
+            Storage::disk(config('userimage.disk'))->delete(
+                "images/users/variants/{$size}/{$filename}"
+            );
+        }
+
+        $picture = null;
+
+        $volunteer->update(['picture' => $picture]);
+
+        return back();
     }
 }
