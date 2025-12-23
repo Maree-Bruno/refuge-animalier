@@ -5,7 +5,7 @@ import GenericTable from "@/components/widgets/table/GenericTable.vue";
 import ExternalIcon from "@/components/widgets/svg/ExternalIcon.vue";
 import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
 import {router} from "@inertiajs/vue3";
-import {ref, watch} from "vue";
+import {ref, watch, computed} from "vue";
 import VolunteerCreate from "@/pages/volunteers/VolunteerCreate.vue";
 import {useUserHelpers} from "@/composables/useUserHelpers.ts";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
@@ -29,6 +29,19 @@ const showCreateVolunteer = ref(false);
 const showVolunteerDetail = ref(false);
 const selectedVolunteer = ref(null);
 const {getInitials, getUserImageUrl, getUserImageSrcset} = useUserHelpers();
+
+// Fonction pour générer les disponibilités par défaut
+const getDefaultAvailability = () => [
+    {id: 1, period: 'Matin', monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false},
+    {id: 2, period: 'Après-Midi', monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false},
+    {id: 3, period: 'Soir', monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false},
+];
+
+// Computed pour les disponibilités du volontaire sélectionné
+const selectedVolunteerAvailability = computed(() => {
+    if (!selectedVolunteer.value) return getDefaultAvailability();
+    return selectedVolunteer.value.availability || getDefaultAvailability();
+});
 
 watch(search, value => {
     clearTimeout(timeout);
@@ -203,7 +216,12 @@ const openDeleteConfirm = (volunteer) => {
 
         <CenterModal v-model="showVolunteerDetail"
                      @update:modelValue="showVolunteerDetail = $event">
-            <VolunteerShow :volunteer="selectedVolunteer" :roles="roles" @close="showVolunteerDetail = false"/>
+            <VolunteerShow
+                :volunteer="selectedVolunteer"
+                :roles="roles"
+                :availability="selectedVolunteerAvailability"
+                @close="showVolunteerDetail = false"
+            />
         </CenterModal>
     </section>
 </template>

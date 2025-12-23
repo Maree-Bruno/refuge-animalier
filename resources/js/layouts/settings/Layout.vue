@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { toUrl, urlIsActive } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
+import { edit as editAvailability } from '@/routes/availability';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem } from '@/types';
@@ -18,6 +19,10 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Mot de passe',
         href: editPassword(),
+    },
+    {
+        title: 'Disponibilité',
+        href: editAvailability(),
     },
     /*{
         title: 'Two-Factor Auth',
@@ -58,7 +63,7 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
             <Separator class="my-6 lg:hidden" />
 
             <div class="flex-1 md:max-w-2xl">
-                <section class="max-w-xl space-y-12">
+                <section class="max-w-6xl space-y-12">
                     <slot />
                 </section>
             </div>

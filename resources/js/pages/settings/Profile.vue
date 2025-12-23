@@ -83,7 +83,7 @@ onUnmounted(() => {
         <div class="flex flex-col space-y-6">
             <HeadingSmall
                 title="Information du profil"
-                description="Changer votre nom, adresse mail et photo de profil"
+                description="Changer votre nom, adresse mail, adresse postale, photo de profil"
             />
 
             <Form
@@ -93,7 +93,7 @@ onUnmounted(() => {
                 @submit.prevent="submit"
             >
                 <div class="space-y-2">
-                    <Label>Photo de profil</Label>
+                    <Label class="font-semibold text-gray-700 text-sm sm:text-lg">Photo de profil</Label>
                     <div class="flex gap-4 items-center justify-center">
                         <div class="relative w-32 h-28">
                             <img
@@ -132,17 +132,24 @@ onUnmounted(() => {
                         Les formats supportés sont le PNG, JPEG et WEBp.
                     </p>
                 </div>
-                <div class="grid gap-2">
-                    <Label for="name">Nom</Label>
-                    <Input id="name" name="name" v-model="form.name"/>
-                    <InputError :message="form.errors.name"/>
-                </div>
-
-                <div class="grid gap-2">
-                    <Label for="email">Adresse email</Label>
-                    <Input id="email" name="email" v-model="form.email"/>
-                    <InputError :message="form.errors.email"/>
-                </div>
+                <InputLabel
+                    nameId="name"
+                    type="text"
+                    placeholder="John Doe"
+                    :message="form.errors.name"
+                    v-model="form.name"
+                >
+                    Nom
+                </InputLabel>
+                <InputLabel
+                    nameId="email"
+                    type="email"
+                    placeholder="John Doe"
+                    :message="form.errors.email"
+                    v-model="form.email"
+                >
+                    Adresse email
+                </InputLabel>
 
                 <div v-if="mustVerifyEmail && !user.email_verified_at">
                     <p class="text-sm">
