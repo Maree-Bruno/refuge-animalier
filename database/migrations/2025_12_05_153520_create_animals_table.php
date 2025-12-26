@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->integer('age');
             $table->string('description');
             $table->enum('status', ['Validated', 'In progress', 'Adopted'])->default('In progress');
-            $table->json('suitable')->nullable();
             $table->boolean('outside')->default(false);
             $table->json('pictures')->nullable();
             $table->boolean('published')->default(false);

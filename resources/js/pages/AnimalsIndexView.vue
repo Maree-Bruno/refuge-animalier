@@ -11,6 +11,7 @@
   const races = computed(()=>page.props.races);
   const coats = computed(()=>page.props.coats);
   const vaccines = computed(()=>page.props.vaccines);
+  const suitableTypes = computed(()=>page.props.suitableTypes);
   const can = computed(()=>page.props.can);
 </script>
 
@@ -22,6 +23,7 @@
         :races="races"
         :coats="coats"
         :vaccines = "vaccines"
+        :suitableTypes="suitableTypes"
         :can="can"
     />
 </template>

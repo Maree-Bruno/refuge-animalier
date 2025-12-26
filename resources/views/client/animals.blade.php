@@ -1,19 +1,32 @@
 @php
     $sizes = config('images.sizes');
-    $buildSrcset = function($photo) use ($sizes) {
-        $srcset = [];
-        foreach($sizes as $key => $size) {
-            $path = sprintf('images/animals/variants/%sx%s/%s',
-                $size['width'],
-                $size['height'],
-                $photo
-            );
-            $srcset[] = asset($path) . ' ' . $size['width'] . 'w';
+
+    $buildSrcset = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
         }
+
+        $srcset = [];
+
+        foreach ($sizes as $size) {
+            $srcset[] = asset(
+                sprintf(
+                    'images/animals/variants/%sx%s/%s',
+                    $size['width'],
+                    $size['height'],
+                    $photo
+                )
+            ) . ' ' . $size['width'] . 'w';
+        }
+
         return implode(', ', $srcset);
     };
 
-    $buildSizes = function() use ($sizes) {
+    $buildSizes = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
+        }
+
         return sprintf(
             '(max-width: 640px) %spx, (max-width: 1024px) %spx, %spx',
             $sizes['sm']['width'],
@@ -21,9 +34,8 @@
             $sizes['lg']['width']
         );
     };
-
 @endphp
-@php use function PHPUnit\Framework\isNull; @endphp
+
 
 <x-layouts.client>
     <x-layouts.section :title="__('animals/client_index.title')">
@@ -103,23 +115,34 @@
 
         <div class="flex flex-col items-center gap-5 sm:grid sm:grid-cols-2 sm:justify-items-center
                 lg:grid-cols-3 lg:gap-10 2xl:grid-cols-4 2xl:gap-20">
-            @if(!isNull($animals))
-            @foreach($animals as $animal)
+            @forelse($animals as $animal)
+                @php
+                    $photo = is_array($animal->pictures) && count($animal->pictures) > 0
+                        ? $animal->pictures[0]
+                        : null;
+
+                    $src = $photo
+                        ? asset('images/animals/originals/'.$photo)
+                        : asset('images/billy.webp');
+                @endphp
+
                 <x-animal.card
                     name="{{ $animal->name }}"
-                    src="{{ asset('images/animals/originals/'.$animal->pictures[0]) }}"
-                    srcset="{{ $buildSrcset($animal->pictures[0]) }}"
-                    sizes="{{ $buildSizes() }}"
+                    src="{{ $src }}"
+                    :srcset="$buildSrcset($photo)"
+                    :sizes="$buildSizes($photo)"
                     age="{{ $animal->age }}"
-                    gender="{{ $animal->gender }}"
-                    species="{{ $animal->species }}"
+                    gender="{{ $animal->sex }}"
+                    species="{{ $animal->specie->name }}"
                     description="{{ $animal->description }}"
                     href="{{ route('animals_show', $animal) }}"
                 />
-            @endforeach
-            @else
-                <p>Aucun animal de disponible</p>
-            @endif
+            @empty
+                <p class="col-span-full text-center text-gray-500">
+                    Aucun animal de disponible
+                </p>
+            @endforelse
+
         </div>
     </x-layouts.section>
 </x-layouts.client>

@@ -1,21 +1,32 @@
 @php
     $sizes = config('images.sizes');
 
-    // Construction du srcset
-    $buildSrcset = function($photo) use ($sizes) {
-        $srcset = [];
-        foreach($sizes as $key => $size) {
-            $path = sprintf('images/animals/variants/%sx%s/%s',
-                $size['width'],
-                $size['height'],
-                $photo
-            );
-            $srcset[] = asset($path) . ' ' . $size['width'] . 'w';
+    $buildSrcset = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
         }
+
+        $srcset = [];
+
+        foreach ($sizes as $size) {
+            $srcset[] = asset(
+                sprintf(
+                    'images/animals/variants/%sx%s/%s',
+                    $size['width'],
+                    $size['height'],
+                    $photo
+                )
+            ) . ' ' . $size['width'] . 'w';
+        }
+
         return implode(', ', $srcset);
     };
 
-    $buildSizes = function() use ($sizes) {
+    $buildSizes = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
+        }
+
         return sprintf(
             '(max-width: 640px) %spx, (max-width: 1024px) %spx, %spx',
             $sizes['sm']['width'],
@@ -24,9 +35,15 @@
         );
     };
 
-    // Récupérer la première photo
-    $mainPhoto = is_array($animal->pictures) && count($animal->pictures) > 0 ? $animal->pictures[0] : 'default.jpg';
+    $mainPhoto = is_array($animal->pictures) && count($animal->pictures) > 0
+        ? $animal->pictures[0]
+        : null;
+
+    $mainSrc = $mainPhoto
+        ? asset('images/animals/originals/'.$mainPhoto)
+        : asset('images/billy.webp');
 @endphp
+
 
 <x-layouts.client>
     <section class="p-5 flex flex-col gap-6 leading-9 lg:px-20 mb-0">
@@ -47,19 +64,19 @@
         <div class="2xl:flex 2xl:flex-row space-y-10 2xl:space-x-10">
             <div class="flex flex-col sm:flex-row gap-20">
                 <div class="flex flex-col lg:flex-row gap-5">
-
                     <img
-                        src="{{ asset('images/animals/originals/'.$mainPhoto) }}"
-                        srcset="{{ $buildSrcset($mainPhoto) }}"
-                        sizes="{{ $buildSizes() }}"
+                        src="{{ $mainSrc }}"
+                        @if($mainPhoto)
+                            srcset="{{ $buildSrcset($mainPhoto) }}"
+                        sizes="{{ $buildSizes($mainPhoto) }}"
+                        @endif
                         alt="{{ $animal->name }}"
                         class="w-full h-full object-cover aspect-square md:max-h-[500px] md:max-w-[500px]
                         lg:w-[500px] lg:h-auto rounded-2xl 2xl:max-h-[500px]"
                     />
-
                     @if($animal->pictures && count($animal->pictures) > 1)
-                        <div class="max-w-[640px] overflow-scroll md:max-w-[500px] flex flex-row
-                            lg:flex-col lg:h-[500px] lg:max-w-24 gap-5 md:min-w-[72px]">
+                        <div class="max-w-[640px] overflow-scroll md:max-w-[500px] flex flex-row lg:flex-col
+                        lg:h-[500px] lg:max-w-24 gap-5 md:min-w-[72px]">
                             @foreach (array_slice($animal->pictures, 1) as $galleryImage)
                                 <img
                                     src="{{ asset('images/animals/originals/'.$galleryImage) }}"
@@ -72,6 +89,7 @@
                         </div>
                     @endif
 
+
                 </div>
 
                 <div class="md:max-h-[500px] space-y-2.5">
@@ -80,16 +98,20 @@
                     <div class="grid grid-cols-2 gap-5">
                         <p class="flex flex-col">
                             <span class="font-quicksand font-bold">{{ __('animals/client_show.features.age') }}</span>
-                            <span class="xsmalltext">{{ $animal->age }} {{ __('animals/client_show.features.years') }}</span>
+                            <span
+                                class="xsmalltext">{{ $animal->age }} {{ __('animals/client_show.features.years') }}</span>
                         </p>
 
                         <p class="flex flex-col">
-                            <span class="font-quicksand font-bold">{{ __('animals/client_show.features.gender') }}</span>
-                            <span class="xsmalltext">{{ __('animals/client_show.features.gender_'.$animal->sex) }}</span>
+                            <span
+                                class="font-quicksand font-bold">{{ __('animals/client_show.features.gender') }}</span>
+                            <span
+                                class="xsmalltext">{{ __('animals/client_show.features.gender_'.$animal->sex) }}</span>
                         </p>
 
                         <p class="flex flex-col">
-                            <span class="font-quicksand font-bold">{{ __('animals/client_show.features.species') }}</span>
+                            <span
+                                class="font-quicksand font-bold">{{ __('animals/client_show.features.species') }}</span>
                             <span class="xsmalltext">{{ $animal->specie->name }}</span>
                         </p>
 
@@ -104,7 +126,8 @@
                         </p>
 
                         <p class="flex flex-col">
-                            <span class="font-quicksand font-bold">{{ __('animals/client_show.features.admission_date') }}</span>
+                            <span
+                                class="font-quicksand font-bold">{{ __('animals/client_show.features.admission_date') }}</span>
                             <span class="xsmalltext">{{ $animal->admission_date }}</span>
                         </p>
                     </div>
@@ -115,9 +138,8 @@
                             <div>
                                 <p class="font-quicksand font-bold">{{ __('animals/client_show.features.suitable_for') }}</p>
                                 <div class="space-x-2.5">
-                                    @foreach($animal->suitable as $suitable)
-                                        <span class="xsmalltext">{{ __('animals/client_show.features.suitable.'.$suitable) }}</span>
-                                    @endforeach
+                                    <span
+                                        class="xsmalltext">{{ __('animals/client_show.features.suitable.'.$animal->suitable) }}</span>
                                 </div>
                             </div>
                         @endif
@@ -154,11 +176,10 @@
             </div>
 
             <div class="w-full">
-                <form action="" method="post" class="flex flex-col space-y-2.5">
+                <form action="{{route('adoption_requests.store', $animal)}}" method="post" class="flex flex-col
+                space-y-2.5">
                     @csrf
-
                     <input type="hidden" name="animal_id" value="{{ $animal->id }}">
-
                     <x-form.input_label
                         id="name"
                         type="text"
@@ -166,16 +187,6 @@
                         :label="__('contact.name')"
                         :placeholder="__('contact.placeholder_name')"
                         :value="old('name')"
-                        required
-                    />
-
-                    <x-form.input_label
-                        id="firstname"
-                        type="text"
-                        name="firstname"
-                        :label="__('contact.firstname')"
-                        :placeholder="__('contact.placeholder_firstname')"
-                        :value="old('firstname')"
                         required
                     />
 
@@ -198,6 +209,51 @@
                         :value="old('tel')"
                         required
                     />
+                    <fieldset class="">
+                        <legend class="sr-only">{{ __('labels.address') }}</legend>
+                        <div class="flex flex-col justify-center items-center sm:flex-row sm:gap-5">
+                            <x-form.input_label
+                                id="address"
+                                type="text"
+                                name="address"
+                                :label="__('labels.street')"
+                                :placeholder="__('placeholder.street')"
+                                required
+                                :value="old('address')"
+                            />
+                            <x-form.input_label
+                                id="number"
+                                type="text"
+                                name="number"
+                                :label="__('labels.number')"
+                                :placeholder="__('placeholder.number')"
+                                :value="old('number')"
+                                required
+                                class="sm:max-w-2/5"
+                            />
+                        </div>
+                        <div class="flex flex-col justify-center items-center sm:flex-row sm:gap-5">
+                            <x-form.input_label
+                                id="cp"
+                                type="text"
+                                name="cp"
+                                :label="__('labels.cp')"
+                                :placeholder="__('placeholder.cp')"
+                                required
+                                :value="old('cp')"
+                                class="sm:max-w-fit"
+                            />
+                            <x-form.input_label
+                                id="city"
+                                type="text"
+                                name="city"
+                                :label="__('labels.city')"
+                                :placeholder="__('placeholder.city')"
+                                required
+                                :value="old('city')"
+                            />
+                        </div>
+                    </fieldset>
 
                     <x-form.textarea_label
                         id="message"
@@ -215,7 +271,6 @@
                     >
                         {{ __('contact.submit') }}
                     </x-buttons.submit_button>
-
                 </form>
             </div>
         </div>
@@ -228,15 +283,19 @@
 
                 @foreach ($otherAnimals as $otherAnimal)
                     @php
-                        $otherMainPhoto = is_array($otherAnimal->pictures) && count($otherAnimal->pictures) > 0
-                            ? $otherAnimal->pictures[0]
-                            : 'default.jpg';
+                        $photo = is_array($animal->pictures) && count($animal->pictures) > 0
+                            ? $animal->pictures[0]
+                            : null;
+
+                        $src = $photo
+                            ? asset('images/animals/originals/'.$photo)
+                            : asset('images/billy.webp');
                     @endphp
                     <x-animal.card
                         name="{{ $otherAnimal->name }}"
-                        src="{{ asset('images/animals/originals/'.$otherMainPhoto) }}"
-                        srcset="{{ $buildSrcset($otherMainPhoto) }}"
-                        sizes="{{ $buildSizes() }}"
+                        src="{{ asset($src) }}"
+                        srcset="{{ $buildSrcset($photo) }}"
+                        sizes="{{ $buildSizes($photo) }}"
                         age="{{ $otherAnimal->age }}"
                         gender="{{ $otherAnimal->sex }}"
                         species="{{ $otherAnimal->specie->name }}"
@@ -248,4 +307,26 @@
             </div>
         </x-layouts.section>
     @endif
+    @if (session('success'))
+        <div
+            x-data="{ show: true }"
+            x-init="setTimeout(() => show = false, 2000)"
+            x-show="show"
+            x-transition
+            class="fixed top-5 right-5 z-50
+               bg-green-600 text-white
+               px-6 py-4 rounded-xl shadow-lg
+               flex items-center gap-3"
+        >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M5 13l4 4L19 7" />
+            </svg>
+
+            <span class="font-medium">
+            {{ session('success') }}
+        </span>
+        </div>
+    @endif
+
 </x-layouts.client>

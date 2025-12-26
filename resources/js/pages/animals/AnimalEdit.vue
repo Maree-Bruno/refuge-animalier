@@ -14,12 +14,14 @@ const props = defineProps({
     coats: Object,
     races: Object,
     vaccines: Object,
+    suitableTypes: Object,
 });
 
 const toast = useToasterStore();
 
 const races = props.races;
 const vaccines = props.vaccines;
+const suitableTypes = props.suitableTypes;
 
 let formAnimal = useForm({
     name: props.animal?.name || '',
@@ -29,8 +31,8 @@ let formAnimal = useForm({
     specie_id: props.animal?.specie_id || '',
     race_id: props.animal?.race_id || [],
     coat_id: props.animal?.coat_id || [],
-    suitable: props.animal?.suitable || [],
-    vaccine_id: props.animal?.vaccine_id || [],
+    suitable_type_ids: props.animal?.suitable_types?.map(st => st.id) || [],
+    vaccine_id: props.animal?.vaccines?.map(v => v.id) || [],
     status: props.animal?.status || '',
     outside: props.animal?.outside || false,
     published: props.animal?.published || false,
@@ -45,6 +47,7 @@ const filteredRaces = computed(() => {
     }
     return races.filter(race => race.specie_id === parseInt(formAnimal.specie_id));
 });
+
 const filteredVaccines = computed(() => {
     if (!formAnimal.specie_id || !vaccines) {
         return vaccines || []
@@ -55,6 +58,7 @@ const filteredVaccines = computed(() => {
 const selectedVaccines = computed(() => {
     return vaccines.filter(vaccine => formAnimal.vaccine_id.includes(vaccine.id));
 })
+
 let previewPictures = ref([]);
 let existingPictures = ref(props.animal?.pictures || []);
 let deletingImage = ref(null);
@@ -68,7 +72,9 @@ watch(() => props.animal, (newAnimal) => {
         formAnimal.specie_id = newAnimal.specie.id || '';
         formAnimal.race_id = newAnimal.race_id || [];
         formAnimal.coat_id = newAnimal.coat_id || [];
-        formAnimal.suitable = newAnimal.suitable || [];
+        formAnimal.suitable_type_ids = newAnimal.suitable_types
+            ? newAnimal.suitable_types.map(st => st.id)
+            : [];
         formAnimal.vaccine_id = newAnimal.vaccines
             ? newAnimal.vaccines.map(vaccine => vaccine.id)
             : [];
@@ -97,7 +103,6 @@ const getImageUrl = (filename, size = 'sm') => {
 };
 
 const deleteImage = (filename) => {
-
     deletingImage.value = filename;
 
     router.delete(`/animals/${props.animal.id}/images`, {
@@ -115,10 +120,10 @@ const deleteImage = (filename) => {
         }
     });
 };
-const emit = defineEmits(
-    'update'
-)
+
+const emit = defineEmits(['update'])
 const showEditAnimal = ref(false);
+
 const submitAnimal = () => {
     const updateUrl = `/animals/${props.animal.id}`;
     formAnimal._method = 'PATCH';
@@ -238,28 +243,22 @@ const submitAnimal = () => {
             <div class="space-y-1">
                 <p class="text-black font-semibold sm:text-lg leading-9">Convient pour</p>
                 <div class="flex gap-5">
-                    <label for="dog-edit" class="space-x-1">
-                        <input id="dog-edit" name="suitable" type="checkbox" value="dog"
-                               v-model="formAnimal.suitable">
-                        Chien
-                    </label>
-                    <label for="cat-edit" class="space-x-1">
-                        <input id="cat-edit" name="suitable" type="checkbox" value="cat"
-                               v-model="formAnimal.suitable">
-                        Chat
-                    </label>
-                    <label for="kid-edit" class="space-x-1">
-                        <input id="kid-edit" name="suitable" type="checkbox" value="kid"
-                               v-model="formAnimal.suitable">
-                        Enfant
-                    </label>
-                    <label for="baby-edit" class="space-x-1">
-                        <input id="baby-edit" name="suitable" type="checkbox" value="baby"
-                               v-model="formAnimal.suitable">
-                        Bébé
+                    <label
+                        v-for="suitableType in suitableTypes"
+                        :key="suitableType.id"
+                        :for="`suitable-edit-${suitableType.id}`"
+                        class="space-x-1"
+                    >
+                        <input
+                            :id="`suitable-edit-${suitableType.id}`"
+                            type="checkbox"
+                            :value="suitableType.id"
+                            v-model="formAnimal.suitable_type_ids"
+                        >
+                        {{ suitableType.label }}
                     </label>
                 </div>
-                    <InputError :message="formAnimal.errors.suitable"/>
+                <InputError :message="formAnimal.errors.suitable_type_ids"/>
             </div>
 
             <div class="flex justify-between gap-5">
@@ -362,8 +361,6 @@ const submitAnimal = () => {
             >
                 Description
             </TabbableTextarea>
-
-
         </div>
 
         <div class="mt-6 flex justify-center">

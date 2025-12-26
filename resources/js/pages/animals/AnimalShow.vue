@@ -11,6 +11,7 @@ const props = defineProps({
     races: Object,
     coats: Object,
     vaccines: Object,
+    suitableTypes: Object,
 });
 
 const page = usePage();
@@ -18,12 +19,14 @@ const species = computed(() => page.props.species);
 const races = computed(() => page.props.races);
 const coats = computed(() => page.props.coats);
 const vaccines = computed(() => page.props.vaccines);
+const suitableTypes = computed(() => page.props.suitableTypes);
 
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);
 const selectedImageIndex = ref(0);
 
+// Déplacer les fonctions en dehors du if
 const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
     if (!filename) return '/images/billy.webp';
 
@@ -46,6 +49,7 @@ const getImageSrcset = (filename: string): string => {
     ].join(', ');
 };
 
+// Déplacer les computed en dehors du if
 const mainImage = computed(() => {
     if (!props.animal?.pictures || props.animal.pictures.length === 0) {
         return {
@@ -76,19 +80,12 @@ const thumbnails = computed(() => {
 });
 
 const suitableText = computed(() => {
-    if (!props.animal?.suitable || props.animal.suitable.length === 0) {
+    if (!props.animal?.suitable_types || props.animal.suitable_types.length === 0) {
         return 'Non spécifié';
     }
 
-    const translations: Record<string, string> = {
-        dog: 'Chien',
-        cat: 'Chat',
-        kid: 'Enfant',
-        baby: 'Bébé'
-    };
-
-    return props.animal.suitable
-        .map((item: string) => translations[item] || item)
+    return props.animal.suitable_types
+        .map((type: any) => type.label)
         .join(', ');
 });
 
@@ -185,7 +182,8 @@ const selectImage = (index: number) => {
                         </div>
 
                         <div v-else class="flex sm:flex-col gap-2 sm:gap-3">
-                            <div class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 flex items-center justify-center">
+                            <div
+                                class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 flex items-center justify-center">
                                 <span class="text-xs text-gray-400">Aucune photo</span>
                             </div>
                         </div>
@@ -261,7 +259,7 @@ const selectImage = (index: number) => {
         </template>
     </RightModal>
 
-    <RightModal v-model="showEdit" @update:modelValue="showEdit = $event">
+    <RightModal v-model="showEdit">
         <template #header>
             <h2 class="subsubtitle">Modifier {{ animal?.name }}</h2>
         </template>
@@ -271,6 +269,7 @@ const selectImage = (index: number) => {
             :races="races"
             :coats="coats"
             :vaccines="vaccines"
+            :suitableTypes="suitableTypes"
             @close="showEdit = false"
         />
     </RightModal>

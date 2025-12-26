@@ -26,6 +26,7 @@ Route::domain('happypaws.test')->group(function () {
     })->name('about');
     Route::get('/animals', [PublicAnimalController::class, 'index'])->name('animals');
     Route::get('/animals/{animal}', [PublicAnimalController::class, 'show'])->name('animals_show');
+    Route::post('/animals/{animal}', [AdoptionRequestController::class, 'store'])->name('adoption_requests.store');
     Route::get('/contact', function () {
         return view('client/contact');
     })->name('contact');
@@ -56,6 +57,8 @@ Route::domain('admin.happypaws.test')->group(function () {
 
         //adoption request
         Route::get('/adoption', [AdoptionRequestController::class, 'index'])->name('adoption_requests.index');
+        Route::patch('/adoption/{adoption}', [AdoptionRequestController::class, 'update'])->name('adoption_requests.update');
+        Route::delete('/adoption/{adoption}', [AdoptionRequestController::class, 'destroy'])->name('adoption_requests.destroy');
 
         //notes
         Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');

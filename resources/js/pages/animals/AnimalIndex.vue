@@ -14,6 +14,7 @@ import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
 import InputLabel from "@/components/widgets/form/InputLabel.vue";
 import {store} from "@/routes/animals/index.ts";
 import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
+import {useFormatDate} from "@/composables/useFormatDate.ts";
 
 
 const props = defineProps({
@@ -40,7 +41,10 @@ const props = defineProps({
     vaccines: {
         type: Object,
     },
-    can:Object,
+    suitableTypes: {
+        type: Object
+    },
+    can: Object,
 })
 
 
@@ -87,10 +91,10 @@ let isShowModalOpen = ref(false)
 let selectedRow = ref(null)
 
 const openShowModal = (row) => {
+    console.log('Opening modal for:', row);
     selectedRow.value = row;
     isShowModalOpen.value = true;
 }
-
 const openDeleteConfirm = (animal) => {
     animalToDelete.value = animal;
     showDeleteConfirm.value = true;
@@ -176,6 +180,7 @@ const getAnimalImageSrcset = (animal) => {
         `/images/animals/variants/900x900/${filename} 900w`
     ].join(', ');
 }
+const {formatDate} = useFormatDate();
 </script>
 
 <template>
@@ -256,7 +261,7 @@ const getAnimalImageSrcset = (animal) => {
                         <div class="space-y-1 text-xs text-gray-600">
                             <p><span class="font-medium">Age:</span> {{ animal.age }}</p>
                             <p><span class="font-medium">Puce:</span> {{ animal.chip }}</p>
-                            <p><span class="font-medium">Admission:</span> {{ animal.admission_date }}</p>
+                            <p><span class="font-medium">Admission:</span> {{ formatDate(animal.admission_date) }}</p>
                         </div>
 
                         <div class="mt-2">
@@ -329,18 +334,20 @@ const getAnimalImageSrcset = (animal) => {
     </section>
 
     <KeepAlive>
-        <RightModal v-model="showCreateAnimal " @update:modelValue="showCreateAnimal = $event"   route-key="create"
-                    route-value="create-animal">
+        <RightModal v-model="showCreateAnimal" route-key="create" route-value="create-animal">
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
-            <AnimalCreate :species :races :coats :vaccines :can @close="showCreateAnimal = false"/>
+            <AnimalCreate :species :races :coats :vaccines :can @close="showCreateAnimal = false" :suitableTypes/>
         </RightModal>
     </KeepAlive>
 
-    <CenterModal v-model="isShowModalOpen"   route-key="animal"
-                 :route-value="selectedRow?.id">
-        <AnimalShow :animal="selectedRow" :races :coats :vaccines/>
+    <CenterModal v-model="isShowModalOpen"
+                 v-if="selectedRow"
+                 route-key="animal"
+                 :route-value="selectedRow?.id"
+    >
+        <AnimalShow :animal="selectedRow" :races :coats :vaccines :suitableTypes/>
     </CenterModal>
 
     <CenterModal v-model="showDeleteConfirm">
