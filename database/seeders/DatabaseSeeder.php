@@ -8,6 +8,7 @@ use App\Models\Animal;
 use App\Models\Coat;
 use App\Models\Race;
 use App\Models\Specie;
+use App\Models\SuitableType;
 use App\Models\User;
 use App\Models\Vaccine;
 use Illuminate\Database\Seeder;
@@ -16,7 +17,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1️⃣ Création des utilisateurs
         $admin = User::factory()->create([
             'name' => 'Admin',
             'email' => 'test@example.com',
@@ -32,15 +32,23 @@ class DatabaseSeeder extends Seeder
             'role' => 'volunteer',
             'password' => bcrypt('password')
         ]);
-
-        // 2️⃣ Création des pelages
         $coatNames = ['Blanc', 'Noir', 'Doré', 'Tâché', 'Tricolore', 'Brun'];
         $coats = collect();
         foreach ($coatNames as $name) {
             $coats->push(Coat::create(['name' => $name]));
         }
+        $suitableTypesData = [
+            ['key' => 'dog', 'label' => 'Chien'],
+            ['key' => 'cat', 'label' => 'Chat'],
+            ['key' => 'kid', 'label' => 'Enfant'],
+            ['key' => 'baby', 'label' => 'Bébé'],
+        ];
 
-        // 3️⃣ Création des espèces avec races et vaccins
+        $suitableTypes = collect();
+        foreach ($suitableTypesData as $data) {
+            $suitableTypes->push(SuitableType::create($data));
+        }
+
         $speciesData = [
             'Dog' => [
                 'races' => ['Husky', 'Chihuahua', 'Golden Retriever', 'Berger Australien', 'Cocker'],
@@ -57,7 +65,6 @@ class DatabaseSeeder extends Seeder
             $specie = Specie::create(['name' => $specieName]);
             $species->push($specie);
 
-            // Création des races
             foreach ($data['races'] as $raceName) {
                 Race::create([
                     'name' => $raceName,
@@ -65,7 +72,6 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
 
-            // Création des vaccins
             foreach ($data['vaccines'] as $vaccineName) {
                 Vaccine::create([
                     'name' => $vaccineName,
@@ -74,10 +80,8 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // 4️⃣ Création des animaux
         $animals = collect();
         for ($i = 0; $i < 20; $i++) {
-            // Choisir une race aléatoire existante
             $race = Race::inRandomOrder()->first();
 
             $animal = Animal::factory()->create([
@@ -86,7 +90,6 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $volunteer->id,
             ]);
 
-            // Associer les vaccins compatibles avec l'espèce
             $compatibleVaccines = $race->specie->vaccines;
             if ($compatibleVaccines->count() > 0) {
                 $animal->vaccines()->attach(
@@ -94,21 +97,21 @@ class DatabaseSeeder extends Seeder
                 );
             }
 
+            $randomSuitableTypes = $suitableTypes->random(rand(1, 4));
+            $animal->suitableTypes()->attach($randomSuitableTypes->pluck('id')->toArray());
+
             $animals->push($animal);
         }
 
-        // 5️⃣ Création des adopters
         $adopters = Adopter::factory(10)->create();
 
-        // 6️⃣ Création des demandes d'adoption
         for ($i = 0; $i < 10; $i++) {
             $animal = $animals->random();
 
-            // Choisir un adopteur existant ou en créer un nouveau
             $adopter = $adopters->random();
 
             $existingAdopter = Adopter::firstOrCreate(
-                ['email' => $adopter->email], // unique key
+                ['email' => $adopter->email],
                 [
                     'name' => $adopter->name,
                     'phone' => $adopter->phone,

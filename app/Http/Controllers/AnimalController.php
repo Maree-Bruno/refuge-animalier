@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Concerns\FilterablePaginate;
 use App\Enums\AnimalStatus;
-use App\Enums\SuitableFor;
 use App\Jobs\ProcessUploadedImage;
 use App\Models\Animal;
 use App\Models\Coat;
 use App\Models\Race;
 use App\Models\Specie;
+use App\Models\SuitableType;
 use App\Models\Vaccine;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,7 +28,14 @@ class AnimalController extends Controller
         $races = Race::all();
         $coats = Coat::all();
         $vaccines = Vaccine::all();
-        $animals = $this->filterAndPaginate(Animal::class, $request, ['coat', 'race', 'specie', 'vaccines']);
+        $suitableTypes = SuitableType::all();
+
+        $animals = $this->filterAndPaginate(
+            Animal::class,
+            $request,
+            ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
+        );
+
         return Inertia::render('AnimalsIndexView', [
             'title' => 'Animals',
             'animals' => $animals,
@@ -36,6 +43,7 @@ class AnimalController extends Controller
             'races' => $races,
             'coats' => $coats,
             'vaccines' => $vaccines,
+            'suitableTypes' => $suitableTypes,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
             'can' => [
                 'publish' => Auth::user()->can('publish', Animal::class),
@@ -61,8 +69,8 @@ class AnimalController extends Controller
             'status' => 'required|in:'.implode(',', AnimalStatus::values()),
             'outside' => 'boolean',
             'published' => 'boolean',
-            'suitable' => 'nullable|array',
-            'suitable.*' => 'string|in:'.implode(',', SuitableFor::values()),
+            'suitable_type_ids' => 'nullable|array',
+            'suitable_type_ids.*' => 'exists:suitable_types,id',
             'pictures' => 'nullable|array',
             'pictures.*' => 'image|mimes:jpeg,png,jpg,webp|max:4096',
             'vaccine_id' => 'nullable|array',
@@ -93,6 +101,7 @@ class AnimalController extends Controller
                 }
             }
         }
+
         $animal = Animal::create([
             'name' => $validated['name'],
             'age' => $validated['age'],
@@ -104,14 +113,19 @@ class AnimalController extends Controller
             'status' => $validated['status'],
             'outside' => $validated['outside'] ?? false,
             'published' => $validated['published'] ?? false,
-            'suitable' => $validated['suitable'] ?? [],
             'user_id' => auth()->id(),
             'admission_date' => Carbon::now()->format('d-m-Y'),
             'pictures' => $storedImages,
         ]);
-        $vaccines = $request['vaccine_id'];
-        if ($vaccines) {
-            $animal->vaccines()->sync($vaccines);
+
+        // Sync suitable types
+        if (!empty($validated['suitable_type_ids'])) {
+            $animal->suitableTypes()->sync($validated['suitable_type_ids']);
+        }
+
+        // Sync vaccines
+        if (!empty($request['vaccine_id'])) {
+            $animal->vaccines()->sync($request['vaccine_id']);
         }
 
         return back();
@@ -131,11 +145,11 @@ class AnimalController extends Controller
             'status' => 'required|in:'.implode(',', AnimalStatus::values()),
             'outside' => 'boolean',
             'published' => 'boolean',
-            'suitable' => 'nullable|array',
-            'suitable.*' => 'string|in:'.implode(',', SuitableFor::values()),
+            'suitable_type_ids' => 'nullable|array',
+            'suitable_type_ids.*' => 'exists:suitable_types,id',
             'pictures' => 'nullable|array',
             'pictures.*' => 'image|mimes:jpeg,png,jpg,webp|max:4096',
-            'admission_date' => 'nullable|date=>format("d-m-Y")',
+            'admission_date' => 'nullable|date_format:d-m-Y',
             'vaccine_id' => 'nullable|array',
             'vaccine_id.*' => 'exists:vaccines,id',
         ]);
@@ -151,7 +165,6 @@ class AnimalController extends Controller
             'status' => $validated['status'],
             'outside' => $validated['outside'] ?? false,
             'published' => $validated['published'] ?? false,
-            'suitable' => $validated['suitable'] ?? [],
         ]);
 
         if ($request->hasFile('pictures')) {
@@ -180,9 +193,15 @@ class AnimalController extends Controller
 
             $animal->update(['pictures' => $storedImages]);
         }
-        $vaccines = $request['vaccine_id'];
-        if ($vaccines) {
-            $animal->vaccines()->sync($vaccines);
+
+        // Sync suitable types
+        if (isset($validated['suitable_type_ids'])) {
+            $animal->suitableTypes()->sync($validated['suitable_type_ids']);
+        }
+
+        // Sync vaccines
+        if (!empty($request['vaccine_id'])) {
+            $animal->vaccines()->sync($request['vaccine_id']);
         }
 
         return back();

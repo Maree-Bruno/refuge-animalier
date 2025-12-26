@@ -11,6 +11,7 @@ const props = defineProps({
     races: Object,
     coats: Object,
     vaccines: Object,
+    suitableTypes: Object,
 });
 
 const page = usePage();
@@ -18,81 +19,73 @@ const species = computed(() => page.props.species);
 const races = computed(() => page.props.races);
 const coats = computed(() => page.props.coats);
 const vaccines = computed(() => page.props.vaccines);
+const suitableTypes = computed(() => page.props.suitableTypes);
 
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);
 const selectedImageIndex = ref(0);
 
-if (props.animal?.pictures !== null) {
+// Déplacer les fonctions en dehors du if
+const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
+    if (!filename) return '/images/billy.webp';
 
-
-    const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
-        if (!filename) return '/images/billy.webp';
-
-        const sizeMap = {
-            sm: '300x300',
-            md: '600x600',
-            lg: '900x900'
-        };
-
-        return `/images/animals/variants/${sizeMap[size]}/${filename}`;
+    const sizeMap = {
+        sm: '300x300',
+        md: '600x600',
+        lg: '900x900'
     };
 
-    const getImageSrcset = (filename: string): string => {
-        if (!filename) return '';
+    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
+};
 
-        return [
-            `/images/animals/variants/300x300/${filename} 300w`,
-            `/images/animals/variants/600x600/${filename} 600w`,
-            `/images/animals/variants/900x900/${filename} 900w`
-        ].join(', ');
-    };
+const getImageSrcset = (filename: string): string => {
+    if (!filename) return '';
 
-    const mainImage = computed(() => {
-        if (!props.animal?.pictures || props.animal.pictures.length === 0) {
-            return {
-                src: '/images/billy.webp',
-                srcset: '',
-                alt: props.animal?.name || 'Animal'
-            };
-        }
+    return [
+        `/images/animals/variants/300x300/${filename} 300w`,
+        `/images/animals/variants/600x600/${filename} 600w`,
+        `/images/animals/variants/900x900/${filename} 900w`
+    ].join(', ');
+};
 
-        const filename = props.animal.pictures[selectedImageIndex.value];
+// Déplacer les computed en dehors du if
+const mainImage = computed(() => {
+    if (!props.animal?.pictures || props.animal.pictures.length === 0) {
         return {
-            src: getImageUrl(filename, 'lg'),
-            srcset: getImageSrcset(filename),
-            alt: props.animal.name
+            src: '/images/billy.webp',
+            srcset: '',
+            alt: props.animal?.name || 'Animal'
         };
-    });
+    }
 
-    const thumbnails = computed(() => {
-        if (!props.animal?.pictures || props.animal.pictures.length === 0) {
-            return [];
-        }
+    const filename = props.animal.pictures[selectedImageIndex.value];
+    return {
+        src: getImageUrl(filename, 'lg'),
+        srcset: getImageSrcset(filename),
+        alt: props.animal.name
+    };
+});
 
-        return props.animal.pictures.map((filename: string) => ({
-            src: getImageUrl(filename, 'sm'),
-            srcset: getImageSrcset(filename),
-            filename
-        }));
-    });
-}
+const thumbnails = computed(() => {
+    if (!props.animal?.pictures || props.animal.pictures.length === 0) {
+        return [];
+    }
+
+    return props.animal.pictures.map((filename: string) => ({
+        src: getImageUrl(filename, 'sm'),
+        srcset: getImageSrcset(filename),
+        filename
+    }));
+});
 
 const suitableText = computed(() => {
-    if (!props.animal?.suitable || props.animal.suitable.length === 0) {
+    if (!props.animal?.suitable_types || props.animal.suitable_types.length === 0) {
         return 'Non spécifié';
     }
 
-    const translations: Record<string, string> = {
-        dog: 'Chien',
-        cat: 'Chat',
-        kid: 'Enfant',
-        baby: 'Bébé'
-    };
-
-    return props.animal.suitable
-        .map((item: string) => translations[item] || item)
+    return props.animal.suitable_types
+        .map((type: any) => type.label)
         .join(', ');
 });
 
@@ -266,7 +259,7 @@ const selectImage = (index: number) => {
         </template>
     </RightModal>
 
-    <RightModal v-model="showEdit" @update:modelValue="showEdit = $event">
+    <RightModal v-model="showEdit">
         <template #header>
             <h2 class="subsubtitle">Modifier {{ animal?.name }}</h2>
         </template>
@@ -276,6 +269,7 @@ const selectImage = (index: number) => {
             :races="races"
             :coats="coats"
             :vaccines="vaccines"
+            :suitableTypes="suitableTypes"
             @close="showEdit = false"
         />
     </RightModal>

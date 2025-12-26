@@ -14,13 +14,14 @@ const props = defineProps({
     coats: Object,
     races: Object,
     vaccines: Object,
-    can:Object,
+    suitableTypes: Object,
+    can: Object,
 });
 
 const emit = defineEmits(['close']);
 const races = props.races;
 const vaccines = props.vaccines;
-
+const suitableTypes = props.suitableTypes;
 
 const page = usePage();
 const animals = computed(() => page.props.animals);
@@ -36,7 +37,7 @@ let formAnimal = useForm({
     race_id: '',
     coat_id: '',
     vaccine_id: [],
-    suitable: [],
+    suitable_type_ids: [],
     status: '',
     outside: false,
     published: false,
@@ -66,6 +67,7 @@ const filteredVaccines = computed(() => {
     }
     return vaccines.filter(vaccine => vaccine.specie_id === parseInt(formAnimal.specie_id));
 });
+
 const removePreviewImage = (index) => {
     const dt = new DataTransfer();
     const files = Array.from(formAnimal.pictures);
@@ -189,32 +191,28 @@ const submitAnimal = () => {
                         <span>{{ vaccine.name }}</span>
                     </label>
                     <InputError :message="formAnimal.errors.vaccine_id"/>
-
                 </div>
             </div>
 
             <div class="space-y-1">
                 <p class="text-black font-semibold sm:text-lg leading-9">Convient pour</p>
                 <div class="flex gap-5">
-                    <label for="dog" class="space-x-1">
-                        <input id="dog" type="checkbox" value="dog" v-model="formAnimal.suitable">
-                        Chien
-                    </label>
-                    <label for="cat" class="space-x-1">
-                        <input id="cat" type="checkbox" value="cat" v-model="formAnimal.suitable">
-                        Chat
-                    </label>
-                    <label for="kid" class="space-x-1">
-                        <input id="kid" type="checkbox" value="kid" v-model="formAnimal.suitable">
-                        Enfant
-                    </label>
-                    <label for="baby" class="space-x-1">
-                        <input id="baby" type="checkbox" value="baby" v-model="formAnimal.suitable">
-                        Bébé
+                    <label
+                        v-for="suitableType in suitableTypes"
+                        :key="suitableType.id"
+                        :for="`suitable-${suitableType.id}`"
+                        class="space-x-1"
+                    >
+                        <input
+                            :id="`suitable-${suitableType.id}`"
+                            type="checkbox"
+                            :value="suitableType.id"
+                            v-model="formAnimal.suitable_type_ids"
+                        >
+                        {{ suitableType.label }}
                     </label>
                 </div>
-                <InputError :message="formAnimal.errors.suitable"/>
-
+                <InputError :message="formAnimal.errors.suitable_type_ids"/>
             </div>
 
             <div class="flex justify-between gap-5">
@@ -227,7 +225,6 @@ const submitAnimal = () => {
                         <option value="Validated">Validé</option>
                     </Select>
                     <InputError :message="formAnimal.errors.status"/>
-
                 </div>
                 <div class="space-y-1 w-full">
                     <p class="text-black font-semibold sm:text-lg leading-9">Sortir</p>
@@ -304,8 +301,6 @@ const submitAnimal = () => {
             >
                 Description
             </TabbableTextarea>
-
-
         </div>
         <button
             type="submit"

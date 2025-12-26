@@ -18,20 +18,17 @@ class AnimalFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->firstName(),
             'sex' => $this->faker->randomElement(['male', 'female']),
             'chip' => '250 26 12 ' . $this->faker->numerify('########'),
-            'age' => json_encode($this->faker->numberBetween(0, 20)),
-            'description' => json_encode($this->faker->text()),
+            'age' => $this->faker->numberBetween(0, 20),
+            'description' => $this->faker->text(),
             'status' => $this->faker->randomElement(['Validated', 'In progress', 'Adopted']),
-            'suitable' => $this->faker->randomElement(['Dog', 'Cat', 'Child', 'Baby']),
             'outside' => $this->faker->boolean(),
             'pictures' => null,
             'published' => $this->faker->boolean(),
             'admission_date' => $this->faker->date(),
-            'coat_id' => Coat::factory(),
             'note_id' => null,
-            'race_id' => Race::factory(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

@@ -31,7 +31,6 @@ class Animal extends Model
     ];
 
     protected $casts = [
-        'suitable' => 'array',
         'pictures' => 'array',
         'outside' => 'boolean',
         'published' => 'boolean',
@@ -71,5 +70,10 @@ class Animal extends Model
     public function vaccines(): BelongsToMany
     {
         return $this->belongsToMany(Vaccine::class, 'animal_vaccine', 'animal_id', 'vaccine_id');
+    }
+
+    public function suitableTypes(): BelongsToMany
+    {
+        return $this->belongsToMany(SuitableType::class, 'animal_suitable_type', 'animal_id', 'suitable_type_id');
     }
 }
