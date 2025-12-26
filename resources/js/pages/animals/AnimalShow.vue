@@ -24,56 +24,60 @@ const showEdit = ref(false);
 const showNotes = ref(false);
 const selectedImageIndex = ref(0);
 
-const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
-    if (!filename) return '/images/billy.webp';
+if (props.animal?.pictures !== null) {
 
-    const sizeMap = {
-        sm: '300x300',
-        md: '600x600',
-        lg: '900x900'
-    };
 
-    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
-};
+    const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
+        if (!filename) return '/images/billy.webp';
 
-const getImageSrcset = (filename: string): string => {
-    if (!filename) return '';
-
-    return [
-        `/images/animals/variants/300x300/${filename} 300w`,
-        `/images/animals/variants/600x600/${filename} 600w`,
-        `/images/animals/variants/900x900/${filename} 900w`
-    ].join(', ');
-};
-
-const mainImage = computed(() => {
-    if (!props.animal?.pictures || props.animal.pictures.length === 0) {
-        return {
-            src: '/images/billy.webp',
-            srcset: '',
-            alt: props.animal?.name || 'Animal'
+        const sizeMap = {
+            sm: '300x300',
+            md: '600x600',
+            lg: '900x900'
         };
-    }
 
-    const filename = props.animal.pictures[selectedImageIndex.value];
-    return {
-        src: getImageUrl(filename, 'lg'),
-        srcset: getImageSrcset(filename),
-        alt: props.animal.name
+        return `/images/animals/variants/${sizeMap[size]}/${filename}`;
     };
-});
 
-const thumbnails = computed(() => {
-    if (!props.animal?.pictures || props.animal.pictures.length === 0) {
-        return [];
-    }
+    const getImageSrcset = (filename: string): string => {
+        if (!filename) return '';
 
-    return props.animal.pictures.map((filename: string) => ({
-        src: getImageUrl(filename, 'sm'),
-        srcset: getImageSrcset(filename),
-        filename
-    }));
-});
+        return [
+            `/images/animals/variants/300x300/${filename} 300w`,
+            `/images/animals/variants/600x600/${filename} 600w`,
+            `/images/animals/variants/900x900/${filename} 900w`
+        ].join(', ');
+    };
+
+    const mainImage = computed(() => {
+        if (!props.animal?.pictures || props.animal.pictures.length === 0) {
+            return {
+                src: '/images/billy.webp',
+                srcset: '',
+                alt: props.animal?.name || 'Animal'
+            };
+        }
+
+        const filename = props.animal.pictures[selectedImageIndex.value];
+        return {
+            src: getImageUrl(filename, 'lg'),
+            srcset: getImageSrcset(filename),
+            alt: props.animal.name
+        };
+    });
+
+    const thumbnails = computed(() => {
+        if (!props.animal?.pictures || props.animal.pictures.length === 0) {
+            return [];
+        }
+
+        return props.animal.pictures.map((filename: string) => ({
+            src: getImageUrl(filename, 'sm'),
+            srcset: getImageSrcset(filename),
+            filename
+        }));
+    });
+}
 
 const suitableText = computed(() => {
     if (!props.animal?.suitable || props.animal.suitable.length === 0) {
@@ -185,7 +189,8 @@ const selectImage = (index: number) => {
                         </div>
 
                         <div v-else class="flex sm:flex-col gap-2 sm:gap-3">
-                            <div class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 flex items-center justify-center">
+                            <div
+                                class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 flex items-center justify-center">
                                 <span class="text-xs text-gray-400">Aucune photo</span>
                             </div>
                         </div>

@@ -9,7 +9,11 @@ class PublicAnimalController extends Controller
 {
     public function index()
     {
-        $animals = Animal::where('published', 1)->get();
+        $animals = Animal::where('published', 1)
+            ->whereIn('status', [
+                AnimalStatus::VALIDATED,
+            ])
+            ->get();
 
         return view('client.animals', compact('animals'));
     }
@@ -19,7 +23,6 @@ class PublicAnimalController extends Controller
         $otherAnimals = Animal::where('id', '!=', $animal->id)
             ->whereIn('status', [
                 AnimalStatus::VALIDATED,
-                AnimalStatus::IN_PROGRESS
             ])
             ->inRandomOrder()
             ->limit(3)

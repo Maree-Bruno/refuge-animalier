@@ -16,25 +16,23 @@
             alt="Photo de {{$name}}"
             class="self-stretch h-72 rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[200px] rounded-br-[200px]
             shadow-[inset_0px_0px_100px_0px_rgba(0,0,0,0.80)] object-cover object-top object-fit-fill">
-        <h3 class="subtitle">{{$name}}</h3>
+        <h3 class="subsubtitle">{{$name}}</h3>
     </div>
     <div
         class="card-hover opacity-0 group-hover:opacity-100 transition-all duration-300 text-white p-5 rounded-2xl ">
         <div class="card-hover-animal relative z-10 overflow-hidden">
             <img
-                src="{{$src}}"
+                src="{{ $src }}"
                 @if($srcset)
-                    srcset="{{$srcset}}"
-                @endif
-                @if($sizes)
-                    sizes="{{$sizes}}"
+                    srcset="{{ $srcset }}"
+                sizes="{{ $sizes }}"
                 @endif
                 alt="Photo de {{$name}}"
                 class="absolute inset-0 w-full h-full object-cover rounded-2xl ">
             <div class="absolute inset-0 bg-black/50 rounded-2xl"></div>
             <div class="flex flex-col justify-center z-10">
                 <div class="mb-4">
-                    <p class="subtitle">{{$name}}</p>
+                    <p class="subsubtitle">{{$name}}</p>
                     <div class="flex flex-col gap-6">
                         <div class="flex justify-between items-center">
                             <span class="xsmalltext">{{$age}}</span>

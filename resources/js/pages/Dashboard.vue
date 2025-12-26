@@ -111,7 +111,7 @@ const handleEmailRowSelect = (selected) => {
 </script>
 
 <template>
-    <section class="flex flex-col gap-5">
+    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
         <h3 class="sr-only">Statistiques</h3>
         <div class="gap-10 self-stretch flex justify-start items-start flex-wrap">
             <Stats title="Animaux adoptés" number="43" className="bg-lighthoneyyellow border-honeyyellow"/>
@@ -128,7 +128,7 @@ const handleEmailRowSelect = (selected) => {
         :species :races :coats :vaccines :can
     />
 
-    <section class="flex flex-col gap-5">
+<!--    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
         <h3 class="subsubtitle">Demande d'adoption</h3>
         <GenericTable
             :columns="adoptionColumns"
@@ -140,7 +140,7 @@ const handleEmailRowSelect = (selected) => {
         />
     </section>
 
-    <section class="flex flex-col gap-5">
+    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
         <h3 class="subsubtitle">Emails</h3>
         <GenericTable
             :columns="emailColumns"
@@ -150,7 +150,7 @@ const handleEmailRowSelect = (selected) => {
             empty-message="Aucun email"
             @row-select="handleEmailRowSelect"
         />
-    </section>
+    </section>-->
 
 
 </template>

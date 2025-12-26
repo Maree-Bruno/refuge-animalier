@@ -14,6 +14,7 @@ import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
 import InputLabel from "@/components/widgets/form/InputLabel.vue";
 import {store} from "@/routes/animals/index.ts";
 import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
+import {useFormatDate} from "@/composables/useFormatDate.ts";
 
 
 const props = defineProps({
@@ -176,6 +177,7 @@ const getAnimalImageSrcset = (animal) => {
         `/images/animals/variants/900x900/${filename} 900w`
     ].join(', ');
 }
+const { formatDate } = useFormatDate();
 </script>
 
 <template>
@@ -256,7 +258,7 @@ const getAnimalImageSrcset = (animal) => {
                         <div class="space-y-1 text-xs text-gray-600">
                             <p><span class="font-medium">Age:</span> {{ animal.age }}</p>
                             <p><span class="font-medium">Puce:</span> {{ animal.chip }}</p>
-                            <p><span class="font-medium">Admission:</span> {{ animal.admission_date }}</p>
+                            <p><span class="font-medium">Admission:</span> {{ formatDate(animal.admission_date) }}</p>
                         </div>
 
                         <div class="mt-2">
