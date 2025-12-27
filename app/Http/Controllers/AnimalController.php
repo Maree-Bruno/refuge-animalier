@@ -120,12 +120,10 @@ class AnimalController extends Controller
             'pictures' => $storedImages,
         ]);
 
-        // Sync suitable types
         if (!empty($validated['suitable_type_ids'])) {
             $animal->suitableTypes()->sync($validated['suitable_type_ids']);
         }
 
-        // Sync vaccines
         if (!empty($request['vaccine_id'])) {
             $animal->vaccines()->sync($request['vaccine_id']);
         }
@@ -196,12 +194,10 @@ class AnimalController extends Controller
             $animal->update(['pictures' => $storedImages]);
         }
 
-        // Sync suitable types
         if (isset($validated['suitable_type_ids'])) {
             $animal->suitableTypes()->sync($validated['suitable_type_ids']);
         }
 
-        // Sync vaccines
         if (!empty($request['vaccine_id'])) {
             $animal->vaccines()->sync($request['vaccine_id']);
         }
