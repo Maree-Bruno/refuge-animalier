@@ -36,17 +36,6 @@ class AdoptionRequestController extends Controller
             'animal.suitableTypes',
             'user'
         ]);
-        $animals = $this->filterAndPaginate(
-            Animal::class,
-            $request,
-            ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
-        );
-        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
-        $species = Specie::all();
-        $races = Race::all();
-        $coats = Coat::all();
-        $vaccines = Vaccine::all();
-        $suitableTypes = SuitableType::all();
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -68,12 +57,35 @@ class AdoptionRequestController extends Controller
 
         if ($request->filled('orderby')) {
             $direction = $request->input('dir', 'asc');
-            $query->orderBy($request->orderby, $direction);
+            $orderBy = $request->orderby;
+
+            if (in_array($orderBy, ['name', 'email', 'phone'])) {
+                $query->join('adopters', 'adoption_requests.adopter_id', '=', 'adopters.id')
+                    ->select('adoption_requests.*')
+                    ->orderBy("adopters.{$orderBy}", $direction);
+            }
+            elseif ($orderBy === 'animal') {
+                $query->orderBy(
+                    \App\Models\Animal::select('name')
+                        ->whereColumn('animals.id', 'adoption_requests.animal_id'),
+                    $direction
+                );
+            }
+            else {
+                $query->orderBy($orderBy, $direction);
+            }
         } else {
             $query->latest();
         }
 
         $adoptionRequests = $query->paginate(10)->withQueryString();
+
+        $animals = Animal::with(['coat', 'race', 'specie', 'vaccines', 'suitableTypes'])->get();
+        $species = Specie::all();
+        $races = Race::all();
+        $coats = Coat::all();
+        $vaccines = Vaccine::all();
+        $suitableTypes = SuitableType::all();
 
         return Inertia::render('AdoptionRequestsIndexView', [
             'title' => "Demandes d'adoption",

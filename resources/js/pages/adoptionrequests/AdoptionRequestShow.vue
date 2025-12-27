@@ -190,7 +190,8 @@ const openShowModal = () => {
                     </div>
                     <div v-if="request.animal?.vaccines">
                         <p class="text-sm text-gray-600 mb-1">Vaccins de l'animal</p>
-                        <p class="font-medium text-gray-900">{{ request.animal.vaccines.map(v => v.name).join(',')}}</p>
+                        <p class="font-medium text-gray-900">{{ request.animal.vaccines.map(v => v.name).join(', ')
+                            }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Puce de l'animal</p>
