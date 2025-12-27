@@ -27,11 +27,12 @@ class DashboardController extends Controller
         $vaccines = Vaccine::all();
         $suitableTypes = SuitableType::all();
         $animals = $this->filterAndPaginate(Animal::class, $request,['coat', 'race', 'specie', 'vaccines', 'suitableTypes']);
+        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
         return Inertia::render('Dashboard', [
             'title' => 'Dashboard',
             'animals' => $animals,
             'species' => $species,
-            'suitableTypes' => $suitableTypes,
+            'allSuitableTypes' => $suitableTypes,
             'races' => $races,
             'coats' => $coats,
             'vaccines' => $vaccines,
