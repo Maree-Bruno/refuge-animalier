@@ -30,11 +30,13 @@ class AnimalController extends Controller
         $vaccines = Vaccine::all();
         $suitableTypes = SuitableType::all();
 
+
         $animals = $this->filterAndPaginate(
             Animal::class,
             $request,
             ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
         );
+        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
 
         return Inertia::render('AnimalsIndexView', [
             'title' => 'Animals',
@@ -43,7 +45,7 @@ class AnimalController extends Controller
             'races' => $races,
             'coats' => $coats,
             'vaccines' => $vaccines,
-            'suitableTypes' => $suitableTypes,
+            'allSuitableTypes' => $suitableTypes,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
             'can' => [
                 'publish' => Auth::user()->can('publish', Animal::class),

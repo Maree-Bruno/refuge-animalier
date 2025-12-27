@@ -1,29 +1,24 @@
 <script setup>
 
-  import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
-  import {usePage} from "@inertiajs/vue3";
-  import {computed} from "vue";
+import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
+import {usePage} from "@inertiajs/vue3";
+import {computed} from "vue";
 
-  const page = usePage();
-  const animals = computed(() => page.props.animals);
-  const filters = computed(() => page.props.filters || {});
-  const species = computed(()=>page.props.species);
-  const races = computed(()=>page.props.races);
-  const coats = computed(()=>page.props.coats);
-  const vaccines = computed(()=>page.props.vaccines);
-  const suitableTypes = computed(()=>page.props.suitableTypes);
-  const can = computed(()=>page.props.can);
+const props = defineProps({
+    animals: {type: Object},
+    filters: {
+        type: Object,
+        default: () => ({})
+    },
+    species: {type: Object},
+    races: {type: Object},
+    coats: {type: Object},
+    vaccines: {type: Object},
+    allSuitableTypes: {type: Object},
+    can: {type: Object},
+})
 </script>
 
 <template>
-    <AnimalIndex
-        :animals="animals"
-        :filters="filters"
-        :species="species"
-        :races="races"
-        :coats="coats"
-        :vaccines = "vaccines"
-        :suitableTypes="suitableTypes"
-        :can="can"
-    />
+    <AnimalIndex v-bind="props"/>
 </template>

@@ -9,25 +9,19 @@ import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
 import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
 
 
-defineProps({
-    species:{
-        type:Object,
+const props = defineProps({
+    animals: {type: Object},
+    filters: {
+        type: Object,
+        default: () => ({})
     },
-    races:{
-        type:Object,
-    },
-    coats:{
-        type:Object,
-    },
-    vaccines:{
-        type:Object,
-    },
-    can:Object,
+    species: {type: Object},
+    races: {type: Object},
+    coats: {type: Object},
+    vaccines: {type: Object},
+    suitableTypes: {type: Object},
+    can: {type: Object},
 })
-const page = usePage();
-const animals = computed(() => page.props.animals);
-const filters = computed(() => page.props.filters || {});
-
 const adoptionColumns = [
     {key: 'name', label: 'Nom'},
     {key: 'email', label: 'Email'},
@@ -121,12 +115,7 @@ const handleEmailRowSelect = (selected) => {
         </div>
     </section>
 
-    <AnimalIndex
-        :animals="animals"
-        :filters="filters"
-        :showTitle="true"
-        :species :races :coats :vaccines :can
-    />
+    <AnimalIndex v-bind="props" />
 
 <!--    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
         <h3 class="subsubtitle">Demande d'adoption</h3>

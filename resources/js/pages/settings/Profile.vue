@@ -37,7 +37,6 @@ const form = useForm({
     availability: user.availability ?? null,
     picture: null,
 });
-console.log('Form initial:', form);
 const handlePicture = (event: Event) => {
     const file = handleSingleImage(event);
     if (file) {

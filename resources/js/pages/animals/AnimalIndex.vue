@@ -11,10 +11,9 @@ import {ref, watch} from "vue";
 import {router, useForm} from "@inertiajs/vue3";
 import ExternalIcon from "@/components/widgets/svg/ExternalIcon.vue";
 import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
-import InputLabel from "@/components/widgets/form/InputLabel.vue";
-import {store} from "@/routes/animals/index.ts";
 import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
 import {useFormatDate} from "@/composables/useFormatDate.ts";
+import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
 
 
 const props = defineProps({
@@ -41,7 +40,7 @@ const props = defineProps({
     vaccines: {
         type: Object,
     },
-    suitableTypes: {
+    allSuitableTypes: {
         type: Object
     },
     can: Object,
@@ -91,7 +90,6 @@ let isShowModalOpen = ref(false)
 let selectedRow = ref(null)
 
 const openShowModal = (row) => {
-    console.log('Opening modal for:', row);
     selectedRow.value = row;
     isShowModalOpen.value = true;
 }
@@ -338,7 +336,13 @@ const {formatDate} = useFormatDate();
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
-            <AnimalCreate :species :races :coats :vaccines :can @close="showCreateAnimal = false" :suitableTypes/>
+            <AnimalCreate :species="species"
+                          :races="races"
+                          :coats="coats"
+                          :vaccines="vaccines"
+                          :can="can"
+                          @close="showCreateAnimal = false"
+                          :allSuitableTypes="allSuitableTypes"/>
         </RightModal>
     </KeepAlive>
 
@@ -347,7 +351,14 @@ const {formatDate} = useFormatDate();
                  route-key="animal"
                  :route-value="selectedRow?.id"
     >
-        <AnimalShow :animal="selectedRow" :races :coats :vaccines :suitableTypes/>
+        <AnimalShow :animal="selectedRow"
+                    :species="species"
+                    :races="races"
+                    :coats="coats"
+                    :vaccines="vaccines"
+                    :can="can"
+                    @close="showCreateAnimal = false"
+                    :allSuitableTypes="allSuitableTypes"/>
     </CenterModal>
 
     <CenterModal v-model="showDeleteConfirm">

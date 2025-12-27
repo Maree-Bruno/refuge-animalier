@@ -7,6 +7,7 @@ use App\Models\Animal;
 use App\Models\Coat;
 use App\Models\Race;
 use App\Models\Specie;
+use App\Models\SuitableType;
 use App\Models\Vaccine;
 use App\Policies\AnimalPolicy;
 use App\Policies\UserPolicy;
@@ -24,11 +25,13 @@ class DashboardController extends Controller
         $races = Race::all();
         $coats = Coat::all();
         $vaccines = Vaccine::all();
-        $animals = $this->filterAndPaginate(Animal::class, $request,['coat', 'race', 'specie', 'vaccines']);
+        $suitableTypes = SuitableType::all();
+        $animals = $this->filterAndPaginate(Animal::class, $request,['coat', 'race', 'specie', 'vaccines', 'suitableTypes']);
         return Inertia::render('Dashboard', [
             'title' => 'Dashboard',
             'animals' => $animals,
             'species' => $species,
+            'suitableTypes' => $suitableTypes,
             'races' => $races,
             'coats' => $coats,
             'vaccines' => $vaccines,

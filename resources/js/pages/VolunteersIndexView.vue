@@ -14,10 +14,6 @@ const props = defineProps({
 </script>
 
 <template>
-   <VolunteerIndex
-   :volunteers="volunteers"
-   :filters="filters"
-   :roles="roles"
-   />
+   <VolunteerIndex v-bind="props"/>
 </template>
 

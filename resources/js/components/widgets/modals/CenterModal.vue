@@ -25,10 +25,13 @@ watch(
     (isOpen) => {
         if (isOpen) {
             document.addEventListener('keydown', handleEscape)
-            document.body.style.overflow = 'hidden'
+            document.body.style.overflow = 'hidden';
+            document.body.tabIndex = -1;
         } else {
             document.removeEventListener('keydown', handleEscape)
             document.body.style.overflow = ''
+            document.body.tabIndex = 0;
+
         }
         if (!props.routeKey) return
 
@@ -74,7 +77,7 @@ onBeforeUnmount(() => {
                 @keydown.esc="close"
                 tabindex="0"
             >
-                <div class="bg-white p-6 rounded-3xl shadow-xl max-w-5xl w-full z-50">
+                <div class="bg-white p-6 rounded-3xl shadow-xl max-w-5xl w-full z-50 max-h-10/12 overflow-y-scroll">
                     <slot />
                 </div>
             </div>

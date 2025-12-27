@@ -3,7 +3,6 @@
 namespace App\Concerns;
 use Illuminate\Http\Request;
 
-
 trait FilterablePaginate
 {
     public function filterAndPaginate($model, Request $request, $relations = [], $perPage = 10)
@@ -13,7 +12,11 @@ trait FilterablePaginate
         $search  = $request->get('search', '');
         $status  = $request->get('status', 'all');
 
-        $query = $model::with($relations);
+        $query = $model::query();
+
+        if (!empty($relations)) {
+            $query->with($relations);
+        }
 
         $query->when($status !== 'all', function ($q) use ($status) {
             if ($status === 'Adopted') {
@@ -22,6 +25,7 @@ trait FilterablePaginate
                 $q->whereIn('status', ['Validated', 'In progress']);
             }
         });
+
         $query->when($search, function ($q) use ($search) {
             $q->where(function ($sub) use ($search) {
                 $sub->where('name', 'like', "%{$search}%")
@@ -30,7 +34,6 @@ trait FilterablePaginate
         });
 
         $query->orderBy($orderBy, $dir);
-
         return $query->paginate($perPage)->withQueryString();
     }
 }

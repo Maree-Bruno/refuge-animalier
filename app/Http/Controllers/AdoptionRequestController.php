@@ -2,18 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Concerns\FilterablePaginate;
 use App\Models\Adopter;
 use App\Models\AdoptionRequest;
 use App\Models\Animal;
+use App\Models\Coat;
+use App\Models\Race;
+use App\Models\Specie;
+use App\Models\SuitableType;
+use App\Models\Vaccine;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AdoptionRequestController extends Controller
 {
+    use FilterablePaginate;
     public function index(Request $request)
     {
-        $query = AdoptionRequest::with(['adopter', 'animal', 'user']);
-
+        $query = AdoptionRequest::with([
+            'adopter',
+            'animal',
+            'animal.coat',
+            'animal.race',
+            'animal.specie',
+            'animal.vaccines',
+            'animal.suitableTypes',
+            'user'
+        ]);
+        $animals = $this->filterAndPaginate(
+            Animal::class,
+            $request,
+            ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
+        );
+        $species = Specie::all();
+        $races = Race::all();
+        $coats = Coat::all();
+        $vaccines = Vaccine::all();
+        $suitableTypes = SuitableType::all();
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -45,6 +70,12 @@ class AdoptionRequestController extends Controller
             'title' => "Demandes d'adoption",
             'adoptionRequests' => $adoptionRequests,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
+            'animals' => $animals,
+            'species' => $species,
+            'races' => $races,
+            'coats' => $coats,
+            'vaccines' => $vaccines,
+            'suitableTypes' => $suitableTypes,
         ]);
     }
 
@@ -73,8 +104,6 @@ class AdoptionRequestController extends Controller
                 'cp' => $validated['cp'] ?? null,
             ]
         );
-
-
         AdoptionRequest::create([
             'adopter_id' => $adopter->id,
             'animal_id' => $validated['animal_id'],
@@ -92,26 +121,14 @@ class AdoptionRequestController extends Controller
         $adoptionRequest = AdoptionRequest::with('adopter')->findOrFail($id);
 
         $validated = $request->validate([
-            'adopter.name' => 'required|string|max:255',
-            'adopter.email' => 'required|email|max:255',
-            'adopter.phone' => 'required|string|max:20',
-            'adopter.address' => 'nullable|string|max:255',
-            'adopter.number' => 'nullable|string|max:10',
-            'adopter.city' => 'nullable|string|max:100',
-            'adopter.cp' => 'nullable|string|max:10',
-            'animal_id' => 'required|exists:animals,id',
-            'message' => 'required|string|max:1000',
             'status' => 'required|in:submitted,pending,accepted,rejected',
         ]);
 
         $adoptionRequest->update([
-            'animal_id' => $validated['animal_id'],
-            'message' => $validated['message'],
             'status' => $validated['status'],
             'adoption_date' => $validated['status'] === 'accepted' ? now() : null,
         ]);
 
-        $adoptionRequest->adopter->update($validated['adopter']);
 
         return back();
     }
