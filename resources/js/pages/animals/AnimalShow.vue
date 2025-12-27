@@ -14,6 +14,8 @@ const props = defineProps({
     vaccines: {type:Object},
     allSuitableTypes: {type:Object},
 });
+console.log(props.species)
+
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);

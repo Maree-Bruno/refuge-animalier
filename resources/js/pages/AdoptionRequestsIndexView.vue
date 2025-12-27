@@ -24,6 +24,6 @@ const props = defineProps({
         :races="races"
         :coats="coats"
         :vaccines="vaccines"
-        :suitable-types="suitableTypes"
+        :suitableTypes="suitableTypes"
     />
 </template>

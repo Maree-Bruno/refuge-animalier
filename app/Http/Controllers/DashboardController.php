@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Concerns\FilterablePaginate;
+use App\Enums\AnimalStatus;
+use App\Models\AdoptionRequest;
 use App\Models\Animal;
 use App\Models\Coat;
 use App\Models\Race;
@@ -26,16 +28,41 @@ class DashboardController extends Controller
         $coats = Coat::all();
         $vaccines = Vaccine::all();
         $suitableTypes = SuitableType::all();
+        $adoptedAnimals = Animal::where('status', AnimalStatus::ADOPTED)->count();
+
+        $refugedAnimals = Animal::whereIn('status', [
+            AnimalStatus::IN_PROGRESS,
+            AnimalStatus::VALIDATED
+        ])->count();
+
+        $accepted = AdoptionRequest::where('status', 'accepted')->count();
+
+        $inProgress = AdoptionRequest::whereIn('status', ['pending', 'submitted'])->count();
         $animals = $this->filterAndPaginate(Animal::class, $request,['coat', 'race', 'specie', 'vaccines', 'suitableTypes']);
         $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
+        $adoptionRequests = AdoptionRequest::with([
+            'adopter',
+            'animal',
+            'animal.coat',
+            'animal.race',
+            'animal.specie',
+            'animal.vaccines',
+            'animal.suitableTypes',
+            'user'
+        ])->paginate(10)->withQueryString();
         return Inertia::render('Dashboard', [
             'title' => 'Dashboard',
+            'adoptionRequests' => $adoptionRequests,
             'animals' => $animals,
             'species' => $species,
             'allSuitableTypes' => $suitableTypes,
             'races' => $races,
             'coats' => $coats,
             'vaccines' => $vaccines,
+            'refugedAnimals' => $refugedAnimals,
+            'adoptedAnimals' => $adoptedAnimals,
+            'accepted' => $accepted,
+            'inProgress' => $inProgress,
             'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
             'can' => [
                 'publish' => Auth::user()->can('publish', Animal::class),

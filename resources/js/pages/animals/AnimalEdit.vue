@@ -16,6 +16,7 @@ const props = defineProps({
     vaccines: Object,
     allSuitableTypes: Object,
 });
+console.log(props.species)
 
 const toast = useToasterStore();
 let formAnimal = useForm({
@@ -40,8 +41,8 @@ let formAnimal = useForm({
 });
 
 const filteredRaces = computed(() => {
-    if (!formAnimal.specie_id) {
-        return props.races
+    if (!formAnimal.specie_id || !props.races) {
+        return props.races || [];
     }
     return props.races.filter(race => race.specie_id === parseInt(formAnimal.specie_id));
 });
@@ -54,8 +55,9 @@ const filteredVaccines = computed(() => {
 });
 
 const selectedVaccines = computed(() => {
+    if (!props.vaccines) return [];
     return props.vaccines.filter(vaccine => formAnimal.vaccine_id.includes(vaccine.id));
-})
+});
 
 let previewPictures = ref([]);
 let existingPictures = ref(props.animal?.pictures || []);
@@ -120,7 +122,7 @@ const deleteImage = (filename) => {
     });
 };
 
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update', 'close']);
 const showEditAnimal = ref(false);
 
 const submitAnimal = () => {
@@ -135,6 +137,7 @@ const submitAnimal = () => {
             previewPictures.value = [];
             showEditAnimal.value = false;
             emit('update');
+            emit('close');
         },
         onError: (errors) => {
             toast.error({text: 'Une erreur est apparue lors de la mise à jour'});

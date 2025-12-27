@@ -1,11 +1,30 @@
 <script setup lang="ts">
-  import Layout from '@/layouts/AppLayout'
-  import { Head } from '@inertiajs/vue3'
-  import AppLayout from "@/layouts/AppLayout.vue";
+import ReportsIndex from "@/pages/reports/ReportsIndex.vue";
 
-  defineProps<{}>()
+const props = defineProps({
+    reports: Array,
+    species: Object,
+    races: Object,
+    coats: Object,
+    vaccines: Object,
+    allSuitableTypes: Object,
+    can: Object,
+    filters: {
+        type: Object,
+        default: () => ({})
+    },
+})
 </script>
 
 <template>
-
+    <ReportsIndex
+        :reports="reports"
+        :species="species"
+        :races="races"
+        :coats="coats"
+        :vaccines="vaccines"
+        :can="can"
+        :allSuitableTypes="allSuitableTypes"
+        :filters="filters"
+    />
 </template>
