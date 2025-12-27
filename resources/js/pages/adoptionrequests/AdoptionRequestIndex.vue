@@ -31,9 +31,6 @@ const props = defineProps({
     vaccines: Object,
     suitableTypes: Object,
 });
-
-console.log(props.species)
-
 let search = ref(props.filters.search || '');
 let activeTab = ref(props.filters.status || 'all');
 let timeout = null;

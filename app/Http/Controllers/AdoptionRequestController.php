@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Concerns\FilterablePaginate;
+use App\Mail\AdoptionRequestReceivedMail;
+use App\Mail\AdoptionRequestStatusUpdatedMail;
 use App\Models\Adopter;
 use App\Models\AdoptionRequest;
 use App\Models\Animal;
@@ -11,12 +13,17 @@ use App\Models\Race;
 use App\Models\Specie;
 use App\Models\SuitableType;
 use App\Models\Vaccine;
+use App\Models\User;
+use App\Notifications\AdoptionRequestCreatedNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
 class AdoptionRequestController extends Controller
 {
     use FilterablePaginate;
+
     public function index(Request $request)
     {
         $query = AdoptionRequest::with([
@@ -29,17 +36,7 @@ class AdoptionRequestController extends Controller
             'animal.suitableTypes',
             'user'
         ]);
-        $animals = $this->filterAndPaginate(
-            Animal::class,
-            $request,
-            ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
-        );
-        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
-        $species = Specie::all();
-        $races = Race::all();
-        $coats = Coat::all();
-        $vaccines = Vaccine::all();
-        $suitableTypes = SuitableType::all();
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -53,19 +50,42 @@ class AdoptionRequestController extends Controller
                     });
             });
         }
+
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-
         if ($request->filled('orderby')) {
             $direction = $request->input('dir', 'asc');
-            $query->orderBy($request->orderby, $direction);
+            $orderBy = $request->orderby;
+
+            if (in_array($orderBy, ['name', 'email', 'phone'])) {
+                $query->join('adopters', 'adoption_requests.adopter_id', '=', 'adopters.id')
+                    ->select('adoption_requests.*')
+                    ->orderBy("adopters.{$orderBy}", $direction);
+            }
+            elseif ($orderBy === 'animal') {
+                $query->orderBy(
+                    \App\Models\Animal::select('name')
+                        ->whereColumn('animals.id', 'adoption_requests.animal_id'),
+                    $direction
+                );
+            }
+            else {
+                $query->orderBy($orderBy, $direction);
+            }
         } else {
             $query->latest();
         }
 
         $adoptionRequests = $query->paginate(10)->withQueryString();
+
+        $animals = Animal::with(['coat', 'race', 'specie', 'vaccines', 'suitableTypes'])->get();
+        $species = Specie::all();
+        $races = Race::all();
+        $coats = Coat::all();
+        $vaccines = Vaccine::all();
+        $suitableTypes = SuitableType::all();
 
         return Inertia::render('AdoptionRequestsIndexView', [
             'title' => "Demandes d'adoption",
@@ -80,7 +100,6 @@ class AdoptionRequestController extends Controller
         ]);
     }
 
-
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -94,6 +113,7 @@ class AdoptionRequestController extends Controller
             'animal_id' => 'required|exists:animals,id',
             'message' => 'required|string|max:1000',
         ]);
+
         $adopter = Adopter::updateOrCreate(
             ['email' => $validated['email']],
             [
@@ -105,7 +125,8 @@ class AdoptionRequestController extends Controller
                 'cp' => $validated['cp'] ?? null,
             ]
         );
-        AdoptionRequest::create([
+
+        $adoptionRequest = AdoptionRequest::create([
             'adopter_id' => $adopter->id,
             'animal_id' => $validated['animal_id'],
             'message' => $validated['message'],
@@ -115,21 +136,36 @@ class AdoptionRequestController extends Controller
             'user_id' => auth()->id(),
         ]);
 
+        $adoptionRequest->load(['adopter', 'animal']);
+
+        Mail::to($adopter->email)->send(new AdoptionRequestReceivedMail($adoptionRequest));
+
+        $users = User::all();
+
+        Notification::send($users, new AdoptionRequestCreatedNotification($adoptionRequest));
+
         return back()->with('success', __('contact.request_sent'));
     }
+
     public function update(Request $request, $id)
     {
-        $adoptionRequest = AdoptionRequest::with('adopter')->findOrFail($id);
+        $adoptionRequest = AdoptionRequest::with(['adopter', 'animal'])->findOrFail($id);
 
         $validated = $request->validate([
             'status' => 'required|in:submitted,pending,accepted,rejected',
         ]);
+
+        $statusChanged = $adoptionRequest->status !== $validated['status'];
 
         $adoptionRequest->update([
             'status' => $validated['status'],
             'adoption_date' => $validated['status'] === 'accepted' ? now() : null,
         ]);
 
+        if ($statusChanged && $validated['status'] !== 'submitted') {
+            Mail::to($adoptionRequest->adopter->email)
+                ->send(new AdoptionRequestStatusUpdatedMail($adoptionRequest));
+        }
 
         return back();
     }
@@ -139,7 +175,6 @@ class AdoptionRequestController extends Controller
         $adoptionRequest = AdoptionRequest::findOrFail($id);
         $adoptionRequest->delete();
 
-        return redirect()->route('adoption-requests.index')
-            ->with('success', 'Demande d\'adoption supprimée avec succès');
+        return back();
     }
 }
