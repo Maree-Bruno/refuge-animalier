@@ -4,29 +4,21 @@ import {usePage} from "@inertiajs/vue3";
 import RightModal from "@/components/widgets/modals/RightModal.vue";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
 import AnimalEdit from "@/pages/animals/AnimalEdit.vue";
+import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
 
 const props = defineProps({
-    animal: Object,
-    species: Object,
-    races: Object,
-    coats: Object,
-    vaccines: Object,
-    suitableTypes: Object,
+    animal: {type:Object},
+    species: {type:Object},
+    races: {type:Object},
+    coats: {type:Object},
+    vaccines: {type:Object},
+    allSuitableTypes: {type:Object},
 });
-
-const page = usePage();
-const species = computed(() => page.props.species);
-const races = computed(() => page.props.races);
-const coats = computed(() => page.props.coats);
-const vaccines = computed(() => page.props.vaccines);
-const suitableTypes = computed(() => page.props.suitableTypes);
-
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);
 const selectedImageIndex = ref(0);
 
-// Déplacer les fonctions en dehors du if
 const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
     if (!filename) return '/images/billy.webp';
 
@@ -49,7 +41,6 @@ const getImageSrcset = (filename: string): string => {
     ].join(', ');
 };
 
-// Déplacer les computed en dehors du if
 const mainImage = computed(() => {
     if (!props.animal?.pictures || props.animal.pictures.length === 0) {
         return {
@@ -164,7 +155,7 @@ const selectImage = (index: number) => {
                                 :key="index"
                                 @click="selectImage(index)"
                                 :class="[
-                                    'flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden transition-all border-2',
+                                    'w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden transition-all border-2',
                                     selectedImageIndex === index
                                         ? 'border-blueslate ring-2 ring-blueslate/30'
                                         : 'border-transparent hover:border-gray-300'
@@ -183,7 +174,7 @@ const selectImage = (index: number) => {
 
                         <div v-else class="flex sm:flex-col gap-2 sm:gap-3">
                             <div
-                                class="flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 flex items-center justify-center">
+                                class="w-16 h-16 sm:w-20 sm:h-20 rounded-lg bg-gray-100 flex items-center justify-center">
                                 <span class="text-xs text-gray-400">Aucune photo</span>
                             </div>
                         </div>
@@ -245,7 +236,7 @@ const selectImage = (index: number) => {
 
                 <div class="space-y-2 sm:space-y-3">
                     <h3 class="font-quicksand font-bold text-lg sm:text-xl">Description</h3>
-                    <p class="text-sm sm:text-base leading-relaxed break-words overflow-hidden">
+                    <p class="text-sm sm:text-base leading-relaxed wrap-break-word overflow-hidden">
                         {{ animal.description || 'Aucune description disponible.' }}
                     </p>
                 </div>
@@ -269,7 +260,7 @@ const selectImage = (index: number) => {
             :races="races"
             :coats="coats"
             :vaccines="vaccines"
-            :suitableTypes="suitableTypes"
+            :allSuitableTypes="allSuitableTypes"
             @close="showEdit = false"
         />
     </RightModal>
@@ -279,26 +270,22 @@ const selectImage = (index: number) => {
 </template>
 
 <style scoped>
-.overflow-x-auto::-webkit-scrollbar,
-.overflow-y-auto::-webkit-scrollbar {
+.overflow-x-auto::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-track,
-.overflow-y-auto::-webkit-scrollbar-track {
+.overflow-x-auto::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb,
-.overflow-y-auto::-webkit-scrollbar-thumb {
+.overflow-x-auto::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 10px;
 }
 
-.overflow-x-auto::-webkit-scrollbar-thumb:hover,
-.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
 </style>

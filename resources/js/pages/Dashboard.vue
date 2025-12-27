@@ -7,27 +7,22 @@ import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
 import ExternalIcon from "@/components/widgets/svg/ExternalIcon.vue";
 import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
 import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
+import AnimalShow from "@/pages/animals/AnimalShow.vue";
 
 
-defineProps({
-    species:{
-        type:Object,
+const props = defineProps({
+    animals: {type: Object},
+    filters: {
+        type: Object,
+        default: () => ({})
     },
-    races:{
-        type:Object,
-    },
-    coats:{
-        type:Object,
-    },
-    vaccines:{
-        type:Object,
-    },
-    can:Object,
+    species: {type: Object},
+    races: {type: Object},
+    coats: {type: Object},
+    vaccines: {type: Object},
+    allSuitableTypes: {type: Object},
+    can: {type: Object},
 })
-const page = usePage();
-const animals = computed(() => page.props.animals);
-const filters = computed(() => page.props.filters || {});
-
 const adoptionColumns = [
     {key: 'name', label: 'Nom'},
     {key: 'email', label: 'Email'},
@@ -123,34 +118,36 @@ const handleEmailRowSelect = (selected) => {
 
     <AnimalIndex
         :animals="animals"
-        :filters="filters"
-        :showTitle="true"
-        :species :races :coats :vaccines :can
-    />
+        :species="species"
+        :races="races"
+        :coats="coats"
+        :vaccines="vaccines"
+        :can="can"
+        :allSuitableTypes="allSuitableTypes"/>
 
-<!--    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
-        <h3 class="subsubtitle">Demande d'adoption</h3>
-        <GenericTable
-            :columns="adoptionColumns"
-            :data="adoptionRequests"
-            :actions="adoptionActions"
-            :selectable="true"
-            empty-message="Aucune demande d'adoption"
-            @row-select="handleAdoptionRowSelect"
-        />
-    </section>
+    <!--    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
+            <h3 class="subsubtitle">Demande d'adoption</h3>
+            <GenericTable
+                :columns="adoptionColumns"
+                :data="adoptionRequests"
+                :actions="adoptionActions"
+                :selectable="true"
+                empty-message="Aucune demande d'adoption"
+                @row-select="handleAdoptionRowSelect"
+            />
+        </section>
 
-    <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
-        <h3 class="subsubtitle">Emails</h3>
-        <GenericTable
-            :columns="emailColumns"
-            :data="emails"
-            :actions="emailActions"
-            :selectable="true"
-            empty-message="Aucun email"
-            @row-select="handleEmailRowSelect"
-        />
-    </section>-->
+        <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
+            <h3 class="subsubtitle">Emails</h3>
+            <GenericTable
+                :columns="emailColumns"
+                :data="emails"
+                :actions="emailActions"
+                :selectable="true"
+                empty-message="Aucun email"
+                @row-select="handleEmailRowSelect"
+            />
+        </section>-->
 
 
 </template>

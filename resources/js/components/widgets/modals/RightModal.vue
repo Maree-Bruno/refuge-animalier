@@ -27,9 +27,11 @@ watch(
         if (isOpen) {
             document.addEventListener('keydown', handleEscape)
             document.body.style.overflow = 'hidden'
+            document.body.tabIndex = -1;
         } else {
             document.removeEventListener('keydown', handleEscape)
             document.body.style.overflow = ''
+            document.body.tabIndex = 0;
         }
         if (!props.routeKey) return
 

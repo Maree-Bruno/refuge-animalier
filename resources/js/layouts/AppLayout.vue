@@ -41,7 +41,7 @@ const showSearchBar = ref(false);
         ]"
     >
         <div class="max-w-7xl mx-auto transition-all duration-300 space-y-16">
-            <div v-if="user" class="flex items-center justify-between mt-5 mb-5">
+            <div v-if="user" class="flex items-center justify-between mt-5 mb-10">
                 <h2 class="title">{{ title }}</h2>
                 <div class="flex items-center justify-center gap-4">
                     <button @click="showSearchBar = true"
