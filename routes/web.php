@@ -67,6 +67,7 @@ Route::domain('admin.happypaws.test')->group(function () {
         Route::middleware(UserIsAdminMiddleware::class)->group(function () {
             //reports
             Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/reports/{month}/{year}/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
 
             //db
             Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');

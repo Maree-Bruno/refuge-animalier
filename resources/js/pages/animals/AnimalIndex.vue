@@ -1,185 +1,99 @@
 <script setup>
 import GenericTable from "@/components/widgets/table/GenericTable.vue";
-import VenusIcon from "@/components/widgets/svg/VenusIcon.vue";
-import LoupeIcon from "@/components/widgets/svg/LoupeIcon.vue";
 import Pagination from "@/components/widgets/pagination/Pagination.vue";
-import MarsIcon from "@/components/widgets/svg/MarsIcon.vue";
 import RightModal from "@/components/widgets/modals/RightModal.vue";
-import AnimalShow from "@/pages/animals/AnimalShow.vue";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
-import {ref, watch} from "vue";
-import {router, useForm} from "@inertiajs/vue3";
+import AnimalShow from "@/pages/animals/AnimalShow.vue";
+import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
+import MarsIcon from "@/components/widgets/svg/MarsIcon.vue";
+import VenusIcon from "@/components/widgets/svg/VenusIcon.vue";
 import ExternalIcon from "@/components/widgets/svg/ExternalIcon.vue";
 import ArchiveIcon from "@/components/widgets/svg/ArchiveIcon.vue";
-import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
-import {useFormatDate} from "@/composables/useFormatDate.ts";
 import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
-
+import {ref} from "vue";
+import {useAnimalImage} from "@/composables/useAnimalImage";
+import {useAnimalFilters} from "@/composables/useAnimalFilters";
+import {useFormatDate} from "@/composables/useFormatDate";
+import LoupeIcon from "@/components/widgets/svg/LoupeIcon.vue";
+import AnimalCard from "@/components/widgets/animals/AnimalCard.vue";
+import AnimalStatusBadge from "@/components/widgets/animals/AnimalStatusBadge.vue";
+import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    animals: {
-        type: Object
-    },
-    filters: {
-        type: Object,
-        default: () => ({})
-    },
-    showTitle: {
-        type: Boolean,
-        default: false
-    },
-    species: {
-        type: Object,
-    },
-    races: {
-        type: Object,
-    },
-    coats: {
-        type: Object,
-    },
-    vaccines: {
-        type: Object,
-    },
-    allSuitableTypes: {
-        type: Object
-    },
-    can: Object,
-})
-
-
-let search = ref(props.filters.search || '');
-let activeTab = ref(props.filters.status || 'all');
-let timeout = null;
-
-watch(search, value => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-        router.get(window.location.pathname, {
-            search: value,
-            status: activeTab.value
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-            replace: true
-        })
-    }, 300);
+    animals: Object,
+    filters: Object,
+    showTitle: Boolean,
+    species: Object,
+    races: Object,
+    coats: Object,
+    vaccines: Object,
+    allSuitableTypes: Object,
+    can: Object
 });
 
+const {search, activeTab, switchTab, updateRoute} =
+    useAnimalFilters(props.filters);
+
+const {getUrl, getSrcset} = useAnimalImage();
+const {formatDate} = useFormatDate();
 const tabs = [
     {value: 'all', label: 'Tous les animaux'},
     {value: 'Adopted', label: 'Animaux adoptés'},
     {value: 'refuge', label: 'Animaux au refuge'}
 ];
 
-const switchTab = (tabValue) => {
-    activeTab.value = tabValue;
-    router.get(window.location.pathname, {
-        search: search.value,
-        status: tabValue
-    }, {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true
-    })
-}
-
+const selectedRow = ref(null);
+const isShowModalOpen = ref(false);
 const showCreateAnimal = ref(false);
 const showDeleteConfirm = ref(false);
 const animalToDelete = ref(null);
-let isShowModalOpen = ref(false)
-let selectedRow = ref(null)
 
-const openShowModal = (row) => {
-    selectedRow.value = row;
+const openShowModal = animal => {
+    selectedRow.value = animal;
     isShowModalOpen.value = true;
-}
-const openDeleteConfirm = (animal) => {
+};
+
+const openDeleteConfirm = animal => {
     animalToDelete.value = animal;
     showDeleteConfirm.value = true;
-}
+};
 
 const destroyAnimal = () => {
     if (!animalToDelete.value) return;
 
     router.delete(`/animals/${animalToDelete.value.id}`, {
-        preserveScroll: true,
-        preserveState: false,
         onSuccess: () => {
             showDeleteConfirm.value = false;
             animalToDelete.value = null;
-        },
-        onError: (errors) => {
-            console.error('Erreur lors de la suppression:', errors);
         }
     });
-}
+};
 
 const animalColumns = [
-    {key: 'photo', label: 'Photo'},
-    {key: 'name', label: 'Nom'},
-    {key: 'admission_date', label: "Date d'admission"},
-    {key: 'chip', label: 'Puce'},
-    {key: 'sex', label: 'Sexe'},
-    {key: 'age', label: 'Age'},
-    {key: 'status', label: 'Status', class: 'font-sans'}
+    {key: "photo", label: "Photo"},
+    {key: "name", label: "Nom"},
+    {key: "admission_date", label: "Admission"},
+    {key: "chip", label: "Puce"},
+    {key: "sex", label: "Sexe"},
+    {key: "age", label: "Age"},
+    {key: "status", label: "Statut"}
 ];
 
 const animalActions = [
+    {label: "Ouvrir", icon: ExternalIcon, handler: openShowModal},
     {
-        label: 'Ouvrir',
-        icon: ExternalIcon,
-        handler: (row) => openShowModal(row)
-    },
-    {
-        label: 'Archiver',
+        label: "Supprimer",
         icon: ArchiveIcon,
-        handler: (row) => openDeleteConfirm(row),
-        class: 'text-red-600 hover:text-red-700'
-    },
+        handler: openDeleteConfirm,
+        class: "text-red-600"
+    }
 ];
 
 const handleSort = ({key, order}) => {
-    router.get(window.location.pathname, {
-        search: search.value,
-        status: activeTab.value,
-        orderby: key,
-        dir: order
-    }, {
-        preserveState: true,
-        preserveScroll: true,
-        replace: true
-    })
-}
-
-const handleAnimalRowSelect = (selected) => {
-
+    updateRoute({orderby: key, dir: order});
 };
-const getAnimalImageUrl = (animal, size = 'md') => {
-    if (!animal.pictures || !animal.pictures[0]) {
-        return '/images/billy.webp';
-    }
-    const filename = animal.pictures[0];
-    const sizeMap = {
-        'sm': '300x300',
-        'md': '600x600',
-        'lg': '900x900'
-    };
-    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
-}
-
-const getAnimalImageSrcset = (animal) => {
-    if (!animal.pictures || !animal.pictures[0]) {
-        return '';
-    }
-    const filename = animal.pictures[0];
-    return [
-        `/images/animals/variants/300x300/${filename} 300w`,
-        `/images/animals/variants/600x600/${filename} 600w`,
-        `/images/animals/variants/900x900/${filename} 900w`
-    ].join(', ');
-}
-const {formatDate} = useFormatDate();
 </script>
+
 
 <template>
     <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
@@ -228,104 +142,47 @@ const {formatDate} = useFormatDate();
             </div>
         </div>
 
-        <div class="md:hidden flex flex-col gap-3">
-            <div
-                v-for="animal in props.animals?.data"
+        <div class="md:hidden space-y-3">
+            <AnimalCard
+                v-for="animal in animals?.data"
                 :key="animal.id"
-                class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-                @click="openShowModal(animal)"
-            >
-                <div class="flex gap-3">
-                    <img
-                        :src="getAnimalImageUrl(animal, 'sm')"
-                        :srcset="getAnimalImageSrcset(animal)"
-                        sizes="64px"
-                        :alt="animal.name"
-                        class="w-16 h-16 object-cover rounded-full flex-shrink-0"
-                        loading="lazy"
-                    >
+                :animal="animal"
+                @click="openShowModal"
+            />
 
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-start justify-between gap-2 mb-2">
-                            <h4 class="font-semibold text-base truncate">{{ animal.name }}</h4>
-                            <span v-if="animal.sex === 'male'">
-                                <MarsIcon class="svg-strokeblue w-5 h-5" stroke-width="2"/>
-                            </span>
-                            <span v-else>
-                                <VenusIcon class="svg-strokeblue w-5 h-5" stroke-width="2"/>
-                            </span>
-                        </div>
-
-                        <div class="space-y-1 text-xs text-gray-600">
-                            <p><span class="font-medium">Age:</span> {{ animal.age }}</p>
-                            <p><span class="font-medium">Puce:</span> {{ animal.chip }}</p>
-                            <p><span class="font-medium">Admission:</span> {{ formatDate(animal.admission_date) }}</p>
-                        </div>
-
-                        <div class="mt-2">
-                            <span
-                                :class="[
-                                    'inline-block px-2 py-1 rounded-full text-xs font-medium border',
-                                    animal.status === 'Adopted' ? 'bg-lightgreenmint/50 text-green-900 border-greenmint' :
-                                    animal.status === 'Validated' ? 'bg-lightsweetorange/20 text-orange-900 border-sweetorange' :
-                                    'bg-lightblueslate/20 text-blueslate border-blueslate'
-                                ]"
-                            >
-                                {{ animal.status }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div v-if="!props.animals?.data?.length" class="text-center py-8 text-gray-500">
-                Aucun animaux enregistré
-            </div>
+            <p v-if="!animals?.data?.length" class="text-center text-gray-500 py-8">
+                Aucun animal enregistré
+            </p>
         </div>
+
 
         <div class="hidden md:block overflow-x-auto">
             <GenericTable
-                v-if="props.animals"
                 :columns="animalColumns"
-                :data="props.animals.data"
+                :data="animals.data"
                 :actions="animalActions"
-                :selectable="true"
-                empty-message="Aucun animaux enregistré"
-                @row-select="handleAnimalRowSelect"
                 @sort="handleSort"
             >
                 <template #cell-photo="{ row }">
                     <img
-                        :src="getAnimalImageUrl(row, 'sm')"
-                        :srcset="getAnimalImageSrcset(row)"
-                        sizes="32px"
-                        :alt="row.name"
+                        :src="getUrl(row)"
+                        :srcset="getSrcset(row)"
                         class="w-8 h-8 object-cover rounded-full"
+                        alt="photo de {{row.name}}"
                         loading="lazy"
-                    >
+                    />
                 </template>
+
                 <template #cell-sex="{ row }">
-                    <span v-if="row.sex === 'male'">
-                        <MarsIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/>
-                    </span>
-                    <span v-else>
-                        <VenusIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/>
-                    </span>
+                    <span v-if="row.sex === 'male'"> <MarsIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/> </span>
+                    <span v-else> <VenusIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/> </span>
                 </template>
 
                 <template #cell-status="{ row }">
-                    <span
-                        :class="[
-                            'px-2 py-1 rounded-full text-xs font-medium border',
-                            row.status === 'Adopted' ? 'bg-lightgreenmint/50 text-green-900 border-greenmint' :
-                            row.status === 'Validated' ? 'bg-lightsweetorange/20 text-orange-900 border-sweetorange' :
-                            'bg-lightblueslate/20 text-blueslate border-blueslate'
-                        ]"
-                    >
-                        {{ row.status }}
-                    </span>
+                    <AnimalStatusBadge :status="row.status"/>
                 </template>
             </GenericTable>
+
         </div>
 
         <Pagination :links="props.animals?.links"/>

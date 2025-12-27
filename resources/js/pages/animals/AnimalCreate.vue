@@ -26,7 +26,6 @@ const suitableTypes = props.suitableTypes;
 const page = usePage();
 const animals = computed(() => page.props.animals);
 const role = page.props.auth.role;
-console.log(role)
 
 let formAnimal = useForm({
     name: '',
