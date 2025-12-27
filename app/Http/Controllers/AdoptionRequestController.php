@@ -34,6 +34,7 @@ class AdoptionRequestController extends Controller
             $request,
             ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
         );
+        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
         $species = Specie::all();
         $races = Race::all();
         $coats = Coat::all();

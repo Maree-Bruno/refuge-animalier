@@ -152,7 +152,7 @@ const openShowModal = () => {
             </div>
             <div class="bg-gray-50 rounded-lg p-4">
                 <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Animal concerné</h4>
-                <div class="flex gap-8">
+                <div class="flex flex-col lg:flex-row gap-8">
                 <div>
                     <img
                         :src="mainImage.src"
@@ -163,7 +163,7 @@ const openShowModal = () => {
                         loading="eager"
                     />
                 </div>
-                <div class="grid grid-cols-3 gap-5">
+                <div class="lg:grid lg:grid-cols-3 gap-5">
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Nom de l'animal</p>
                         <p class="font-medium text-gray-900">{{ request.animal?.name }}</p>
@@ -196,9 +196,11 @@ const openShowModal = () => {
                         <p class="text-sm text-gray-600 mb-1">Puce de l'animal</p>
                         <p class="font-medium text-gray-900">{{ request.animal.chip }}</p>
                     </div>
-                    <div v-if="request.animal?.suitableTypes">
+                    <div v-if="request.animal?.suitable_types && request.animal.suitable_types.length > 0">
                         <p class="text-sm text-gray-600 mb-1">Convient pour</p>
-                        <p class="font-medium text-gray-900">{{ request.animal.suitableTypes.map(t =>t.name).join(',')}}</p>
+                        <p class="font-medium text-gray-900">
+                            {{ request.animal.suitable_types.map(t => t.label).join(', ') }}
+                        </p>
                     </div>
                 </div>
                 </div>
