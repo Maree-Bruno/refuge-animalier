@@ -6,6 +6,7 @@ use App\Models\Adopter;
 use App\Models\AdoptionRequest;
 use App\Models\Animal;
 use App\Models\Coat;
+use App\Models\ContactMessage;
 use App\Models\Race;
 use App\Models\Specie;
 use App\Models\SuitableType;
@@ -127,6 +128,121 @@ class DatabaseSeeder extends Seeder
                 'adopter_id' => $existingAdopter->id,
                 'user_id' => $volunteer->id,
             ]);
+
+            $contactMessages = [
+                [
+                    'type' => ContactMessage::TYPE_CONTACT,
+                    'name' => 'Marie Dubois',
+                    'email' => 'marie.dubois@email.com',
+                    'phone' => '0471234567',
+                    'subject' => 'Question sur les horaires',
+                    'message' => 'Bonjour, j\'aimerais connaître vos horaires d\'ouverture pour venir visiter le refuge. Merci !',
+                    'status' => ContactMessage::STATUS_NEW,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_CONTACT,
+                    'name' => 'Jean Martin',
+                    'email' => 'jean.martin@email.com',
+                    'phone' => '0482345678',
+                    'subject' => 'Renseignements adoption',
+                    'message' => 'Bonjour, je souhaiterais avoir plus d\'informations sur le processus d\'adoption. Quelles sont les démarches à suivre ?',
+                    'status' => ContactMessage::STATUS_READ,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_CONTACT,
+                    'name' => 'Sophie Bernard',
+                    'email' => 'sophie.bernard@email.com',
+                    'phone' => '0493456789',
+                    'subject' => 'Don de matériel',
+                    'message' => 'Bonjour, j\'ai des couvertures et des jouets pour animaux dont je voudrais me séparer. Acceptez-vous les dons de matériel ?',
+                    'status' => ContactMessage::STATUS_NEW,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_VOLUNTEER,
+                    'name' => 'Lucas Petit',
+                    'email' => 'lucas.petit@email.com',
+                    'phone' => '0464567890',
+                    'address' => 'Rue des Lilas',
+                    'number' => '42',
+                    'cp' => '4000',
+                    'city' => 'Liège',
+                    'subject' => 'Demande de volontariat',
+                    'message' => 'Bonjour, je suis étudiant et j\'aimerais devenir bénévole dans votre refuge. Je suis disponible les week-ends et j\'adore les animaux.',
+                    'status' => ContactMessage::STATUS_NEW,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_VOLUNTEER,
+                    'name' => 'Emma Leroy',
+                    'email' => 'emma.leroy@email.com',
+                    'phone' => '0475678901',
+                    'address' => 'Avenue du Parc',
+                    'number' => '18',
+                    'cp' => '4020',
+                    'city' => 'Liège',
+                    'subject' => 'Demande de volontariat',
+                    'message' => 'Bonjour, je travaille à temps partiel et je cherche à m\'impliquer dans une cause qui me tient à cœur. J\'ai de l\'expérience avec les chiens et les chats.',
+                    'status' => ContactMessage::STATUS_READ,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_CONTACT,
+                    'name' => 'Pierre Durand',
+                    'email' => 'pierre.durand@email.com',
+                    'phone' => '0486789012',
+                    'subject' => 'Animal perdu',
+                    'message' => 'Bonjour, j\'ai perdu mon chat hier soir dans le quartier de Cointe. C\'est un chat tigré avec un collier rouge. Avez-vous eu des signalements ?',
+                    'status' => ContactMessage::STATUS_ARCHIVED,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_VOLUNTEER,
+                    'name' => 'Camille Rousseau',
+                    'email' => 'camille.rousseau@email.com',
+                    'phone' => '0497890123',
+                    'address' => 'Rue de la Gare',
+                    'number' => '7',
+                    'cp' => '4030',
+                    'city' => 'Grivegnée',
+                    'subject' => 'Demande de volontariat',
+                    'message' => 'Bonjour, je suis retraitée et je dispose de beaucoup de temps libre. J\'aimerais aider au refuge, notamment pour promener les chiens.',
+                    'status' => ContactMessage::STATUS_NEW,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_CONTACT,
+                    'name' => 'Thomas Lambert',
+                    'email' => 'thomas.lambert@email.com',
+                    'phone' => '0468901234',
+                    'subject' => 'Parrainage',
+                    'message' => 'Bonjour, je souhaiterais parrainer un animal. Comment cela fonctionne-t-il ? Quels sont les coûts ?',
+                    'status' => ContactMessage::STATUS_READ,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_CONTACT,
+                    'name' => 'Julie Moreau',
+                    'email' => 'julie.moreau@email.com',
+                    'phone' => '0479012345',
+                    'subject' => 'Urgence',
+                    'message' => 'Bonjour, j\'ai trouvé un chiot abandonné près de chez moi. Il semble blessé. Pouvez-vous le prendre en charge rapidement ?',
+                    'status' => ContactMessage::STATUS_NEW,
+                ],
+                [
+                    'type' => ContactMessage::TYPE_VOLUNTEER,
+                    'name' => 'Alexandre Blanc',
+                    'email' => 'alex.blanc@email.com',
+                    'phone' => '0480123456',
+                    'address' => 'Boulevard de la Sauvenière',
+                    'number' => '125',
+                    'cp' => '4000',
+                    'city' => 'Liège',
+                    'subject' => 'Demande de volontariat',
+                    'message' => 'Bonjour, je suis vétérinaire à la retraite et j\'aimerais mettre mes compétences au service de votre refuge.',
+                    'status' => ContactMessage::STATUS_ARCHIVED,
+                ],
+            ];
+
+            foreach ($contactMessages as $messageData) {
+                ContactMessage::create(array_merge($messageData, [
+                    'send_date' => now()->subDays(rand(0, 10)),
+                ]));
+            }
         }
     }
 }

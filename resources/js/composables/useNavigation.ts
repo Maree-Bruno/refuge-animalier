@@ -5,7 +5,7 @@ import { index as AdoptionRequestsIndexView } from "@/actions/App/Http/Controlle
 import { index as NotesIndexView } from "@/actions/App/Http/Controllers/NoteController";
 import { index as ReportsIndexView } from "@/actions/App/Http/Controllers/ReportController";
 import { index as DatabaseIndexView } from "@/actions/App/Http/Controllers/DatabaseController";
-import { index as EmailsIndexView } from "@/actions/App/Http/Controllers/EmailController";
+import { index as ContactMessageIndexView } from "@/actions/App/Http/Controllers/ContactMessageController";
 import { index as VolunteersIndexView } from "@/actions/App/Http/Controllers/VolunteerController";
 import HomeIcon from "@/components/widgets/svg/HomeIcon.vue";
 import DogIcon from "@/components/widgets/svg/DogIcon.vue";
@@ -42,7 +42,7 @@ const translations = {
         admin: "Admin",
         reports: "Rapports",
         database: "Base de données",
-        emails: "Emails",
+        contactmessages: "Message de contact",
         volunteers: "Bénévoles"
     },
     en: {
@@ -54,7 +54,7 @@ const translations = {
         admin: "Admin",
         reports: "Reports",
         database: "Database",
-        emails: "Emails",
+        contactmessages: "Contact messages ",
         volunteers: "Volunteers"
     },
     nl: {
@@ -66,7 +66,7 @@ const translations = {
         admin: "Beheer",
         reports: "Rapporten",
         database: "Database",
-        emails: "E-mails",
+        contactmessages: "E-mails",
         volunteers: "Vrijwilligers"
     }
 };
@@ -133,10 +133,10 @@ function useNavigation(locale: Locale | Ref<Locale> = 'fr') {
                         requiresRole: 'admin'
                     },
                     {
-                        title: t.value.emails,
-                        href: EmailsIndexView,
+                        title: t.value.contactmessages,
+                        href: ContactMessageIndexView,
                         icon: EmailsIcon,
-                        component: "EmailsIndexView",
+                        component: "ContactMessageIndexView",
                         requiresRole: 'admin'
                     },
                     {

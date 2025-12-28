@@ -19,9 +19,8 @@
             </div>
 
             <div class="w-full">
-                <form action="" method="post" class="flex flex-col space-y-2.5">
+                <form action="{{route('contact.submit')}}" method="post" class="flex flex-col space-y-2.5">
                     @csrf
-
                     <x-form.input_label
                         id="name"
                         type="text"
@@ -30,16 +29,6 @@
                         :placeholder="__('contact.placeholder_name')"
                         required
                     />
-
-                    <x-form.input_label
-                        id="firstname"
-                        type="text"
-                        name="firstname"
-                        :label="__('contact.firstname')"
-                        :placeholder="__('contact.placeholder_firstname')"
-                        required
-                    />
-
                     <x-form.input_label
                         id="email"
                         type="email"
@@ -57,7 +46,14 @@
                         :placeholder="__('contact.placeholder_phone')"
                         required
                     />
-
+                    <x-form.input_label
+                        id="subject"
+                        type="text"
+                        name="subject"
+                        :label="__('contact.subject')"
+                        :placeholder="__('contact.placeholder_subject')"
+                        required
+                    />
                     <x-form.textarea_label
                         id="message"
                         name="message"

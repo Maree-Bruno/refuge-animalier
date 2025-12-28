@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'name' => 'Last name',
+    'name' => 'Name',
     'firstname' => 'First name',
     'email' => 'Email',
     'tel' => 'Phone',

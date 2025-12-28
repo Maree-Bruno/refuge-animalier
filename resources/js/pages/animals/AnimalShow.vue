@@ -244,6 +244,7 @@ const selectImage = (index: number) => {
                 </div>
             </div>
         </div>
+
     </section>
 
     <RightModal v-model="showCreate">

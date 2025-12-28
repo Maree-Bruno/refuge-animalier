@@ -2,7 +2,6 @@
 
 return [
     'name' => 'Nom',
-    'firstname' => 'Prénom',
     'email' => 'Email',
     'tel' => 'Téléphone',
     'street' => 'Rue',

@@ -46,7 +46,6 @@ const sortedData = computed(() => {
         let aValue = a[sortKey.value];
         let bValue = b[sortKey.value];
 
-        // Conversion si nécessaire
         if (sortKey.value.includes('date')) {
             aValue = new Date(aValue).getTime();
             bValue = new Date(bValue).getTime();
@@ -59,6 +58,14 @@ const sortedData = computed(() => {
         return sortOrder.value === 'asc' ? result : -result;
     });
 });
+const getVisibleActions = (row) => {
+    return props.actions.filter(action => {
+        if (typeof action.show === 'function') {
+            return action.show(row);
+        }
+        return true;
+    });
+};
 
 const handleSort = (key) => {
     if (sortKey.value === key) {
@@ -147,7 +154,7 @@ watch(() => props.data, () => {
                 <td v-if="actions.length > 0" class="p-2">
                     <div class="flex gap-2">
                         <button
-                            v-for="(action, index) in actions"
+                            v-for="(action, index) in getVisibleActions(row)"
                             :key="index"
                             @click="action.handler(row)"
                             :class="action.class || 'text-gray-600 hover:bg-gray-100'"

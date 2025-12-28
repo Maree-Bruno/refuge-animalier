@@ -127,35 +127,35 @@ const reportActions = [
                 :actions="reportActions"
             >
                 <template #cell-label="{ row }">
-                    <span class="font-semibold">{{ row.label }}</span>
+                    <span class="">{{ row.label }}</span>
                 </template>
 
                 <template #cell-refuged_animals="{ row }">
-                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                    <span class="text-sm">
                         {{ row.refuged_animals }}
                     </span>
                 </template>
 
                 <template #cell-adopted_animals="{ row }">
-                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                    <span class="text-sm">
                         {{ row.adopted_animals }}
                     </span>
                 </template>
 
                 <template #cell-accepted_requests="{ row }">
-                    <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-sm">
+                    <span class="text-sm">
                         {{ row.accepted_requests }}
                     </span>
                 </template>
 
                 <template #cell-in_progress_requests="{ row }">
-                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">
+                    <span class="text-sm">
                         {{ row.in_progress_requests }}
                     </span>
                 </template>
 
                 <template #cell-total_animals="{ row }">
-                    <span class="font-bold text-lg">{{ row.total_animals }}</span>
+                    <span class="">{{ row.total_animals }}</span>
                 </template>
             </GenericTable>
         </div>

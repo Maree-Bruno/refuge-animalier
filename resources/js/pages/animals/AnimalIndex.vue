@@ -177,6 +177,9 @@ const handleSort = ({key, order}) => {
                     <span v-if="row.sex === 'male'"> <MarsIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/> </span>
                     <span v-else> <VenusIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/> </span>
                 </template>
+                <template #cell-admission_date="{ row }">
+                   <span>{{formatDate(row.admission_date)}}</span>
+                </template>
 
                 <template #cell-status="{ row }">
                     <AnimalStatusBadge :status="row.status"/>
