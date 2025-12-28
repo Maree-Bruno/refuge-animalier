@@ -230,7 +230,8 @@ class AnimalController extends Controller
                 }
             }
         }
-
+        $animal->vaccines()->detach();
+        $animal->suitableTypes()->detach();
         $animal->delete();
 
         return back();

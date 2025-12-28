@@ -31,7 +31,6 @@ const getTypeLabel = (type) => {
 }
 
 const toast = useToasterStore();
-const messageToDelete = ref(null);
 const showDeleteConfirm = ref(false);
 const openDeleteConfirm = () => {
     showDeleteConfirm.value = true;
@@ -62,15 +61,26 @@ const destroyMessage = () => {
                     <div>
                         <h2 class="text-xl font-bold text-gray-900 leading-tight">{{ props.message?.name }}</h2>
                         <div class="mt-2 flex items-center gap-2">
-          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+          <span :class="[
+                            'px-2 py-1 rounded-full text-xs font-medium',
+                            message.type === 'volunteer' ? 'bg-lightsweetorange/40 text-orange-700' :
+                            'bg-blue-300/20 text-blueslate'
+                        ]">
             {{ getTypeLabel(props.message?.type) }}
           </span>
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border border-green-200 bg-green-50 text-green-800">
+                            <span
+                                :class="[
+                            'px-2 py-1 rounded-full text-xs font-medium border',
+                            message.status === 'nouveau' ? 'bg-lightgreenmint/20 text-green-900 border-greenmint' :
+                            message.status === 'lu' ? 'bg-lightsweetorange/20 text-orange-900 border-sweetorange' :
+                            'bg-gray-100 text-gray-900 border-gray-300'
+                        ]"
+                                >
             {{ getStatusLabel(props.message?.status) }}
           </span>
                         </div>
                     </div>
-                    <div class="text-right">
+                    <div class="text-right space-y-2">
                         <p class="text-sm text-gray-500">{{ formatDate(message.send_date) }}</p>
                         <button
                             v-if="message.status !== 'archivé'"

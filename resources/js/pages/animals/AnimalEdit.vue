@@ -15,6 +15,7 @@ const props = defineProps({
     races: Object,
     vaccines: Object,
     allSuitableTypes: Object,
+    can: Object,
 });
 console.log(props.species)
 
@@ -282,7 +283,7 @@ const submitAnimal = () => {
                     </label>
                     <InputError :message="formAnimal.errors.outside"/>
                 </div>
-                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted'">
+                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted' && can.published">
                     <p class="text-black font-semibold sm:text-lg leading-9">Publié</p>
                     <label for="published-edit" class="space-x-1"
                            :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed' ">

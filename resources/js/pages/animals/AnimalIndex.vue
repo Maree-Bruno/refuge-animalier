@@ -18,6 +18,7 @@ import LoupeIcon from "@/components/widgets/svg/LoupeIcon.vue";
 import AnimalCard from "@/components/widgets/animals/AnimalCard.vue";
 import AnimalStatusBadge from "@/components/widgets/animals/AnimalStatusBadge.vue";
 import {router} from "@inertiajs/vue3";
+import {useToasterStore} from "@/stores/useToasterStore.ts";
 
 const props = defineProps({
     animals: Object,
@@ -33,7 +34,7 @@ const props = defineProps({
 
 const {search, activeTab, switchTab, updateRoute} =
     useAnimalFilters(props.filters);
-
+const toast = useToasterStore();
 const {getUrl, getSrcset} = useAnimalImage();
 const {formatDate} = useFormatDate();
 const tabs = [
@@ -63,6 +64,7 @@ const destroyAnimal = () => {
 
     router.delete(`/animals/${animalToDelete.value.id}`, {
         onSuccess: () => {
+            toast.success({text: 'Animal supprimé avec succès'})
             showDeleteConfirm.value = false;
             animalToDelete.value = null;
         }

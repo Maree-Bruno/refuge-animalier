@@ -13,6 +13,7 @@ const props = defineProps({
     coats: {type:Object},
     vaccines: {type:Object},
     allSuitableTypes: {type:Object},
+    can: Object,
 });
 console.log(props.species)
 
@@ -264,6 +265,7 @@ const selectImage = (index: number) => {
             :coats="coats"
             :vaccines="vaccines"
             :allSuitableTypes="allSuitableTypes"
+            :can="can"
             @close="showEdit = false"
         />
     </RightModal>

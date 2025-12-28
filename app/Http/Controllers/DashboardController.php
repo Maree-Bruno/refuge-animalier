@@ -7,6 +7,7 @@ use App\Enums\AnimalStatus;
 use App\Models\AdoptionRequest;
 use App\Models\Animal;
 use App\Models\Coat;
+use App\Models\ContactMessage;
 use App\Models\Race;
 use App\Models\Specie;
 use App\Models\SuitableType;
@@ -93,6 +94,39 @@ class DashboardController extends Controller
 
         $adoptionRequests = $adoptionRequestsQuery->paginate(10)->withQueryString();
 
+
+        $contactMessagesquery = ContactMessage::query();
+
+        if ($request->filled('message_search')) {
+            $search = $request->message_search;
+            $contactMessagesquery->where(function($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhere('phone', 'like', "%$search%")
+                    ->orWhere('subject', 'like', "%$search%")
+                    ->orWhere('content', 'like', "%$search%");
+            });
+        }
+
+        if ($request->filled('type') && $request->type !== 'all') {
+            $contactMessagesquery->where('type', $request->type);
+        }
+
+        if ($request->filled('status') && $request->status !== 'all') {
+            $contactMessagesquery->where('status', $request->status);
+        }
+
+        if ($request->filled('orderby')) {
+            $direction = $request->input('dir', 'asc');
+            $orderBy = $request->orderby;
+
+            $contactMessagesquery->orderBy($orderBy, $direction);
+        } else {
+            $contactMessagesquery->latest('send_date');
+        }
+
+        $messages = $contactMessagesquery->paginate(10)->withQueryString();
+
         return Inertia::render('Dashboard', [
             'title' => 'Dashboard',
             'adoptionRequests' => $adoptionRequests,
@@ -106,34 +140,12 @@ class DashboardController extends Controller
             'adoptedAnimals' => $adoptedAnimals,
             'accepted' => $accepted,
             'inProgress' => $inProgress,
-            'filters' => $request->only(['animal_search', 'request_search', 'orderby', 'dir', 'status']),
+            'messages' => $messages,
+            'filters' => $request->only(['animal_search', 'request_search','message_search', 'orderby', 'dir', 'status']),
             'can' => [
                 'publish' => Auth::user()->can('publish', Animal::class),
+                'view' => Auth::user()->can('view', ContactMessage::class),
             ]
         ]);
-    }
-
-    public function create()
-    {
-    }
-
-    public function store(Request $request)
-    {
-    }
-
-    public function show($id)
-    {
-    }
-
-    public function edit($id)
-    {
-    }
-
-    public function update(Request $request, $id)
-    {
-    }
-
-    public function destroy($id)
-    {
     }
 }
