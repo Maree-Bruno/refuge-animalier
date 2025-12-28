@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Concerns\FilterablePaginate;
-use App\Enums\AnimalStatus;
-use App\Models\AdoptionRequest;
-use App\Models\Animal;
+use App\Models\Report;
 use App\Models\Coat;
 use App\Models\Race;
 use App\Models\Specie;
@@ -15,12 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 
 class ReportController extends Controller
 {
-    use FilterablePaginate;
-
     public function index(Request $request)
     {
         $species = Specie::all();
@@ -28,52 +22,25 @@ class ReportController extends Controller
         $coats = Coat::all();
         $vaccines = Vaccine::all();
         $suitableTypes = SuitableType::all();
-        $reports = collect();
-        for ($i = 0; $i < 36; $i++) {
-            $date = now()->subMonths($i);
-            $month = $date->month;
-            $year = $date->year;
-            $startDate = Carbon::create($year, $month, 1)->startOfMonth();
-            $endDate = Carbon::create($year, $month, 1)->endOfMonth();
 
-            $adoptedCount = Animal::where('status', AnimalStatus::ADOPTED)
-                ->whereBetween('updated_at', [$startDate, $endDate])
-                ->count();
-
-            $refugedCount = Animal::whereIn('status', [
-                AnimalStatus::IN_PROGRESS,
-                AnimalStatus::VALIDATED
-            ])->whereBetween('created_at', [$startDate, $endDate])
-                ->count();
-
-            $acceptedCount = AdoptionRequest::where('status', 'accepted')
-                ->whereBetween('updated_at', [$startDate, $endDate])
-                ->count();
-
-            $inProgressCount = AdoptionRequest::whereIn('status', ['pending', 'submitted'])
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->count();
-
-            $animals = Animal::with(['suitableTypes', 'vaccines', 'race', 'specie'])
-                ->whereBetween('created_at', [$startDate, $endDate])
-                ->orderBy('status')
-                ->get()
-                ->groupBy('status');
-
-            $reports->push([
-                'id' => $year . '-' . str_pad($month, 2, '0', STR_PAD_LEFT),
-                'month' => $month,
-                'year' => $year,
-                'label' => $date->locale('fr')->isoFormat('MMMM YYYY'),
-                'adopted_animals' => $adoptedCount,
-                'refuged_animals' => $refugedCount,
-                'accepted_requests' => $acceptedCount,
-                'in_progress_requests' => $inProgressCount,
-                'total_animals' => $adoptedCount + $refugedCount,
-                'date' => $startDate,
-                'animals_by_status' => $animals
-            ]);
-        }
+        $reports = Report::orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get()
+            ->map(function ($report) {
+                return [
+                    'id' => $report->year . '-' . str_pad($report->month, 2, '0', STR_PAD_LEFT),
+                    'month' => $report->month,
+                    'year' => $report->year,
+                    'label' => $report->label,
+                    'adopted_animals' => $report->adopted_animals,
+                    'refuged_animals' => $report->refuged_animals,
+                    'accepted_requests' => $report->accepted_requests,
+                    'in_progress_requests' => $report->in_progress_requests,
+                    'total_animals' => $report->total_animals,
+                    'date' => $report->start_date,
+                    'animals_by_status' => $report->animals_by_status
+                ];
+            });
 
         return Inertia::render('ReportsIndexView', [
             'title' => 'Rapports statistiques',
@@ -92,40 +59,17 @@ class ReportController extends Controller
 
     public function exportPdf($month, $year)
     {
-        $startDate = Carbon::create($year, $month, 1)->startOfMonth();
-        $endDate = Carbon::create($year, $month, 1)->endOfMonth();
-
-        $adoptedAnimals = Animal::where('status', AnimalStatus::ADOPTED)
-            ->whereBetween('updated_at', [$startDate, $endDate])
-            ->count();
-
-        $refugedAnimals = Animal::whereIn('status', [
-            AnimalStatus::IN_PROGRESS,
-            AnimalStatus::VALIDATED
-        ])->whereBetween('created_at', [$startDate, $endDate])
-            ->count();
-
-        $accepted = AdoptionRequest::where('status', 'accepted')
-            ->whereBetween('updated_at', [$startDate, $endDate])
-            ->count();
-
-        $inProgress = AdoptionRequest::whereIn('status', ['pending', 'submitted'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->count();
-
-        $animals = Animal::with(['suitableTypes', 'vaccines', 'race', 'specie'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->orderBy('status')
-            ->get()
-            ->groupBy('status');
+        $report = Report::where('month', $month)
+            ->where('year', $year)
+            ->firstOrFail();
 
         $data = [
-            'month' => Carbon::create($year, $month, 1)->locale('fr')->isoFormat('MMMM YYYY'),
-            'adoptedAnimals' => $adoptedAnimals,
-            'refugedAnimals' => $refugedAnimals,
-            'accepted' => $accepted,
-            'inProgress' => $inProgress,
-            'animalsByStatus' => $animals,
+            'month' => $report->label,
+            'adoptedAnimals' => $report->adopted_animals,
+            'refugedAnimals' => $report->refuged_animals,
+            'accepted' => $report->accepted_requests,
+            'inProgress' => $report->in_progress_requests,
+            'animalsByStatus' => $report->animals_by_status,
             'generatedAt' => now()->locale('fr')->isoFormat('DD MMMM YYYY à HH:mm')
         ];
 

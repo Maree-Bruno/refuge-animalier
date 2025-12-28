@@ -276,22 +276,23 @@
                 <div class="animal-card">
                     <div class="animal-card-content">
                         @php
-                            $imagePath = isset($animal->pictures[0])
-                                ? public_path('images/animals/variants/300x300/' . $animal->pictures[0])
+                            $imagePath = isset($animal['pictures'][0])
+                                ? public_path('images/animals/variants/300x300/' . $animal['pictures'][0])
                                 : public_path('images/billy.webp');
                         @endphp
 
                         @if(file_exists($imagePath))
-                            <img src="{{ $imagePath }}" alt="{{ $animal->name }}" class="animal-image">
+                            <img src="{{ $imagePath }}" alt="{{ $animal['name'] }}" class="animal-image">
                         @else
-                            <img src="{{ public_path('images/billy.webp') }}" alt="{{ $animal->name }}" class="animal-image">
+                            <img src="{{ public_path('images/billy.webp') }}" alt="{{ $animal['name'] }}"
+                                 class="animal-image">
                         @endif
 
                         <div class="animal-info">
                             <div class="animal-header">
-                                <h4 class="animal-name">{{ $animal->name }}</h4>
+                                <h4 class="animal-name">{{ $animal['name'] }}</h4>
                                 <span class="sex-icon">
-                                @if($animal->sex === 'male')
+                                @if($animal['sex'] === 'male')
                                         ♂
                                     @else
                                         ♀
@@ -300,9 +301,10 @@
                             </div>
 
                             <div class="animal-details">
-                                <p><strong>Age :</strong> {{ $animal->age ?? 'N/A' }}</p>
-                                <p><strong>Puce :</strong> {{ $animal->chip ?? 'N/A' }}</p>
-                                <p><strong>Admission :</strong> {{ \Carbon\Carbon::parse($animal->admission_date)->format('d/m/Y') }}</p>
+                                <p><strong>Age :</strong> {{ $animal['age'] ?? 'N/A' }}</p>
+                                <p><strong>Puce :</strong> {{ $animal['chip'] ?? 'N/A' }}</p>
+                                <p><strong>Admission :</strong> {{ \Carbon\Carbon::parse($animal['admission_date'])->format
+                                ('d/m/Y') }}</p>
                             </div>
 
                             <span class="status-badge adopted">Adopted</span>
@@ -330,22 +332,22 @@
                 <div class="animal-card">
                     <div class="animal-card-content">
                         @php
-                            $imagePath = isset($animal->pictures[0])
-                                ? public_path('images/animals/variants/300x300/' . $animal->pictures[0])
+                            $imagePath = isset($animal['pictures'][0])
+                                ? public_path('images/animals/variants/300x300/' . $animal['pictures'][0])
                                 : public_path('images/billy.webp');
                         @endphp
 
                         @if(file_exists($imagePath))
-                            <img src="{{ $imagePath }}" alt="{{ $animal->name }}" class="animal-image">
+                            <img src="{{ $imagePath }}" alt="{{ $animal['name'] }}" class="animal-image">
                         @else
-                            <img src="{{ public_path('images/billy.webp') }}" alt="{{ $animal->name }}" class="animal-image">
+                            <img src="{{ public_path('images/billy.webp') }}" alt="{{ $animal['name'] }}" class="animal-image">
                         @endif
 
                         <div class="animal-info">
                             <div class="animal-header">
-                                <h4 class="animal-name">{{ $animal->name }}</h4>
+                                <h4 class="animal-name">{{$animal['name'] }}</h4>
                                 <span class="sex-icon">
-                                @if($animal->sex === 'male')
+                                @if($animal['sex'] === 'male')
                                         ♂
                                     @else
                                         ♀
@@ -354,9 +356,10 @@
                             </div>
 
                             <div class="animal-details">
-                                <p><strong>Age :</strong> {{ $animal->age ?? 'N/A' }}</p>
-                                <p><strong>Puce :</strong> {{ $animal->chip ?? 'N/A' }}</p>
-                                <p><strong>Admission :</strong> {{ \Carbon\Carbon::parse($animal->admission_date)->format('d/m/Y') }}</p>
+                                <p><strong>Age :</strong> {{ $animal['age'] ?? 'N/A' }}</p>
+                                <p><strong>Puce :</strong> {{ $animal['chip'] ?? 'N/A' }}</p>
+                                <p><strong>Admission :</strong> {{ \Carbon\Carbon::parse($animal['admission_date'])
+                                ->format('d/m/Y') }}</p>
                             </div>
 
                             <span class="status-badge validated">Validated</span>
@@ -384,22 +387,23 @@
                 <div class="animal-card">
                     <div class="animal-card-content">
                         @php
-                            $imagePath = isset($animal->pictures[0])
-                                ? public_path('images/animals/variants/300x300/' . $animal->pictures[0])
+                            $imagePath = isset($animal['pictures'][0])
+                                ? public_path('images/animals/variants/300x300/' .$animal['pictures'][0])
                                 : public_path('images/billy.webp');
                         @endphp
 
                         @if(file_exists($imagePath))
-                            <img src="{{ $imagePath }}" alt="{{ $animal->name }}" class="animal-image">
+                            <img src="{{ $imagePath }}" alt="{{$animal['name'] }}" class="animal-image">
                         @else
-                            <img src="{{ public_path('images/billy.webp') }}" alt="{{ $animal->name }}" class="animal-image">
+                            <img src="{{ public_path('images/billy.webp') }}" alt="{{ $animal['name'] }}"
+                                 class="animal-image">
                         @endif
 
                         <div class="animal-info">
                             <div class="animal-header">
-                                <h4 class="animal-name">{{ $animal->name }}</h4>
+                                <h4 class="animal-name">{{ $animal['name'] }}</h4>
                                 <span class="sex-icon">
-                                @if($animal->sex === 'male')
+                                @if($animal['sex'] === 'male')
                                         ♂
                                     @else
                                         ♀
@@ -408,9 +412,10 @@
                             </div>
 
                             <div class="animal-details">
-                                <p><strong>Age :</strong> {{ $animal->age ?? 'N/A' }}</p>
-                                <p><strong>Puce :</strong> {{ $animal->chip ?? 'N/A' }}</p>
-                                <p><strong>Admission :</strong> {{ \Carbon\Carbon::parse($animal->admission_date)->format('d/m/Y') }}</p>
+                                <p><strong>Age :</strong> {{ $animal['age'] ?? 'N/A' }}</p>
+                                <p><strong>Puce :</strong> {{ $animal['chip'] ?? 'N/A' }}</p>
+                                <p><strong>Admission :</strong> {{ \Carbon\Carbon::parse($animal['admission_date'])->format
+                                ('d/m/Y') }}</p>
                             </div>
 
                             <span class="status-badge in-progress">In progress</span>
