@@ -2,7 +2,7 @@ import { ref, watch } from "vue";
 import { router } from "@inertiajs/vue3";
 
 export function useAnimalFilters(filters: Record<string, any> | undefined) {
-    const search = ref(filters?.search ?? "");
+    const search = ref(filters?.animal_search ?? "");
     const activeTab = ref(filters?.status ?? "all");
 
     let timeout: number | undefined;
@@ -18,7 +18,7 @@ export function useAnimalFilters(filters: Record<string, any> | undefined) {
         router.get(
             window.location.pathname,
             {
-                search: search.value,
+                animal_search: search.value,
                 status: activeTab.value,
                 ...extra
             },

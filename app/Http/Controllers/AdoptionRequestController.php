@@ -37,8 +37,8 @@ class AdoptionRequestController extends Controller
             'user'
         ]);
 
-        if ($request->filled('search')) {
-            $search = $request->search;
+        if ($request->filled('request_search')) {
+            $search = $request->request_search;
             $query->where(function($q) use ($search) {
                 $q->whereHas('adopter', function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -90,7 +90,7 @@ class AdoptionRequestController extends Controller
         return Inertia::render('AdoptionRequestsIndexView', [
             'title' => "Demandes d'adoption",
             'adoptionRequests' => $adoptionRequests,
-            'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
+            'filters' => $request->only(['request_search', 'orderby', 'dir', 'status']),
             'animals' => $animals,
             'species' => $species,
             'races' => $races,

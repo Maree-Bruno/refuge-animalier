@@ -31,7 +31,8 @@ const props = defineProps({
     vaccines: Object,
     suitableTypes: Object,
 });
-let search = ref(props.filters.search || '');
+
+let search = ref(props.filters.request_search || '');
 let activeTab = ref(props.filters.status || 'all');
 let timeout = null;
 
@@ -39,8 +40,9 @@ watch(search, value => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         router.get(window.location.pathname, {
-            search: value,
-            status: activeTab.value
+            request_search: value,
+            status: activeTab.value,
+            animal_search: props.filters.animal_search
         }, {
             preserveState: true,
             preserveScroll: true,
@@ -60,8 +62,9 @@ const tabs = [
 const switchTab = (tabValue) => {
     activeTab.value = tabValue;
     router.get(window.location.pathname, {
-        search: search.value,
-        status: tabValue
+        request_search: search.value,
+        status: tabValue,
+        animal_search: props.filters.animal_search
     }, {
         preserveState: true,
         preserveScroll: true,
@@ -77,6 +80,11 @@ const selectedRequest = ref(null);
 const openShowModal = (request) => {
     selectedRequest.value = request;
     isShowModalOpen.value = true;
+};
+
+const openDeleteConfirm = (request) => {
+    requestToDelete.value = request;
+    showDeleteConfirm.value = true;
 };
 
 const destroyRequest = () => {
@@ -120,10 +128,11 @@ const requestActions = [
 
 const handleSort = ({key, order}) => {
     router.get(window.location.pathname, {
-        search: search.value,
+        request_search: search.value,
         status: activeTab.value,
         orderby: key,
-        dir: order
+        dir: order,
+        animal_search: props.filters.animal_search
     }, {
         preserveState: true,
         preserveScroll: true,
