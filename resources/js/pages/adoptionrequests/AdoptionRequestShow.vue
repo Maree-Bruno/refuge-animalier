@@ -2,8 +2,6 @@
 import {computed, ref, watch} from "vue";
 import {router} from "@inertiajs/vue3";
 import {useFormatDate} from "@/composables/useFormatDate.ts";
-import CenterModal from "@/components/widgets/modals/CenterModal.vue";
-import AnimalShow from "@/pages/animals/AnimalShow.vue";
 import {useToasterStore} from "@/stores/useToasterStore";
 
 const props = defineProps({

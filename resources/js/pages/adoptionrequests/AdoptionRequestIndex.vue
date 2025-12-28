@@ -12,6 +12,7 @@ import {useFormatDate} from "@/composables/useFormatDate.ts";
 import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
 import AdoptionRequestShow from "@/pages/adoptionrequests/AdoptionRequestShow.vue";
 import AnimalShow from "@/pages/animals/AnimalShow.vue";
+import {useToasterStore} from "@/stores/useToasterStore.ts";
 
 const props = defineProps({
     adoptionRequests: {
@@ -31,7 +32,7 @@ const props = defineProps({
     vaccines: Object,
     suitableTypes: Object,
 });
-
+const toast = useToasterStore();
 let search = ref(props.filters.request_search || '');
 let activeTab = ref(props.filters.status || 'all');
 let timeout = null;
@@ -90,15 +91,16 @@ const openDeleteConfirm = (request) => {
 const destroyRequest = () => {
     if (!requestToDelete.value) return;
 
-    router.delete(`/adoption-requests/${requestToDelete.value.id}`, {
+    router.delete(`/adoption/${requestToDelete.value.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {
+            toast.success({text:'La demande a bien été supprimée'});
             showDeleteConfirm.value = false;
             requestToDelete.value = null;
         },
         onError: (errors) => {
-            console.error('Erreur lors de la suppression:', errors);
+            toast.error({text:'Une erreur est survenue pendant la suppression de la demande '})
         }
     });
 }

@@ -25,7 +25,7 @@
             </div>
 
             <div class="w-full">
-                <form action="" method="post" class="flex flex-col space-y-2.5">
+                <form action="{{route('volunteer.submit')}}" method="post" class="flex flex-col space-y-2.5">
                     @csrf
                     <fieldset class="flex flex-col sm:flex-row sm:gap-5">
                         <legend class="sr-only">{{ __('labels.identity') }}</legend>
@@ -37,16 +37,6 @@
                             :placeholder="__('placeholder.name')"
                             required
                             :value="old('name')"
-                        />
-
-                        <x-form.input_label
-                            id="firstname"
-                            type="text"
-                            name="firstname"
-                            :label="__('labels.firstname')"
-                            :placeholder="__('placeholder.firstname')"
-                            required
-                            :value="old('firstname')"
                         />
                     </fieldset>
                     <fieldset class="flex flex-col sm:flex-row sm:gap-5 ">
@@ -61,13 +51,13 @@
                             :value="old('email')"
                         />
                         <x-form.input_label
-                            id="tel"
+                            id="phone"
                             type="tel"
-                            name="tel"
+                            name="phone"
                             :label="__('labels.tel')"
                             :placeholder="__('placeholder.tel')"
                             required
-                            :value="old('tel')"
+                            :value="old('phone')"
                         />
                     </fieldset>
 
@@ -75,13 +65,12 @@
                         <legend class="sr-only">{{ __('labels.address') }}</legend>
                         <div class="flex flex-col justify-center items-center sm:flex-row sm:gap-5">
                             <x-form.input_label
-                                id="street"
+                                id="address"
                                 type="text"
-                                name="street"
+                                name="address"
                                 :label="__('labels.street')"
                                 :placeholder="__('placeholder.street')"
-                                required
-                                :value="old('street')"
+                                :value="old('address')"
                             />
                             <x-form.input_label
                                 id="number"
@@ -90,7 +79,6 @@
                                 :label="__('labels.number')"
                                 :placeholder="__('placeholder.number')"
                                 :value="old('number')"
-                                required
                                 class="sm:max-w-2/5"
                             />
                         </div>
@@ -101,7 +89,6 @@
                                 name="cp"
                                 :label="__('labels.cp')"
                                 :placeholder="__('placeholder.cp')"
-                                required
                                 :value="old('cp')"
                                 class="sm:max-w-fit"
                             />
@@ -111,7 +98,6 @@
                                 name="city"
                                 :label="__('labels.city')"
                                 :placeholder="__('placeholder.city')"
-                                required
                                 :value="old('city')"
                             />
                         </div>
@@ -123,7 +109,6 @@
                             name="message"
                             :label="__('labels.message')"
                             :placeholder="__('placeholder.message')"
-                            required
                             :value="old('message')"
                         />
                     </fieldset>

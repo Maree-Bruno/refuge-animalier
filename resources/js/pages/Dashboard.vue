@@ -2,6 +2,7 @@
 import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
 import StatsSection from "@/components/widgets/stats/StatsSection.vue";
 import AdoptionRequestIndex from "@/pages/adoptionrequests/AdoptionRequestIndex.vue";
+import ContactMessagesIndex from "@/pages/contactmessages/ContactMessagesIndex.vue";
 
 
 const props = defineProps({
@@ -22,16 +23,22 @@ const props = defineProps({
     adoptedAnimals: Number,
     accepted: Number,
     inProgress: Number,
+    messages:Object
 })
 </script>
 
 <template>
+    <section class="space-y-5">
+        <h3 class="subsubtitle">Statistique</h3>
   <StatsSection
       :accepted="accepted"
       :refugedAnimals="refugedAnimals"
       :adoptedAnimals="adoptedAnimals"
       :inProgress="inProgress"
   />
+    </section>
+    <section class="space-y-5">
+        <h3 class="subsubtitle">Animaux</h3>
     <AnimalIndex
         :animals="animals"
         :species="species"
@@ -40,7 +47,9 @@ const props = defineProps({
         :vaccines="vaccines"
         :can="can"
         :allSuitableTypes="allSuitableTypes"/>
-
+    </section>
+<section class="space-y-5">
+    <h3 class="subsubtitle">Demandes d'adoption</h3>
   <AdoptionRequestIndex
       :adoptionRequests="adoptionRequests"
       :filters="filters"
@@ -52,6 +61,13 @@ const props = defineProps({
       :vaccines="vaccines"
       :suitableTypes="allSuitableTypes"
   />
-
+</section>
+    <section class="space-y-5" v-if="can.view">
+        <h3 class="subsubtitle">Messages de contact</h3>
+    <ContactMessagesIndex
+    :messages="messages"
+    :filters="filters"
+    />
+    </section>
 
 </template>

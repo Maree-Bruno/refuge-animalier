@@ -2,7 +2,6 @@
 
 return [
     'name' => 'Naam',
-    'firstname' => 'Voornaam',
     'email' => 'E-mail',
     'tel' => 'Telefoon',
     'street' => 'Straat',

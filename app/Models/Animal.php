@@ -34,6 +34,7 @@ class Animal extends Model
         'pictures' => 'array',
         'outside' => 'boolean',
         'published' => 'boolean',
+        'admission_date' => 'datetime',
     ];
 
     public function coat(): BelongsTo

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdoptionRequestController;
 use App\Http\Controllers\AnimalController;
+use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\EmailController;
@@ -17,22 +18,34 @@ use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
 Route::domain('happypaws.test')->group(function () {
+
+    //homepage
     Route::get('/', function () {
         $animals = Animal::where('published', 1)->get();
         return view('client/homepage', ['animals' => $animals]);
     })->name('homepage');
+
+    //about
     Route::get('/happypaws', function () {
         return view('client/about');
     })->name('about');
+
+    //animals
     Route::get('/animals', [PublicAnimalController::class, 'index'])->name('animals');
     Route::get('/animals/{animal}', [PublicAnimalController::class, 'show'])->name('animals_show');
     Route::post('/animals/{animal}', [AdoptionRequestController::class, 'store'])->name('adoption_requests.store');
+
+    //contact
     Route::get('/contact', function () {
         return view('client/contact');
     })->name('contact');
+    Route::post('/contact', [ContactMessageController::class, 'submitContact'])->name('contact.submit');
+
+    //volunteer
     Route::get('/volunteer', function () {
         return view('client/volunteer');
     })->name('volunteer');
+    Route::post('/volunteer', [ContactMessageController::class, 'submitVolunteer'])->name('volunteer.submit');
 });
 Route::domain('admin.happypaws.test')->group(function () {
     require __DIR__.'/settings.php';
@@ -57,8 +70,10 @@ Route::domain('admin.happypaws.test')->group(function () {
 
         //adoption request
         Route::get('/adoption', [AdoptionRequestController::class, 'index'])->name('adoption_requests.index');
-        Route::patch('/adoption/{adoption}', [AdoptionRequestController::class, 'update'])->name('adoption_requests.update');
-        Route::delete('/adoption/{adoption}', [AdoptionRequestController::class, 'destroy'])->name('adoption_requests.destroy');
+        Route::patch('/adoption/{adoption}',
+            [AdoptionRequestController::class, 'update'])->name('adoption_requests.update');
+        Route::delete('/adoption/{adoption}',
+            [AdoptionRequestController::class, 'destroy'])->name('adoption_requests.destroy');
 
         //notes
         Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
@@ -67,13 +82,17 @@ Route::domain('admin.happypaws.test')->group(function () {
         Route::middleware(UserIsAdminMiddleware::class)->group(function () {
             //reports
             Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-            Route::get('/reports/{month}/{year}/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
+            Route::get('/reports/{month}/{year}/export-pdf',
+                [ReportController::class, 'exportPdf'])->name('reports.export-pdf');
 
             //db
             Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');
 
-            //email
-            Route::get('/emails', [EmailController::class, 'index'])->name('emails.index');
+            //contact
+            Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact_message.index');
+            Route::patch('/contact-messages/{id}/status', [ContactMessageController::class, 'update'])->name('contact_message.update');
+            Route::delete('/contact-messages/{id}', [ContactMessageController::class, 'destroy'])->name('contact_message.destroy');
+
 
             //volunteer
             Route::get('/volunteers', [VolunteerController::class, 'index'])->name('volunteers.index');
