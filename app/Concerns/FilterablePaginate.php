@@ -5,11 +5,11 @@ use Illuminate\Http\Request;
 
 trait FilterablePaginate
 {
-    public function filterAndPaginate($model, Request $request, $relations = [], $perPage = 10)
+    public function filterAndPaginate($model, Request $request, $relations = [], $searchParam = 'search', $perPage = 10)
     {
         $orderBy = $request->get('orderby', 'name');
         $dir     = $request->get('dir', 'asc');
-        $search  = $request->get('search', '');
+        $search  = $request->get($searchParam, '');
         $status  = $request->get('status', 'all');
 
         $query = $model::query();

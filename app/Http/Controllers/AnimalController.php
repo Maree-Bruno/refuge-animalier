@@ -34,7 +34,7 @@ class AnimalController extends Controller
         $animals = $this->filterAndPaginate(
             Animal::class,
             $request,
-            ['coat', 'race', 'specie', 'vaccines', 'suitableTypes']
+            ['coat', 'race', 'specie', 'vaccines', 'suitableTypes'], 'animal_search'
         );
         $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
 
@@ -46,7 +46,7 @@ class AnimalController extends Controller
             'coats' => $coats,
             'vaccines' => $vaccines,
             'allSuitableTypes' => $suitableTypes,
-            'filters' => $request->only(['search', 'orderby', 'dir', 'status']),
+            'filters' => $request->only(['animal_search', 'orderby', 'dir', 'status']),
             'can' => [
                 'publish' => Auth::user()->can('publish', Animal::class),
             ]
@@ -249,7 +249,7 @@ class AnimalController extends Controller
         }
 
         Storage::disk(config('images.disk'))->delete(
-            config('images.original_path') . '/' . $filename
+            config('images.original_path').'/'.$filename
         );
 
         $sizes = ['300x300', '600x600', '900x900'];
@@ -259,7 +259,7 @@ class AnimalController extends Controller
             );
         }
 
-        $pictures = array_values(array_filter($animal->pictures, function($pic) use ($filename) {
+        $pictures = array_values(array_filter($animal->pictures, function ($pic) use ($filename) {
             return $pic !== $filename;
         }));
 
