@@ -39,10 +39,10 @@ class DatabaseSeeder extends Seeder
             $coats->push(Coat::create(['name' => $name]));
         }
         $suitableTypesData = [
-            ['key' => 'dog', 'label' => 'Chien'],
-            ['key' => 'cat', 'label' => 'Chat'],
-            ['key' => 'kid', 'label' => 'Enfant'],
-            ['key' => 'baby', 'label' => 'Bébé'],
+            ['key' => 'dog', 'name' => 'Chien'],
+            ['key' => 'cat', 'name' => 'Chat'],
+            ['key' => 'kid', 'name' => 'Enfant'],
+            ['key' => 'baby', 'name' => 'Bébé'],
         ];
 
         $suitableTypes = collect();
