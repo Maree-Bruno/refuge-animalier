@@ -60,16 +60,17 @@ class VolunteerController extends Controller
     public function store(VolunteerRequest $request)
     {
         $validated = $request->validated();
+
         $plainPassword = Str::random(12);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
-            'address' => $validated['address'],
-            'number' => $validated['number'],
-            'city' => $validated['city'],
-            'cp' => $validated['cp'],
+            'address' => $validated['address'] ?? null,
+            'number' => $validated['number'] ?? null,
+            'city' => $validated['city'] ?? null,
+            'cp' => $validated['cp'] ?? null,
             'password' => Hash::make($plainPassword),
             'role' => $validated['role'],
             'picture' => $this->handleImageUpload($request),

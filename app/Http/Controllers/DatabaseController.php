@@ -16,17 +16,33 @@ class DatabaseController extends Controller
     {
         $querySearch = $request->database_search;
 
-        $vaccines = Vaccine::when($querySearch, static fn($q) => $q->where('name', 'like', "%$querySearch%"))
-            ->paginate(10)->withQueryString();
+        $vaccines = Vaccine::when($querySearch,
+            static fn($q) => $q
+                ->where('name', 'like', "%$querySearch%"))
+            ->orderBy('name', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
-        $species = Specie::when($querySearch, static fn($q) => $q->where('name', 'like', "%$querySearch%"))
-            ->paginate(10)->withQueryString();
+        $species = Specie::when($querySearch,
+            static fn($q) => $q
+                ->where('name', 'like', "%$querySearch%"))
+            ->orderBy('name', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
-        $races = Race::when($querySearch, static fn($q) => $q->where('name', 'like', "%$querySearch%"))
-            ->paginate(10)->withQueryString();
+        $races = Race::when($querySearch,
+            static fn($q) => $q
+                ->where('name', 'like', "%$querySearch%"))
+            ->orderBy('name', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
-        $coats = Coat::when($querySearch, static fn($q) => $q->where('name', 'like', "%$querySearch%"))
-            ->paginate(10)->withQueryString();
+        $coats = Coat::when($querySearch,
+            static fn($q) => $q
+                ->where('name', 'like', "%$querySearch%"))
+            ->orderBy('name', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
         $suitableTypes = SuitableType::when($querySearch, static fn($q) => $q->where('name', 'like', "%$querySearch%"))
             ->paginate(10)->withQueryString();

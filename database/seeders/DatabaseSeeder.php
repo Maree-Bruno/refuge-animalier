@@ -51,11 +51,11 @@ class DatabaseSeeder extends Seeder
         }
 
         $speciesData = [
-            'Dog' => [
+            'Chien' => [
                 'races' => ['Husky', 'Chihuahua', 'Golden Retriever', 'Berger Australien', 'Cocker'],
                 'vaccines' => ['CHPPi', 'Rage', 'Toux du chenil']
             ],
-            'Cat' => [
+            'Chat' => [
                 'races' => ['Persan', 'Siamois', 'Maine Coon', 'Sphinx'],
                 'vaccines' => ['Typhus', 'Coryza', 'Leucose féline']
             ]

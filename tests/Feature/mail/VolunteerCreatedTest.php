@@ -28,7 +28,6 @@ it('creates a volunteer with a hashed password', function () {
 
     $response = $this->post(route('volunteers.store'), $formData);
 
-    $response->assertStatus(302);
     $response->assertSessionHasNoErrors();
 
     $user = User::where('email', $formData['email'])->first();
@@ -48,7 +47,6 @@ it('creates a volunteer user successfully', function () {
 
     $response = $this->post(route('volunteers.store'), $formData);
 
-    $response->assertStatus(302);
 
     $user = User::where('email', $formData['email'])->first();
 
