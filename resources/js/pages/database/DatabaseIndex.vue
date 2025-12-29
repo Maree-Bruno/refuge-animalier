@@ -9,20 +9,20 @@ import Pagination from "@/components/widgets/pagination/Pagination.vue";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
 import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
 import LoupeIcon from "@/components/widgets/svg/LoupeIcon.vue";
+import RightModal from "@/components/widgets/modals/RightModal.vue";
+import DatabaseCreate from "@/pages/database/DatabaseCreate.vue";
 
-const props= defineProps(
-    {
-        filters: {
-            type: Object,
-            default: () => ({})
-        },
-        vaccines:Object,
-        species:Object,
-        races:Object,
-        coats:Object,
-        suitableTypes:Object,
-    }
-)
+const props = defineProps({
+    filters: {
+        type: Object,
+        default: () => ({})
+    },
+    vaccines: Object,
+    species: Object,
+    races: Object,
+    coats: Object,
+    suitableTypes: Object,
+})
 
 const allResources = computed(() => {
     if (activeTab.value === 'all') {
@@ -51,7 +51,6 @@ const allResources = computed(() => {
     }
 });
 
-
 const currentData = computed(() => {
     switch (activeTab.value) {
         case 'vaccines':
@@ -70,7 +69,7 @@ const currentData = computed(() => {
 })
 
 const toast = useToasterStore();
-let search = ref(props.filters.request_search || '');
+let search = ref(props.filters.database_search || '');
 let activeTab = ref(props.filters.status || 'all');
 let timeout = null;
 
@@ -78,9 +77,8 @@ watch(search, value => {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         router.get(window.location.pathname, {
-            request_search: value,
-            status: activeTab.value,
-            animal_search: props.filters.animal_search
+            database_search: value,
+            status: activeTab.value
         }, {
             preserveState: true,
             preserveScroll: true,
@@ -101,9 +99,8 @@ const tabs = [
 const switchTab = (tabValue) => {
     activeTab.value = tabValue;
     router.get(window.location.pathname, {
-        request_search: search.value,
-        status: tabValue,
-        animal_search: props.filters.animal_search
+        database_search: search.value,
+        status: tabValue
     }, {
         preserveState: true,
         preserveScroll: true,
@@ -115,7 +112,8 @@ const showDeleteConfirm = ref(false);
 const valueToDelete = ref(null);
 const isShowModalOpen = ref(false);
 const selectedRequest = ref(null);
-const showCreateRessource=ref(false)
+const showCreateRessource = ref(false);
+
 const openShowModal = (request) => {
     selectedRequest.value = request;
     isShowModalOpen.value = true;
@@ -138,7 +136,7 @@ const destroyRessource = () => {
             valueToDelete.value = null;
         },
         onError: (errors) => {
-            toast.error({text: 'Une erreur est survenue pendant la suppression de la ressource '})
+            toast.error({text: 'Une erreur est survenue pendant la suppression de la ressource'})
         }
     });
 }
@@ -162,24 +160,36 @@ const databaseActions = [
     },
 ];
 
-console.log(allResources?.data?.length)
-
 const handleSort = ({key, order}) => {
     router.get(window.location.pathname, {
-        request_search: search.value,
+        database_search: search.value,
+        status: activeTab.value,
         orderby: key,
-        dir: order,
-        database_search: props.filters.database_search
+        dir: order
     }, {
         preserveState: true,
         preserveScroll: true,
         replace: true
     })
 }
-const handleDatabaseRowSelect=(row)=>{
 
+const handleDatabaseRowSelect = (row) => {
 }
+
+const handlePaginationClick = (url) => {
+    if (!url) return;
+
+    router.get(url, {
+        status: activeTab.value,
+        database_search: search.value
+    }, {
+        preserveState: true,
+        preserveScroll: true,
+        replace: true
+    });
+};
 </script>
+
 <template>
     <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
         <div class="flex flex-col gap-3 sm:gap-4 lg:gap-5">
@@ -206,7 +216,7 @@ const handleDatabaseRowSelect=(row)=>{
                     <LoupeIcon class="svg-strokeblue w-5 h-5 sm:w-6 sm:h-6"/>
                     <input
                         type="text"
-                        placeholder="Rechercher une demande..."
+                        placeholder="Rechercher une ressource..."
                         v-model="search"
                         class="flex-1 outline-none text-sm sm:text-base"
                     >
@@ -260,7 +270,11 @@ const handleDatabaseRowSelect=(row)=>{
                 </template>
             </GenericTable>
         </div>
-        <Pagination v-if="currentData" :links="currentData.links"/>
+        <Pagination
+            v-if="currentData"
+            :links="currentData.links"
+            @navigate="handlePaginationClick"
+        />
 
     </section>
 
@@ -275,7 +289,7 @@ const handleDatabaseRowSelect=(row)=>{
             </h3>
 
             <p class="text-gray-600 text-center mb-6">
-                Êtes-vous sûr de vouloir supprimer la demande de
+                Êtes-vous sûr de vouloir supprimer la ressource
                 <span class="font-semibold">{{ valueToDelete?.name }}</span> ?
                 Cette action est irréversible.
             </p>
@@ -296,10 +310,22 @@ const handleDatabaseRowSelect=(row)=>{
             </div>
         </div>
     </CenterModal>
-
+    <KeepAlive>
+        <RightModal v-model="showCreateRessource" route-key="create" route-value="create-ressource">
+            <template #header>
+                <h2 class="subsubtitle">Nouvelle ressource</h2>
+            </template>
+            <DatabaseCreate
+                :species="species"
+                :races="races"
+                :coats="coats"
+                :suitableTypes="suitableTypes"
+                :vaccines="vaccines"
+            />
+        </RightModal>
+    </KeepAlive>
 </template>
 
 <style scoped>
 
 </style>
-

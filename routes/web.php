@@ -88,6 +88,7 @@ Route::domain('admin.happypaws.test')->group(function () {
 
             //db
             Route::get('/database', [DatabaseController::class, 'index'])->name('database.index');
+            Route::post('/database', [DatabaseController::class, 'store'])->name('database.store');
 
             //contact
             Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact_message.index');

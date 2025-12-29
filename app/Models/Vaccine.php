@@ -11,6 +11,11 @@ class Vaccine extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'specie_id',
+    ];
+
     public function specie(): BelongsTo
     {
         return $this->belongsTo(Specie::class);
