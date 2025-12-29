@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useForm } from '@inertiajs/vue3';
 import { store } from "@/routes/database";
 import Select from "@/components/widgets/form/Select.vue";
@@ -22,6 +22,7 @@ const toast = useToasterStore();
 const form = useForm({
     model_type: '',
     name: '',
+    key: '',
     specie_id: null
 });
 
@@ -33,12 +34,38 @@ const modelTypes = [
     { value: 'suitable_type', label: 'Convient pour' }
 ];
 
+const requiresKey = computed(() => {
+    return form.model_type === 'suitable_type';
+});
+
 const requiresSpecies = computed(() => {
     return form.model_type === 'vaccine' || form.model_type === 'race';
 });
 
 const speciesList = computed(() => {
     return props.species?.data || [];
+});
+
+
+const generateKey = (name: string): string => {
+    return name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+};
+
+
+watch(() => form.name, (newName) => {
+    if (requiresKey.value && newName) {
+        form.key = generateKey(newName);
+    }
+});
+
+
+watch(() => form.model_type, () => {
+    form.key = '';
 });
 
 const submit = () => {
@@ -79,7 +106,6 @@ const submit = () => {
                 <InputError :message="form.errors.model_type" />
             </div>
 
-            <!-- Nom -->
             <InputLabel
                 nameId="name"
                 type="text"
@@ -111,6 +137,26 @@ const submit = () => {
                 <p class="text-gray-500 text-sm">
                     Les {{ form.model_type === 'vaccine' ? 'vaccins' : 'races' }} doivent être liés à une espèce
                 </p>
+            </div>
+
+            <div v-if="requiresKey" class="flex flex-col gap-2 w-full">
+                <InputLabel
+                    nameId="key"
+                    type="text"
+                    placeholder="cle_automatique"
+                    :message="form.errors.key"
+                    v-model="form.key"
+                    :required="true"
+                    maxlength="50"
+                >
+                    Clé d'identification *
+                </InputLabel>
+                <p class="text-gray-500 text-sm">
+                    La clé est générée automatiquement à partir du nom. Vous pouvez la modifier si nécessaire.
+                    <br>
+                    <span class="text-xs italic">Format recommandé : minuscules, sans accents, séparés par des underscores (_)</span>
+                </p>
+                <InputError :message="form.errors.key" />
             </div>
         </div>
 
