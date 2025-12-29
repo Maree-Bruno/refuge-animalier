@@ -3,6 +3,7 @@
 import AnimalIndex from "@/pages/animals/AnimalIndex.vue";
 import {usePage} from "@inertiajs/vue3";
 import {computed} from "vue";
+import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
 
 const props = defineProps({
     animals: {type: Object},
@@ -20,5 +21,13 @@ const props = defineProps({
 </script>
 
 <template>
-    <AnimalIndex v-bind="props"/>
+    <AnimalIndex
+        :animals="animals"
+        :filters="filters"
+        :species="species"
+        :races="races"
+        :coats="coats"
+        :vaccines="vaccines"
+        :can="can"
+        :allSuitableTypes="allSuitableTypes"/>
 </template>

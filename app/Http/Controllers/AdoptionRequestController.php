@@ -39,13 +39,13 @@ class AdoptionRequestController extends Controller
 
         if ($request->filled('request_search')) {
             $search = $request->request_search;
-            $query->where(function($q) use ($search) {
-                $q->whereHas('adopter', function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('adopter', function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhere('phone', 'like', "%{$search}%");
                 })
-                    ->orWhereHas('animal', function($q) use ($search) {
+                    ->orWhereHas('animal', function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%");
                     });
             });
@@ -63,15 +63,13 @@ class AdoptionRequestController extends Controller
                 $query->join('adopters', 'adoption_requests.adopter_id', '=', 'adopters.id')
                     ->select('adoption_requests.*')
                     ->orderBy("adopters.{$orderBy}", $direction);
-            }
-            elseif ($orderBy === 'animal') {
+            } elseif ($orderBy === 'animal') {
                 $query->orderBy(
                     \App\Models\Animal::select('name')
                         ->whereColumn('animals.id', 'adoption_requests.animal_id'),
                     $direction
                 );
-            }
-            else {
+            } else {
                 $query->orderBy($orderBy, $direction);
             }
         } else {
@@ -112,6 +110,7 @@ class AdoptionRequestController extends Controller
             'cp' => 'nullable|string|max:10',
             'animal_id' => 'required|exists:animals,id',
             'message' => 'required|string|max:1000',
+            'status' => 'in:accepted,rejected,submitted,pending',
         ]);
 
         $adopter = Adopter::updateOrCreate(
@@ -132,7 +131,7 @@ class AdoptionRequestController extends Controller
             'message' => $validated['message'],
             'request_date' => now(),
             'adoption_date' => null,
-            'status' => 'submitted',
+            'status' => $validated['status'] ?? 'submitted',
             'user_id' => auth()->id(),
         ]);
 
@@ -144,7 +143,7 @@ class AdoptionRequestController extends Controller
 
         Notification::send($users, new AdoptionRequestCreatedNotification($adoptionRequest));
 
-        return back()->with('success', __('contact.request_sent'));
+        return back();
     }
 
     public function update(Request $request, $id)

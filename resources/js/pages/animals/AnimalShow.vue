@@ -15,7 +15,7 @@ const props = defineProps({
     allSuitableTypes: {type:Object},
     can: Object,
 });
-console.log(props.species)
+//console.log(props.can)
 
 const showCreate = ref(false);
 const showEdit = ref(false);

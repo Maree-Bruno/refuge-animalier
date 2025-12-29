@@ -13,6 +13,8 @@ import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
 import AdoptionRequestShow from "@/pages/adoptionrequests/AdoptionRequestShow.vue";
 import AnimalShow from "@/pages/animals/AnimalShow.vue";
 import {useToasterStore} from "@/stores/useToasterStore.ts";
+import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
+import AdoptionRequestCreate from "@/pages/adoptionrequests/AdoptionRequestCreate.vue";
 
 const props = defineProps({
     adoptionRequests: {
@@ -95,12 +97,12 @@ const destroyRequest = () => {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {
-            toast.success({text:'La demande a bien été supprimée'});
+            toast.success({text: 'La demande a bien été supprimée'});
             showDeleteConfirm.value = false;
             requestToDelete.value = null;
         },
         onError: (errors) => {
-            toast.error({text:'Une erreur est survenue pendant la suppression de la demande '})
+            toast.error({text: 'Une erreur est survenue pendant la suppression de la demande '})
         }
     });
 }
@@ -157,6 +159,8 @@ const getStatusLabel = (status) => {
 }
 
 const {formatDate} = useFormatDate();
+
+const showCreateAdoptionRequest = ref(false);
 </script>
 <template>
     <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
@@ -188,6 +192,14 @@ const {formatDate} = useFormatDate();
                         v-model="search"
                         class="flex-1 outline-none text-sm sm:text-base"
                     >
+                </div>
+                <div class="flex flex-col lg:flex-row xs:flex-row gap-2 sm:gap-3 lg:order-3">
+                    <button
+                        @click="showCreateAdoptionRequest=true"
+                        class="button-yellow button-animation rounded-md p-2 text-sm sm:text-base font-semibold whitespace-nowrap"
+                    >
+                        Ajouter une demande
+                    </button>
                 </div>
             </div>
         </div>
@@ -328,6 +340,23 @@ const {formatDate} = useFormatDate();
             :suitable-types="suitableTypes"
         />
     </CenterModal>
+
+    <KeepAlive>
+        <RightModal v-model="showCreateAdoptionRequest" route-key="create" route-value="create-adoption">
+            <template #header>
+                <h2 class="subsubtitle">Nouvelle demande d'adoption</h2>
+            </template>
+            <AdoptionRequestCreate
+                :animals="animals"
+                :adopter="adopter"
+                :species="species"
+                :races="races"
+                :coats="coats"
+                :vaccines="vaccines"
+                @close="showCreateAdoptionRequest = false"
+                :suitableTypes="suitableTypes"/>
+        </RightModal>
+    </KeepAlive>
 </template>
 
 <style scoped>

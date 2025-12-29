@@ -33,7 +33,7 @@ Route::domain('happypaws.test')->group(function () {
     //animals
     Route::get('/animals', [PublicAnimalController::class, 'index'])->name('animals');
     Route::get('/animals/{animal}', [PublicAnimalController::class, 'show'])->name('animals_show');
-    Route::post('/animals/{animal}', [AdoptionRequestController::class, 'store'])->name('adoption_requests.store');
+    Route::post('/animals/{animal}', [AdoptionRequestController::class, 'store'])->name('adoption_requests.public.store');
 
     //contact
     Route::get('/contact', function () {
@@ -70,6 +70,7 @@ Route::domain('admin.happypaws.test')->group(function () {
 
         //adoption request
         Route::get('/adoption', [AdoptionRequestController::class, 'index'])->name('adoption_requests.index');
+        Route::post('/adoption/', [AdoptionRequestController::class, 'store'])->name('adoption_requests.store');
         Route::patch('/adoption/{adoption}',
             [AdoptionRequestController::class, 'update'])->name('adoption_requests.update');
         Route::delete('/adoption/{adoption}',

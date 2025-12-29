@@ -2,16 +2,34 @@
 const props = defineProps({
     label: String,
     multiple: Boolean,
-    modelValue: [String, Number, Array]
+    modelValue: [String, Number, Array],
+    nameId: {
+        type: String,
+        default: 'select'
+    },
+    convertToNumber: {
+        type: Boolean,
+        default: true,
+    }
 })
+
 const emit = defineEmits(['update:modelValue'])
 
 const onChange = (event) => {
     if (props.multiple) {
-        const values = Array.from(event.target.selectedOptions).map(o => Number(o.value))
+        const values = Array.from(event.target.selectedOptions)
+            .map(o => {
+                if (o.value === '') return ''
+                return props.convertToNumber ? Number(o.value) : o.value
+            })
         emit('update:modelValue', values)
     } else {
-        emit('update:modelValue', Number(event.target.value))
+        const value = event.target.value
+        if (value === '') {
+            emit('update:modelValue', '')
+        } else {
+            emit('update:modelValue', props.convertToNumber ? Number(value) : value)
+        }
     }
 }
 </script>
