@@ -14,14 +14,14 @@ const props = defineProps({
     coats: Object,
     races: Object,
     vaccines: Object,
-    suitableTypes: Object,
+    allSuitableTypes: Object,
     can: Object,
 });
 
 const emit = defineEmits(['close']);
 const races = props.races;
 const vaccines = props.vaccines;
-const suitableTypes = props.suitableTypes;
+const suitableTypes = props.allSuitableTypes;
 
 const page = usePage();
 const animals = computed(() => page.props.animals);
@@ -127,7 +127,7 @@ const submitAnimal = () => {
                     Âge de l'animal
                 </InputLabel>
                 <div class="flex flex-col gap-2 w-full">
-                    <Select nameId="sex" v-model="formAnimal.sex" label="Sexe de l'animal">
+                    <Select nameId="sex" v-model="formAnimal.sex" label="Sexe de l'animal" :convertToNumber="false">
                         <option value="" selected>-- Choisissez le sexe de l'animal --</option>
                         <option value="male">Mâle</option>
                         <option value="female">Femelle</option>
@@ -217,7 +217,7 @@ const submitAnimal = () => {
             <div class="flex justify-between gap-5">
                 <div class="w-full space-y-1">
                     <Select nameId="status-edit" v-model="formAnimal.status" label="Status de l'animal"
-                            :modelValue="formAnimal.status">
+                            :modelValue="formAnimal.status" :convertToNumber="false">
                         <option value="">-- Choisissez un statut --</option>
                         <option value="Adopted">Adopté</option>
                         <option value="In progress">En cours</option>

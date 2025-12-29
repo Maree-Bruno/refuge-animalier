@@ -176,7 +176,7 @@
             </div>
 
             <div class="w-full">
-                <form action="{{route('adoption_requests.store', $animal)}}" method="post" class="flex flex-col
+                <form action="{{route('adoption_requests.public.store', $animal)}}" method="post" class="flex flex-col
                 space-y-2.5">
                     @csrf
                     <input type="hidden" name="animal_id" value="{{ $animal->id }}">

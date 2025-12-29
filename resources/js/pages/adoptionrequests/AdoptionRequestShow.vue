@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import {computed, ref, watch} from "vue";
 import {router} from "@inertiajs/vue3";
-import {useFormatDate} from "@/composables/useFormatDate.ts";
+import {useFormatDate} from "@/composables/useFormatDate";
 import {useToasterStore} from "@/stores/useToasterStore";
+import {useAnimalImage} from "@/composables/useAnimalImage";
 
 const props = defineProps({
     request: {
@@ -27,44 +28,19 @@ const props = defineProps({
     },
 
 });
-const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
-    if (!filename) return '/images/billy.webp';
 
-    const sizeMap = {
-        sm: '300x300',
-        md: '600x600',
-        lg: '900x900'
-    };
+const { getUrl, getSrcset } = useAnimalImage();
 
-    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
-};
-
-const getImageSrcset = (filename: string): string => {
-    if (!filename) return '';
-
-    return [
-        `/images/animals/variants/300x300/${filename} 300w`,
-        `/images/animals/variants/600x600/${filename} 600w`,
-        `/images/animals/variants/900x900/${filename} 900w`
-    ].join(', ');
-};
+const animal = computed(() => props.request?.animal);
 
 const mainImage = computed(() => {
-    if (!props.animal?.pictures || props.animal.pictures.length === 0) {
-        return {
-            src: '/images/billy.webp',
-            srcset: '',
-            alt: props.animal?.name || 'Animal'
-        };
-    }
-
-    const filename = props.animal.pictures[selectedImageIndex.value];
     return {
-        src: getImageUrl(filename, 'lg'),
-        srcset: getImageSrcset(filename),
-        alt: props.animal.name
+        src: getUrl(animal.value, 'lg'),
+        srcset: getSrcset(animal.value),
+        alt: animal.value?.name || 'Animal'
     };
 });
+
 const localStatus = ref(props.request?.status || '');
 const isSaving = ref(false);
 

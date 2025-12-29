@@ -225,7 +225,7 @@ const displayedImage = computed(() => {
             </div>
 
             <div class="flex flex-col gap-2">
-                <Select nameId="role" v-model="formVolunteer.role" label="Rôle du bénévole">
+                <Select nameId="role" v-model="formVolunteer.role" label="Rôle du bénévole" :convertToNumber="false">
                     <option value="" selected>Sélectionner un rôle</option>
                     <option
                         v-for="role in availableRoles"

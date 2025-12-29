@@ -17,7 +17,6 @@ const props = defineProps({
     allSuitableTypes: Object,
     can: Object,
 });
-console.log(props.species)
 
 const toast = useToasterStore();
 let formAnimal = useForm({
@@ -146,6 +145,7 @@ const submitAnimal = () => {
         }
     });
 }
+console.log(props.can)
 </script>
 
 <template>
@@ -176,7 +176,7 @@ const submitAnimal = () => {
                 </InputLabel>
 
                 <div class="flex flex-col gap-2 w-full">
-                    <Select nameId="sex-edit" v-model="formAnimal.sex" label="Sexe de l'animal">
+                    <Select nameId="sex-edit" v-model="formAnimal.sex" label="Sexe de l'animal" :convertToNumber="false">
                         <option value="" selected>-- Choisissez le sexe de l'animal --</option>
                         <option value="male">Mâle</option>
                         <option value="female">Femelle</option>
@@ -265,7 +265,7 @@ const submitAnimal = () => {
 
             <div class="flex justify-between gap-5">
                 <div class="w-full space-y-1">
-                    <Select nameId="status-edit" v-model="formAnimal.status" label="Status de l'animal"
+                    <Select nameId="status-edit" v-model="formAnimal.status" label="Status de l'animal" :convertToNumber="false"
                             :modelValue="formAnimal.status">
                         <option value="">-- Choisissez un statut --</option>
                         <option value="Adopted">Adopté</option>
@@ -283,7 +283,7 @@ const submitAnimal = () => {
                     </label>
                     <InputError :message="formAnimal.errors.outside"/>
                 </div>
-                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted' && can.published">
+                <div class="space-y-1 w-full" v-if="formAnimal.status !== 'Adopted' && props.can" >
                     <p class="text-black font-semibold sm:text-lg leading-9">Publié</p>
                     <label for="published-edit" class="space-x-1"
                            :class="formAnimal.status === 'Validated' ?'':'cursor-not-allowed' ">
