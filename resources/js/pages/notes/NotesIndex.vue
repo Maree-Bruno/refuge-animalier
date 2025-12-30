@@ -143,6 +143,7 @@ const {formatDate} = useFormatDate();
 
 <template>
     <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
+        <h3 class="sr-only">Notes</h3>
         <div class="flex flex-col gap-3 sm:gap-4 lg:gap-5">
             <div class="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:justify-between lg:items-start">
                 <div

@@ -58,6 +58,7 @@ const initials = computed(() => getInitials(user.value?.name));
             >
                 <h2 class="sr-only">Navigation</h2>
                 <nav class="h-full flex flex-col mt-4 shadow-xl">
+                    <h3 class="sr-only">Navigation</h3>
                     <div class="flex items-center justify-between mb-4 border-b border-b-white/20 mx-2 pb-3">
                         <Transition
                             enter-active-class="transition-all duration-300 ease-out delay-100"

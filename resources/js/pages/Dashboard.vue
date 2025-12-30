@@ -28,15 +28,13 @@ const props = defineProps({
 </script>
 
 <template>
-    <section class="space-y-5">
-        <h3 class="subsubtitle">Statistique</h3>
+
   <StatsSection
       :accepted="accepted"
       :refugedAnimals="refugedAnimals"
       :adoptedAnimals="adoptedAnimals"
       :inProgress="inProgress"
   />
-    </section>
     <section class="space-y-5">
         <h3 class="subsubtitle">Animaux</h3>
     <AnimalIndex
