@@ -15,12 +15,12 @@ class NoteFactory extends Factory
     public function definition(): array
     {
         return [
+            'title' => $this->faker->words(),
             'content' => $this->faker->text(),
-            'date' => Carbon::now(),
+            'notables_type' => $this->faker->word(),
+            'notables_id' => $this->faker->randomNumber(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-            'animal_id' => Animal::factory(),
-            'user_id' => User::factory(),
         ];
     }
 }

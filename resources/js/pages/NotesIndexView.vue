@@ -1,11 +1,21 @@
 <script setup lang="ts">
-  import Layout from '@/layouts/AppLayout'
-  import { Head } from '@inertiajs/vue3'
-  import AppLayout from "@/layouts/AppLayout.vue";
+ import NotesIndex from "@/pages/notes/NotesIndex.vue";
 
-  defineProps<{}>()
+ const props = defineProps({
+     notes: Object,
+     filters: {
+         type: Object,
+         default: () => ({})
+     },
+     animals:Array,
+     adoptionRequests:Array,
+ })
 </script>
-
 <template>
-
+<NotesIndex
+:notes="notes"
+:filters="filters"
+:animals="animals"
+:adoptionRequests="adoptionRequests"
+/>
 </template>

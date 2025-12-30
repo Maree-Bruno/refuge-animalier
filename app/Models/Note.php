@@ -4,28 +4,42 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Note extends Model
 {
     use HasFactory;
 
-    protected $fillable=['content', 'animal_id', 'user_id', 'date'];
+    protected $fillable = [
+        'title',
+        'content',
+        'notable_type',
+        'notable_id',
+    ];
 
-    public function animal(): BelongsTo
+    protected $appends = ['notable_name'];
+
+    public function notable(): MorphTo
     {
-        return $this->belongsTo(Animal::class);
+        return $this->morphTo();
     }
-
-    public function user(): BelongsTo
+    public function getNotableNameAttribute(): ?string
     {
-        return $this->belongsTo(User::class);
-    }
+        if (! $this->relationLoaded('notable') || ! $this->notable) {
+            return null;
+        }
 
-    protected function casts(): array
-    {
-        return [
-            'date' => 'datetime',
-        ];
+        if ($this->notable instanceof Animal) {
+            return $this->notable->name;
+        }
+
+        if ($this->notable instanceof AdoptionRequest) {
+            $adopter = optional($this->notable->adopter)->name ?? 'Adoptant inconnu';
+            $animal  = optional($this->notable->animal)->name ?? 'Animal inconnu';
+
+            return "{$adopter} - {$animal}";
+        }
+
+        return 'Inconnu';
     }
 }

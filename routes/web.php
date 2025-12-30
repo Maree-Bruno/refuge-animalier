@@ -78,6 +78,9 @@ Route::domain('admin.happypaws.test')->group(function () {
 
         //notes
         Route::get('/notes', [NoteController::class, 'index'])->name('notes.index');
+        Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+        Route::patch('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
+        Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
 
         Route::middleware(UserIsAdminMiddleware::class)->group(function () {

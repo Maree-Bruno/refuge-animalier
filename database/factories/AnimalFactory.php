@@ -28,7 +28,6 @@ class AnimalFactory extends Factory
             'pictures' => null,
             'published' => $this->faker->boolean(),
             'admission_date' => $this->faker->date(),
-            'note_id' => null,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

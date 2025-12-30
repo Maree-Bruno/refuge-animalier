@@ -15,7 +15,6 @@ const props = defineProps({
     allSuitableTypes: {type:Object},
     can: Object,
 });
-//console.log(props.can)
 
 const showCreate = ref(false);
 const showEdit = ref(false);
@@ -79,9 +78,10 @@ const suitableText = computed(() => {
     }
 
     return props.animal.suitable_types
-        .map((type: any) => type.label)
+        .map((type: any) => type.name)
         .join(', ');
 });
+
 
 const outsideText = computed(() => {
     return props.animal?.outside
