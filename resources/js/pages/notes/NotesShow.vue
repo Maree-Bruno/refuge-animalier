@@ -20,6 +20,7 @@ const props = defineProps({
 })
 const toast = useToasterStore();
 
+
 const getNotableLabel = (notable) => {
     if (!notable) return 'N/A';
     return ` ${notable.name || notable.id}`;
@@ -74,7 +75,8 @@ const destroyNote = () => {
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500">Lié à</p>
-                    <p class="text-gray-800 mt-1">{{ getNotableLabel(note?.notable) }}</p>
+                    <p class="text-gray-800 mt-1">{{ note?.notable_name }}</p>
+
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-500">Date de création</p>

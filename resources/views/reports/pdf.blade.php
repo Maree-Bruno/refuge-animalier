@@ -40,7 +40,6 @@
             font-size: 11px;
             color: #6b7280;
             padding: 8px 16px;
-            background-color: #fef3c7;
             border-radius: 6px;
         }
 
@@ -236,15 +235,13 @@
     </style>
 </head>
 <body>
-<!-- Header -->
 <div class="header">
     <h2>Rapport de {{ $month }}</h2>
     <div class="export-info">
-        📥 PDF généré le {{ $generatedAt }}
+         PDF généré le {{ $generatedAt }}
     </div>
 </div>
 
-<!-- Stats Section -->
 <section class="stats-section">
     <div class="stat-card yellow">
         <p class="title">Animaux adoptés</p>
@@ -266,8 +263,6 @@
         <p class="number">{{ $accepted }}</p>
     </div>
 </section>
-
-<!-- Animaux adoptés -->
 @if(isset($animalsByStatus['Adopted']) && count($animalsByStatus['Adopted']) > 0)
     <section class="animal-section">
         <h3>Animaux adoptés</h3>
@@ -323,7 +318,6 @@
     </section>
 @endif
 
-<!-- Animaux au refuge -->
 @if(isset($animalsByStatus['Validated']) && count($animalsByStatus['Validated']) > 0)
     <section class="animal-section">
         <h3>Animaux au refuge</h3>
@@ -378,7 +372,6 @@
     </section>
 @endif
 
-<!-- Animaux en cours de validation -->
 @if(isset($animalsByStatus['In progress']) && count($animalsByStatus['In progress']) > 0)
     <section class="animal-section">
         <h3>Animaux en cours de validation</h3>
@@ -434,7 +427,6 @@
     </section>
 @endif
 
-<!-- Footer -->
 <div class="footer">
     <p>Document généré automatiquement - {{ $generatedAt }}</p>
 </div>
