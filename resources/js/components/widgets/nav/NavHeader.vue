@@ -86,7 +86,6 @@ const initials = computed(() => getInitials(user.value?.name));
 
                             <SidebarIcon
                                 class="svg-strokewhite w-6 h-6 transition-transform duration-1000 ease-in-out"
-                                :class="{ 'rotate-360': isPinned }"
                             />
                         </button>
                     </div>

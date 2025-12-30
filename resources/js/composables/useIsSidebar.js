@@ -1,6 +1,5 @@
 import { ref, computed } from 'vue';
 
-// Shared state across all instances
 const isPinned = ref(localStorage.getItem('sidebar_pinned') === '1');
 const isHovered = ref(false);
 
@@ -12,20 +11,20 @@ export function useSidebar() {
         localStorage.setItem('sidebar_pinned', isPinned.value ? '1' : '0');
     };
 
-    const handleMouseEnter = () => {
+   /* const handleMouseEnter = () => {
         isHovered.value = true;
     };
 
     const handleMouseLeave = () => {
         isHovered.value = false;
-    };
+    };*/
 
     return {
         isPinned,
         isHovered,
         isCollapsed,
         togglePin,
-        handleMouseEnter,
-        handleMouseLeave
+       /* handleMouseEnter,
+        handleMouseLeave*/
     };
 }
