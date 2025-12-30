@@ -36,7 +36,9 @@ class AnimalController extends Controller
             $request,
             ['coat', 'race', 'specie', 'vaccines', 'suitableTypes'], 'animal_search'
         );
-        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
+        $animals->through(fn($animal) => $animal->loadMissing([
+            'suitableTypes', 'vaccines', 'notes' => fn($q) => $q->latest()
+        ]));
 
         return Inertia::render('AnimalsIndexView', [
             'title' => 'Animals',
