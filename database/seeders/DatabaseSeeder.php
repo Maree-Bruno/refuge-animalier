@@ -39,10 +39,10 @@ class DatabaseSeeder extends Seeder
             $coats->push(Coat::create(['name' => $name]));
         }
         $suitableTypesData = [
-            ['key' => 'dog', 'label' => 'Chien'],
-            ['key' => 'cat', 'label' => 'Chat'],
-            ['key' => 'kid', 'label' => 'Enfant'],
-            ['key' => 'baby', 'label' => 'Bébé'],
+            ['key' => 'dog', 'name' => 'Chien'],
+            ['key' => 'cat', 'name' => 'Chat'],
+            ['key' => 'kid', 'name' => 'Enfant'],
+            ['key' => 'baby', 'name' => 'Bébé'],
         ];
 
         $suitableTypes = collect();
@@ -51,11 +51,11 @@ class DatabaseSeeder extends Seeder
         }
 
         $speciesData = [
-            'Dog' => [
+            'Chien' => [
                 'races' => ['Husky', 'Chihuahua', 'Golden Retriever', 'Berger Australien', 'Cocker'],
                 'vaccines' => ['CHPPi', 'Rage', 'Toux du chenil']
             ],
-            'Cat' => [
+            'Chat' => [
                 'races' => ['Persan', 'Siamois', 'Maine Coon', 'Sphinx'],
                 'vaccines' => ['Typhus', 'Coryza', 'Leucose féline']
             ]
@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $animals = collect();
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $race = Race::inRandomOrder()->first();
 
             $animal = Animal::factory()->create([

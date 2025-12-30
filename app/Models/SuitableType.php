@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class SuitableType extends Model
 {
     use HasFactory;
-    protected $fillable = ['key', 'label'];
+    protected $fillable = ['key', 'name'];
 
     public function animals(): BelongsToMany
     {
