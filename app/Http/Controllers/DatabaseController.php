@@ -112,8 +112,94 @@ class DatabaseController extends Controller
         return back();
     }
 
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'model_type' => 'required|in:vaccine,specie,race,coat,suitable_type',
+            'name' => 'required|string|max:255',
+            'key' => 'required_if:model_type,suitable_type|nullable|string|max:50',
+            'specie_id' => 'required_if:model_type,vaccine,race|nullable|exists:species,id'
+        ], [
+            'key.unique' => 'Cette clé existe déjà. Veuillez en choisir une autre.',
+            'key.required_if' => 'La clé est obligatoire pour ce type de ressource.',
+        ]);
+
+        switch ($validated['model_type']) {
+            case 'vaccine':
+                $resource = Vaccine::findOrFail($id);
+                $resource->update([
+                    'name' => $validated['name'],
+                    'specie_id' => $validated['specie_id']
+                ]);
+                break;
+
+            case 'specie':
+                $resource = Specie::findOrFail($id);
+                $resource->update([
+                    'name' => $validated['name']
+                ]);
+                break;
+
+            case 'race':
+                $resource = Race::findOrFail($id);
+                $resource->update([
+                    'name' => $validated['name'],
+                    'specie_id' => $validated['specie_id']
+                ]);
+                break;
+
+            case 'coat':
+                $resource = Coat::findOrFail($id);
+                $resource->update([
+                    'name' => $validated['name']
+                ]);
+                break;
+
+            case 'suitable_type':
+                $resource = SuitableType::findOrFail($id);
+                $request->validate([
+                    'key' => 'required|string|max:50|unique:suitable_types,key,' . $id
+                ], [
+                    'key.unique' => 'Cette clé existe déjà. Veuillez en choisir une autre.',
+                ]);
+
+                $resource->update([
+                    'name' => $validated['name'],
+                    'key' => $validated['key']
+                ]);
+                break;
+        }
+
+        return back();
+    }
+
     public function destroy($id)
     {
+        $resource = null;
+        $resourceType = null;
 
-    }
+        if ($vaccine = Vaccine::find($id)) {
+            $resource = $vaccine;
+            $resourceType = 'vaccine';
+        } elseif ($specie = Specie::find($id)) {
+            $resource = $specie;
+            $resourceType = 'specie';
+        } elseif ($race = Race::find($id)) {
+            $resource = $race;
+            $resourceType = 'race';
+        } elseif ($coat = Coat::find($id)) {
+            $resource = $coat;
+            $resourceType = 'coat';
+        } elseif ($suitableType = SuitableType::find($id)) {
+            $resource = $suitableType;
+            $resourceType = 'suitable_type';
+        }
+
+        if (!$resource) {
+            return back();
+        }
+
+            $resource->delete();
+            return back();
+        }
 }

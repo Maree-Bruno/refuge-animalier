@@ -11,6 +11,8 @@ import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
 import LoupeIcon from "@/components/widgets/svg/LoupeIcon.vue";
 import RightModal from "@/components/widgets/modals/RightModal.vue";
 import DatabaseCreate from "@/pages/database/DatabaseCreate.vue";
+import AdoptionRequestShow from "@/pages/adoptionrequests/AdoptionRequestShow.vue";
+import DatabaseShow from "@/pages/database/DatabaseShow.vue";
 
 const props = defineProps({
     filters: {
@@ -111,16 +113,16 @@ const switchTab = (tabValue) => {
 const showDeleteConfirm = ref(false);
 const valueToDelete = ref(null);
 const isShowModalOpen = ref(false);
-const selectedRequest = ref(null);
+const selectedRessource = ref(null);
 const showCreateRessource = ref(false);
 
-const openShowModal = (request) => {
-    selectedRequest.value = request;
+const openShowModal = (ressource) => {
+    selectedRessource.value = ressource;
     isShowModalOpen.value = true;
 };
 
-const openDeleteConfirm = (request) => {
-    valueToDelete.value = request;
+const openDeleteConfirm = (ressource) => {
+    valueToDelete.value = ressource;
     showDeleteConfirm.value = true;
 };
 
@@ -324,6 +326,17 @@ const handlePaginationClick = (url) => {
             />
         </RightModal>
     </KeepAlive>
+    <CenterModal v-model="isShowModalOpen"
+                 route-key="ressource"
+                 :route-value="selectedRessource?.id">
+        <DatabaseShow
+            :species="species"
+            :races="races"
+            :coats="coats"
+            :suitableTypes="suitableTypes"
+            :vaccines="vaccines"
+        />
+    </CenterModal>
 </template>
 
 <style scoped>

@@ -82,7 +82,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $animals = collect();
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 100; $i++) {
             $race = Race::inRandomOrder()->first();
 
             $animal = Animal::factory()->create([
