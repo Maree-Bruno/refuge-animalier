@@ -20,7 +20,6 @@ return new class extends Migration {
             $table->boolean('published')->default(false);
             $table->date('admission_date');
             $table->foreignId('coat_id')->nullable()->constrained('coats')->onDelete('cascade');
-            $table->foreignId('note_id')->nullable()->constrained('notes')->onDelete('cascade');
             $table->foreignId('race_id')->nullable()->constrained('races')->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();

@@ -169,7 +169,7 @@ console.log(form.animal_id);
                 Message
             </TabbableTextarea>
             <div class="bg-blue-50 rounded-lg p-4 border-2 border-blue-200">
-                <h4 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Statut de la demande</h4>
+                <p class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Statut de la demande</p>
                 <div class="flex items-center gap-3">
                     <select
                         v-model="localStatus"

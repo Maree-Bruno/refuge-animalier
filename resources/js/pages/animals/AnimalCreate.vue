@@ -208,7 +208,7 @@ const submitAnimal = () => {
                             :value="suitableType.id"
                             v-model="formAnimal.suitable_type_ids"
                         >
-                        {{ suitableType.label }}
+                        {{ suitableType.name }}
                     </label>
                 </div>
                 <InputError :message="formAnimal.errors.suitable_type_ids"/>

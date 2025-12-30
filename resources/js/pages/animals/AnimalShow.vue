@@ -1,27 +1,31 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
-import {usePage} from "@inertiajs/vue3";
+import {router, useForm, usePage} from "@inertiajs/vue3";
 import RightModal from "@/components/widgets/modals/RightModal.vue";
 import CenterModal from "@/components/widgets/modals/CenterModal.vue";
 import AnimalEdit from "@/pages/animals/AnimalEdit.vue";
 import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
+import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
+import EditIcon from "@/components/widgets/svg/EditIcon.vue";
+import {useToasterStore} from "@/stores/useToasterStore";
 
 const props = defineProps({
-    animal: {type:Object},
-    species: {type:Object},
-    races: {type:Object},
-    coats: {type:Object},
-    vaccines: {type:Object},
-    allSuitableTypes: {type:Object},
+    animal: {type: Object},
+    species: {type: Object},
+    races: {type: Object},
+    coats: {type: Object},
+    vaccines: {type: Object},
+    allSuitableTypes: {type: Object},
     can: Object,
 });
-//console.log(props.can)
-
+const toast = useToasterStore();
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);
 const selectedImageIndex = ref(0);
-
+const animalNotes = computed(() => {
+    return props.animal?.notes ?? [];
+});
 const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
     if (!filename) return '/images/billy.webp';
 
@@ -79,9 +83,10 @@ const suitableText = computed(() => {
     }
 
     return props.animal.suitable_types
-        .map((type: any) => type.label)
+        .map((type: any) => type.name)
         .join(', ');
 });
+
 
 const outsideText = computed(() => {
     return props.animal?.outside
@@ -102,6 +107,82 @@ const statusClass = computed(() => {
 const selectImage = (index: number) => {
     selectedImageIndex.value = index;
 };
+const noteForm = useForm({
+    title: '',
+    content: '',
+});
+
+const submitNote = () => {
+    router.post('/notes', {
+        title: noteForm.title,
+        content: noteForm.content,
+        notable_type: 'App\\Models\\Animal',
+        notable_id: props.animal.id,
+    }, {
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: () => {
+            toast.success({text: 'Note créée avec succès'});
+            noteForm.reset();
+            showCreate.value = false;
+        }
+    });
+
+};
+const showDeleteConfirm = ref(false);
+const noteToDelete = ref(null);
+
+const openDeleteConfirm = (note) => {
+    noteToDelete.value = note;
+    showDeleteConfirm.value = true;
+};
+
+
+const deleteNote = (note) => {
+    if (!note) return;
+
+    router.delete(`/notes/${note.id}`, {
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: () => {
+            toast.success({ text: 'Note supprimée avec succès' });
+            showDeleteConfirm.value = false;
+        },
+        onError: () => {
+            toast.error({ text: 'Impossible de supprimer la note.' });
+        }
+    });
+};
+
+const editNoteForm = useForm({
+    id: null,
+    title: '',
+    content: '',
+});
+
+const showEditNote = ref(false);
+
+const openEditNote = (note) => {
+    editNoteForm.id = note.id;
+    editNoteForm.title = note.title;
+    editNoteForm.content = note.content;
+    showEditNote.value = true;
+};
+
+const submitEditNote = () => {
+    router.patch(`/notes/${editNoteForm.id}`, {
+        title: editNoteForm.title,
+        content: editNoteForm.content,
+    }, {
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: () => {
+            toast.success({text: 'Note éditée avec succès'});
+            showEditNote.value = false;
+        }
+    });
+};
+
 </script>
 
 <template>
@@ -247,12 +328,88 @@ const selectImage = (index: number) => {
         </div>
 
     </section>
+    <CenterModal v-model="showNotes">
+        <div class="space-y-5">
+            <h2 class="subsubtitle">Notes – {{ animal.name }}</h2>
+            <div class="space-y-4 max-h-[60vh] overflow-y-auto p-4">
+                <div v-if="animalNotes.length === 0" class="text-center text-gray-500 text-sm">
+                    Aucune note pour cet animal.
+                </div>
+
+                <div v-for="note in animalNotes" :key="note.id" class="border rounded-lg p-4 bg-white shadow-sm"
+                     @click="">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-semibold text-sm">{{ note.title }}</h3>
+                        <span class="text-xs text-gray-400">{{ new Date(note.created_at).toLocaleDateString() }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm mt-2 whitespace-pre-line">{{ note.content }}</p>
+                        <div class="space-x-2.5">
+                            <button @click="openEditNote(note)" class="ml-2">
+                                <EditIcon class="w-4 h-4 svg-strokeblue"/>
+                            </button>
+
+                            <button @click="openDeleteConfirm(note)">
+                                <TrashIcon class="w-4 h-4 svg-strokeblue"/>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </CenterModal>
 
     <RightModal v-model="showCreate">
         <template #header>
-            <h2 class="subsubtitle">Ajouter une note</h2>
+            <h2 class="subsubtitle">Ajouter une note – {{ animal.name }}</h2>
         </template>
+
+        <form class="p-4 space-y-4" @submit.prevent="submitNote">
+            <div class="flex flex-col gap-2">
+                <label for="title" class="text-sm font-medium text-gray-700">
+                    Titre <span class="text-red-500">*</span>
+                </label>
+                <input
+                    id="title"
+                    v-model="noteForm.title"
+                    type="text"
+                    placeholder="Titre de la note"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueslate focus:border-transparent"
+                />
+                <span v-if="noteForm.errors.title" class="text-sm text-red-500">
+                {{ noteForm.errors.title }}
+            </span>
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label for="content" class="text-sm font-medium text-gray-700">
+                    Contenu <span class="text-red-500">*</span>
+                </label>
+                <textarea
+                    id="content"
+                    v-model="noteForm.content"
+                    rows="6"
+                    placeholder="Contenu de la note..."
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueslate focus:border-transparent resize-none"
+                ></textarea>
+                <span v-if="noteForm.errors.content" class="text-sm text-red-500">
+                {{ noteForm.errors.content }}
+            </span>
+            </div>
+
+            <button
+                type="submit"
+                class="button-yellow button-animation rounded-lg px-4 py-2 font-semibold"
+                :disabled="noteForm.processing"
+            >
+                {{ noteForm.processing ? 'Création...' : 'Création la note' }}
+            </button>
+        </form>
     </RightModal>
+
 
     <RightModal v-model="showEdit">
         <template #header>
@@ -269,8 +426,82 @@ const selectImage = (index: number) => {
             @close="showEdit = false"
         />
     </RightModal>
+    <RightModal v-model="showEditNote">
+        <template #header>
+            <h2 class="subsubtitle">Modifier la note – {{ editNoteForm.title }}</h2>
+        </template>
+        <form @submit.prevent="submitEditNote" class="p-4 space-y-4">
+            <div class="flex flex-col gap-2">
+                <label for="title" class="text-sm font-medium text-gray-700">
+                    Titre <span class="text-red-500">*</span>
+                </label>
+                <input
+                    id="title"
+                    v-model="editNoteForm.title"
+                    type="text"
+                    placeholder="Titre de la note"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueslate focus:border-transparent"
+                />
+                <span v-if="editNoteForm.errors.title" class="text-sm text-red-500">
+                {{ editNoteForm.errors.title }}
+            </span>
+            </div>
 
-    <CenterModal v-model="showNotes">
+            <div class="flex flex-col gap-2">
+                <label for="content" class="text-sm font-medium text-gray-700">
+                    Contenu <span class="text-red-500">*</span>
+                </label>
+                <textarea
+                    id="content"
+                    v-model="editNoteForm.content"
+                    rows="6"
+                    placeholder="Contenu de la note..."
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blueslate focus:border-transparent resize-none"
+                ></textarea>
+                <span v-if="editNoteForm.errors.content" class="text-sm text-red-500">
+                {{ editNoteForm.errors.content }}
+            </span>
+            </div>
+
+            <button
+                type="submit"
+                class="button-yellow button-animation rounded-lg px-4 py-2 font-semibold"
+                :disabled="editNoteForm.processing"
+            >
+                {{ editNoteForm.processing ? 'Modification...' : 'Modification la note' }}
+            </button>
+        </form>
+    </RightModal>
+    <CenterModal v-model="showDeleteConfirm">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+                <TrashIcon class="w-6 h-6 text-red-600"/>
+            </div>
+
+            <h3 class="text-lg font-semibold text-center mb-2">
+                Confirmer la suppression
+            </h3>
+
+            <p class="text-gray-600 text-center mb-6">
+                Êtes-vous sûr de vouloir supprimer
+                <span class="font-semibold">{{ noteToDelete?.title }}</span> ?
+                Cette action est irréversible.
+            </p>
+            <div class="flex gap-3 justify-end">
+                <button
+                    @click="showDeleteConfirm = false"
+                    class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                    Annuler
+                </button>
+                <button
+                    @click="deleteNote(noteToDelete)"
+                    class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                    Supprimer
+                </button>
+            </div>
+        </div>
     </CenterModal>
 </template>
 

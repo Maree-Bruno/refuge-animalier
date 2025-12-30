@@ -46,7 +46,9 @@ class DashboardController extends Controller
             ['coat', 'race', 'specie', 'vaccines', 'suitableTypes'],
             'animal_search',
         );
-        $animals->through(fn($animal) => $animal->loadMissing(['suitableTypes', 'vaccines']));
+        $animals->through(fn($animal) => $animal->loadMissing([
+            'suitableTypes', 'vaccines', 'notes' => fn($q) => $q->latest()
+        ]));
 
         $adoptionRequestsQuery = AdoptionRequest::with([
             'adopter',
@@ -65,11 +67,11 @@ class DashboardController extends Controller
 
         if ($request->filled('request_search')) {
             $search = $request->request_search;
-            $adoptionRequestsQuery->whereHas('adopter', function($query) use ($search) {
+            $adoptionRequestsQuery->whereHas('adopter', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
                     ->orWhere('phone', 'like', "%{$search}%");
-            })->orWhereHas('animal', function($query) use ($search) {
+            })->orWhereHas('animal', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             });
         }
@@ -99,7 +101,7 @@ class DashboardController extends Controller
 
         if ($request->filled('message_search')) {
             $search = $request->message_search;
-            $contactMessagesquery->where(function($q) use ($search) {
+            $contactMessagesquery->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%$search%")
                     ->orWhere('email', 'like', "%$search%")
                     ->orWhere('phone', 'like', "%$search%")
@@ -141,7 +143,9 @@ class DashboardController extends Controller
             'accepted' => $accepted,
             'inProgress' => $inProgress,
             'messages' => $messages,
-            'filters' => $request->only(['animal_search', 'request_search','message_search', 'orderby', 'dir', 'status']),
+            'filters' => $request->only([
+                'animal_search', 'request_search', 'message_search', 'orderby', 'dir', 'status'
+            ]),
             'can' => [
                 'publish' => Auth::user()->can('publish', Animal::class),
                 'view' => Auth::user()->can('view', ContactMessage::class),

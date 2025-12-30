@@ -9,10 +9,9 @@ return new class extends Migration {
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->string('content');
-            $table->dateTime('date');
-            $table->foreignId('animal_id')->constrained('animals');
-            $table->foreignId('user_id')->constrained('users');
+            $table->morphs('notable');
             $table->timestamps();
         });
     }

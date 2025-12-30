@@ -60,6 +60,7 @@ const reportActions = [
 
 <template>
     <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
+        <h3 class="sr-only">Rapports</h3>
         <div class="flex flex-col gap-3 sm:gap-4">
             <div
                 class="flex gap-2 sm:gap-3 items-center border-2 border-lightblueslate/50 p-2 rounded-lg max-w-md">

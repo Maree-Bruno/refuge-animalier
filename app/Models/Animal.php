@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Animal extends Model
 {
@@ -42,9 +43,10 @@ class Animal extends Model
         return $this->belongsTo(Coat::class);
     }
 
-    public function note(): BelongsTo
+
+    public function notes(): MorphMany
     {
-        return $this->belongsTo(Note::class);
+        return $this->morphMany(Note::class, 'notable');
     }
 
     public function race(): BelongsTo

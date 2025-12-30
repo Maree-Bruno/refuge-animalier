@@ -99,10 +99,7 @@ const handleSort = ({key, order}) => {
 
 <template>
     <section class="flex flex-col gap-4 sm:gap-5 p-4 sm:p-0">
-        <div class="flex justify-between">
-            <h3 class="subsubtitle" :class="showTitle ? 'not-sr-only': 'sr-only'">Animaux</h3>
-        </div>
-
+        <h3 class="subsubtitle" :class="showTitle ? 'not-sr-only': 'sr-only'">Animaux</h3>
         <div class="flex flex-col gap-3 sm:gap-4 lg:gap-5">
             <div class="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:justify-between lg:items-start">
                 <div
@@ -180,7 +177,7 @@ const handleSort = ({key, order}) => {
                     <span v-else> <VenusIcon class="svg-strokeblue w-6 h-6" stroke-width="2"/> </span>
                 </template>
                 <template #cell-admission_date="{ row }">
-                   <span>{{formatDate(row.admission_date)}}</span>
+                    <span>{{ formatDate(row.admission_date) }}</span>
                 </template>
 
                 <template #cell-status="{ row }">
