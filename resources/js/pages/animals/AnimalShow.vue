@@ -114,18 +114,20 @@ const noteForm = useForm({
 
 const submitNote = () => {
     router.post('/notes', {
-        title: noteForm.value.title,
-        content: noteForm.value.content,
+        title: noteForm.title,
+        content: noteForm.content,
         notable_type: 'App\\Models\\Animal',
         notable_id: props.animal.id,
     }, {
+        preserveScroll: true,
+        preserveState: false,
         onSuccess: () => {
             toast.success({text: 'Note créée avec succès'});
-            noteForm.value.title = '';
-            noteForm.value.content = '';
+            noteForm.reset();
             showCreate.value = false;
         }
     });
+
 };
 const showDeleteConfirm = ref(false);
 const noteToDelete = ref(null);

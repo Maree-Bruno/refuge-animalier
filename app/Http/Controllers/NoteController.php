@@ -25,22 +25,15 @@ class NoteController extends Controller
                 ]);
             }
         ]);
-
-
-        // Recherche
         if ($request->has('search') && $request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%'.$request->search.'%')
                     ->orWhere('content', 'like', '%'.$request->search.'%');
             });
         }
-
-        // Filtrage par type de notable
         if ($request->has('type') && $request->type && $request->type !== 'all') {
             $query->where('notable_type', $request->type);
         }
-
-        // Tri
         $orderBy = $request->get('orderby', 'created_at');
         $direction = $request->get('dir', 'desc');
         $query->orderBy($orderBy, $direction);
