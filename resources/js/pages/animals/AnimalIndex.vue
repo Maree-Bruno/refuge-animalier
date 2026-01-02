@@ -72,7 +72,7 @@ const destroyAnimal = () => {
 };
 
 const animalColumns = [
-    {key: "photo", label: "Photo"},
+    {key: "photo", label: "Photo", sortable:false},
     {key: "name", label: "Nom"},
     {key: "admission_date", label: "Admission"},
     {key: "chip", label: "Puce"},
