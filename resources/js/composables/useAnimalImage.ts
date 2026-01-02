@@ -1,25 +1,35 @@
+import { usePage } from '@inertiajs/vue3';
+
 export function useAnimalImage() {
-    const getUrl = (animal, size = "sm") => {
+    const page = usePage();
+    const storageUrl = () =>
+        (page.props.storage as { animals: string })?.animals || '/images';
+
+    const getUrl = (
+        animal: { pictures?: string[] },
+        size: 'sm' | 'md' | 'lg' = 'sm',
+    ) => {
         const pic = animal.pictures?.[0];
-        if (!pic) return "/images/billy.webp";
+        if (!pic) return '/images/billy.webp';
 
         const map = {
-            sm: "300x300",
-            md: "600x600",
-            lg: "900x900"
+            sm: '300x300',
+            md: '600x600',
+            lg: '900x900',
         };
 
-        return `/images/animals/variants/${map[size]}/${pic}`;
+        return `${storageUrl()}/animals/variants/${map[size]}/${pic}`;
     };
 
-    const getSrcset = (animal) => {
+    const getSrcset = (animal: { pictures?: string[] }) => {
         const pic = animal.pictures?.[0];
-        if (!pic) return "";
+        if (!pic) return '';
 
+        const base = storageUrl();
         return `
-      /images/animals/variants/300x300/${pic} 300w,
-      /images/animals/variants/600x600/${pic} 600w,
-      /images/animals/variants/900x900/${pic} 900w
+      ${base}/animals/variants/300x300/${pic} 300w,
+      ${base}/animals/variants/600x600/${pic} 600w,
+      ${base}/animals/variants/900x900/${pic} 900w
     `;
     };
 

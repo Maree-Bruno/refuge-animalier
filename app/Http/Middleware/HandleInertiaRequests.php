@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -56,6 +57,10 @@ class HandleInertiaRequests extends Middleware
                 'availability' => $request->user()->availability ?? null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'storage' => [
+                'animals' => Storage::disk('images')->url(''),
+                'users' => Storage::disk('userimages')->url(''),
+            ],
         ];
     }
 }

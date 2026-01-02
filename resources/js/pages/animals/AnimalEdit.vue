@@ -7,6 +7,7 @@ import TabbableTextarea from "@/components/widgets/form/TabbableTextarea.vue";
 import SaveIcon from "@/components/widgets/svg/SaveIcon.vue";
 import {useToasterStore} from "@/stores/useToasterStore.ts";
 import InputError from "@/components/InputError.vue";
+import {useAnimalImage} from "@/composables/useAnimalImage";
 
 const props = defineProps({
     animal: Object,
@@ -19,6 +20,7 @@ const props = defineProps({
 });
 
 const toast = useToasterStore();
+const { getUrl: getAnimalUrl } = useAnimalImage();
 let formAnimal = useForm({
     name: props.animal?.name || '',
     age: props.animal?.age || '',
@@ -96,11 +98,8 @@ const handlePictures = (event) => {
 }
 
 const getImageUrl = (filename, size = 'sm') => {
-    const sizeMap = {
-        'sm': '300x300',
-        'md': '600x600',
-    };
-    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
+    if (!filename) return '/images/billy.webp';
+    return getAnimalUrl({ pictures: [filename] }, size);
 };
 
 const deleteImage = (filename) => {

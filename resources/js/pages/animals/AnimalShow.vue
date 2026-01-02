@@ -8,6 +8,7 @@ import AnimalCreate from "@/pages/animals/AnimalCreate.vue";
 import TrashIcon from "@/components/widgets/svg/TrashIcon.vue";
 import EditIcon from "@/components/widgets/svg/EditIcon.vue";
 import {useToasterStore} from "@/stores/useToasterStore";
+import {useAnimalImage} from "@/composables/useAnimalImage";
 
 const props = defineProps({
     animal: {type: Object},
@@ -19,6 +20,7 @@ const props = defineProps({
     can: Object,
 });
 const toast = useToasterStore();
+const { getUrl: getAnimalUrl, getSrcset: getAnimalSrcset } = useAnimalImage();
 const showCreate = ref(false);
 const showEdit = ref(false);
 const showNotes = ref(false);
@@ -28,24 +30,12 @@ const animalNotes = computed(() => {
 });
 const getImageUrl = (filename: string, size: 'sm' | 'md' | 'lg' = 'md'): string => {
     if (!filename) return '/images/billy.webp';
-
-    const sizeMap = {
-        sm: '300x300',
-        md: '600x600',
-        lg: '900x900'
-    };
-
-    return `/images/animals/variants/${sizeMap[size]}/${filename}`;
+    return getAnimalUrl({ pictures: [filename] }, size);
 };
 
 const getImageSrcset = (filename: string): string => {
     if (!filename) return '';
-
-    return [
-        `/images/animals/variants/300x300/${filename} 300w`,
-        `/images/animals/variants/600x600/${filename} 600w`,
-        `/images/animals/variants/900x900/${filename} 900w`
-    ].join(', ');
+    return getAnimalSrcset({ pictures: [filename] });
 };
 
 const mainImage = computed(() => {
