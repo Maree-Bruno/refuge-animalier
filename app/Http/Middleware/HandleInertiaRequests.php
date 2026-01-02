@@ -58,8 +58,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'storage' => [
-                'animals' => Storage::disk('images')->url(''),
-                'users' => Storage::disk('userimages')->url(''),
+                'animals' => Storage::disk(config('images.disk'))->url(''),
+                'users' => Storage::disk(config('userimage.disk'))->url(''),
             ],
         ];
     }
