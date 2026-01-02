@@ -72,7 +72,7 @@ const updateStatus = () => {
 
     isSaving.value = true;
 
-    router.patch(`/adoption/${props.request.id}`, {
+    router.patch(`/admin/adoption/${props.request.id}`, {
         status: localStatus.value
     }, {
         preserveScroll: true,

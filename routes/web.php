@@ -5,7 +5,6 @@ use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatabaseController;
-use App\Http\Controllers\EmailController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PublicAnimalController;
 use App\Http\Controllers\ReportController;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::domain('happypaws.test')->group(function () {
+Route::group([], function () {
 
     //homepage
     Route::get('/', function () {
@@ -33,7 +32,8 @@ Route::domain('happypaws.test')->group(function () {
     //animals
     Route::get('/animals', [PublicAnimalController::class, 'index'])->name('animals');
     Route::get('/animals/{animal}', [PublicAnimalController::class, 'show'])->name('animals_show');
-    Route::post('/animals/{animal}', [AdoptionRequestController::class, 'store'])->name('adoption_requests.public.store');
+    Route::post('/animals/{animal}',
+        [AdoptionRequestController::class, 'store'])->name('adoption_requests.public.store');
 
     //contact
     Route::get('/contact', function () {
@@ -47,7 +47,7 @@ Route::domain('happypaws.test')->group(function () {
     })->name('volunteer');
     Route::post('/volunteer', [ContactMessageController::class, 'submitVolunteer'])->name('volunteer.submit');
 });
-Route::domain('admin.happypaws.test')->group(function () {
+Route::prefix('admin')->group(function () {
     require __DIR__.'/settings.php';
 
     Route::get('/', function () {
@@ -97,8 +97,10 @@ Route::domain('admin.happypaws.test')->group(function () {
 
             //contact
             Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact_message.index');
-            Route::patch('/contact-messages/{id}/status', [ContactMessageController::class, 'update'])->name('contact_message.update');
-            Route::delete('/contact-messages/{id}', [ContactMessageController::class, 'destroy'])->name('contact_message.destroy');
+            Route::patch('/contact-messages/{id}/status',
+                [ContactMessageController::class, 'update'])->name('contact_message.update');
+            Route::delete('/contact-messages/{id}',
+                [ContactMessageController::class, 'destroy'])->name('contact_message.destroy');
 
 
             //volunteer

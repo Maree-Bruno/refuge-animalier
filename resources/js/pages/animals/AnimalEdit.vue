@@ -106,27 +106,26 @@ const getImageUrl = (filename, size = 'sm') => {
 const deleteImage = (filename) => {
     deletingImage.value = filename;
 
-    router.delete(`/animals/${props.animal.id}/images`, {
-        data: {filename},
+    router.delete(`/admin/animals/${props.animal.id}/images`, {
+        data: { filename },
         preserveScroll: true,
         onSuccess: () => {
-            toast.success({text: 'Image supprimée avec succès'});
+            toast.success({ text: 'Image supprimée avec succès' });
             existingPictures.value = existingPictures.value.filter(pic => pic !== filename);
             deletingImage.value = null;
         },
         onError: (errors) => {
-            toast.error({text: 'Erreur lors de la suppression de l\'image'});
+            toast.error({ text: 'Erreur lors de la suppression de l\'image' });
             console.error(errors);
             deletingImage.value = null;
         }
     });
 };
-
 const emit = defineEmits(['update', 'close']);
 const showEditAnimal = ref(false);
 
 const submitAnimal = () => {
-    const updateUrl = `/animals/${props.animal.id}`;
+    const updateUrl = `/admin/animals/${props.animal.id}`;
     formAnimal._method = 'PATCH';
     formAnimal.post(updateUrl, {
         forceFormData: true,

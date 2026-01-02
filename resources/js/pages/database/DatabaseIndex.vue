@@ -129,7 +129,7 @@ const openDeleteConfirm = (ressource) => {
 const destroyRessource = () => {
     if (!valueToDelete.value) return;
 
-    router.delete(`/database/${valueToDelete.value.id}`, {
+    router.delete(`/admin/database/${valueToDelete.value.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {

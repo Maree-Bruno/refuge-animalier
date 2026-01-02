@@ -81,7 +81,7 @@ const openDeleteConfirm = (note) => {
 const destroyNote = () => {
     if (!noteToDelete.value) return;
 
-    router.delete(`/notes/${noteToDelete.value.id}`, {
+    router.delete(`/admin/notes/${noteToDelete.value.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {

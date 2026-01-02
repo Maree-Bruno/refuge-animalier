@@ -84,7 +84,6 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        // Exemples de notes possibles pour les animaux
         $noteTitles = [
             'Comportement',
             'Santé',
@@ -134,7 +133,6 @@ class DatabaseSeeder extends Seeder
             $randomSuitableTypes = $suitableTypes->random(rand(1, 4));
             $animal->suitableTypes()->attach($randomSuitableTypes->pluck('id')->toArray());
 
-            // Ajouter 1 à 3 notes aléatoires pour chaque animal
             $numberOfNotes = rand(1, 3);
             for ($j = 0; $j < $numberOfNotes; $j++) {
                 $animal->notes()->create([

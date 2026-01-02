@@ -89,7 +89,7 @@ const imageSrcset = computed(() => {
 });
 
 const submitVolunteer = () => {
-    const updateUrl = `/volunteers/${props.volunteer.id}`;
+    const updateUrl = `/admin/volunteers/${props.volunteer.id}`;
 
     formVolunteer.post(updateUrl, {
         forceFormData: true,

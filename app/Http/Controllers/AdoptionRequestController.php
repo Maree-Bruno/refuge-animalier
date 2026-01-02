@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Concerns\FilterablePaginate;
+use App\Enums\UserRole;
 use App\Mail\AdoptionRequestReceivedMail;
 use App\Mail\AdoptionRequestStatusUpdatedMail;
 use App\Models\Adopter;
@@ -141,7 +142,7 @@ class AdoptionRequestController extends Controller
 
         $users = User::all();
 
-        Notification::send($users, new AdoptionRequestCreatedNotification($adoptionRequest));
+        Notification::send($users->where('status', UserRole::ADMIN), new AdoptionRequestCreatedNotification($adoptionRequest));
 
         return back();
     }

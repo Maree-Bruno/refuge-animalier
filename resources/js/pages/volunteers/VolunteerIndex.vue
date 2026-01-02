@@ -101,7 +101,7 @@ const openShowModal = (volunteer) => {
 const openDeleteConfirm = (volunteer) => {
     if (confirm(`Êtes-vous sûr de vouloir archiver ${volunteer.name} ?`)) {
         toast.success({text: 'Suppression effectuée'});
-        router.delete(`/volunteers/${volunteer.id}`);
+        router.delete(`/admin/volunteers/${volunteer.id}`);
     }
 }
 
