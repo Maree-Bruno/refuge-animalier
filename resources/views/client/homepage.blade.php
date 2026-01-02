@@ -9,7 +9,7 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = asset(
+            $srcset[] = URL(
                 sprintf(
                     'images/animals/variants/%sx%s/%s',
                     $size['width'],
@@ -42,7 +42,7 @@
                 <div class="relative group-img-homepage-1 place-self-end">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ asset('images/hamster.webp') }}"
+                            src="{{ URL('images/hamster.webp') }}"
                             alt="Hamster"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -55,7 +55,7 @@
                 <div class="relative group-img-homepage-2 place-self-start">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ asset('images/cat.webp') }}"
+                            src="{{ URL('images/cat.webp') }}"
                             alt="Chat"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -68,7 +68,7 @@
                 <div class="relative group-img-homepage-3">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ asset('images/billy.webp') }}"
+                            src="{{ URL('images/billy.webp') }}"
                             alt="Chien"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -148,8 +148,8 @@
                     <x-animal.card
                         name="{{ $animal->name }}"
                         src="{{ $picture
-                        ? asset('images/animals/originals/'.$picture)
-                        : asset('images/animals/default.webp')
+                        ? URL('images/animals/originals/'.$picture)
+                        : URL('images/animals/default.webp')
                     }}"
                         srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
                         sizes="{{ $buildSizes($picture) }}"
