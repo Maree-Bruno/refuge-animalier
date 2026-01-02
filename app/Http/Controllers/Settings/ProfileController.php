@@ -48,7 +48,7 @@ class ProfileController extends Controller
             );
             if ($originalPath) {
                 $user->picture = $filename;
-                ProcessUploadedImage::dispatch(
+                ProcessUploadedImage::dispatchSync(
                     $originalPath,
                     $filename,
                     'userimage'

@@ -1,4 +1,13 @@
+import { usePage } from '@inertiajs/vue3';
+
 export const useUserHelpers = () => {
+    const page = usePage();
+    const storageUrl = () => {
+        const url =
+            (page.props.storage as { users: string })?.users || '/images';
+        return url.endsWith('/') ? url.slice(0, -1) : url;
+    };
+
     const profileImageVariants = {
         xs: '64x64',
         sm: '128x128',
@@ -9,25 +18,29 @@ export const useUserHelpers = () => {
     const getInitials = (name: string | null | undefined): string => {
         if (!name) return '';
         return name
-            .split(" ")
+            .split(' ')
             .filter(Boolean)
-            .map(n => n[0])
-            .join("")
+            .map((n) => n[0])
+            .join('')
             .toUpperCase();
     };
 
     const getUserImageUrl = (
-            picture: string | null | undefined,
-        size: keyof typeof profileImageVariants = 'md'
-): string => {
+        picture: string | null | undefined,
+        size: keyof typeof profileImageVariants = 'md',
+    ): string => {
         if (!picture) return '/images/billy.webp';
-        return `/images/users/variants/${profileImageVariants[size]}/${picture}`;
+        return `${storageUrl()}/users/variants/${profileImageVariants[size]}/${picture}`;
     };
 
     const getUserImageSrcset = (picture: string | null | undefined): string => {
         if (!picture) return '';
+        const base = storageUrl();
         return Object.entries(profileImageVariants)
-            .map(([key, size]) => `/images/users/variants/${size}/${picture} ${size.split('x')[0]}w`)
+            .map(
+                ([key, size]) =>
+                    `${base}/users/variants/${size}/${picture} ${size.split('x')[0]}w`,
+            )
             .join(', ');
     };
 

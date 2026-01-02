@@ -1,4 +1,39 @@
-@php use function PHPUnit\Framework\isNull; @endphp
+@php
+    $sizes = config('images.sizes');
+
+    $buildSrcset = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
+        }
+
+        $srcset = [];
+
+        foreach ($sizes as $size) {
+            $path = sprintf(
+                'animals/variants/%sx%s/%s',
+                $size['width'],
+                $size['height'],
+                $photo
+            );
+            $srcset[] = Storage::disk('images')->url($path) . ' ' . $size['width'] . 'w';
+        }
+
+        return implode(', ', $srcset);
+    };
+
+    $buildSizes = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
+        }
+
+        return sprintf(
+            '(max-width: 640px) %spx, (max-width: 1024px) %spx, %spx',
+            $sizes['sm']['width'],
+            $sizes['md']['width'],
+            $sizes['lg']['width']
+        );
+    };
+@endphp
 <x-layouts.client>
     <div class="bg-lightgreenmint/40 shadow-[inset_2px_-4px_30px_rgba(0,0,0,0.1)] py-8">
         <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28">
@@ -6,7 +41,7 @@
                 <div class="relative group-img-homepage-1 place-self-end">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/hamster.webp') }}"
+                            src="{{ asset('images/hamster.webp') }}"
                             alt="Hamster"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -19,7 +54,7 @@
                 <div class="relative group-img-homepage-2 place-self-start">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/cat.webp') }}"
+                            src="{{ asset('images/cat.webp') }}"
                             alt="Chat"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -32,7 +67,7 @@
                 <div class="relative group-img-homepage-3">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/billy.webp') }}"
+                            src="{{ asset('images/billy.webp') }}"
                             alt="Chien"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -99,13 +134,24 @@
 
     <x-layouts.section :title="__('homepage.animals_section.title')" class="relative">
         <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
-            @if(!isNull($animals))
-                @foreach($animals as $animal)
+            @if(!is_null($animals) && $animals->isNotEmpty())
+                @php
+                    $randomAnimals = $animals->shuffle()->take(3);
+                @endphp
+
+                @foreach($randomAnimals as $animal)
+                    @php
+                        $picture = $animal->pictures[0] ?? null;
+                    @endphp
+
                     <x-animal.card
                         name="{{ $animal->name }}"
-                        src="{{ asset('images/animals/originals/'.$animal->pictures[0]) }}"
-                        srcset="{{ $buildSrcset($animal->pictures[0]) }}"
-                        sizes="{{ $buildSizes() }}"
+                        src="{{ $picture
+                        ? Storage::disk('images')->url('animals/originals/'.$picture)
+                        : asset('images/billy.webp')
+                    }}"
+                        srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
+                        sizes="{{ $buildSizes($picture) }}"
                         age="{{ $animal->age }}"
                         gender="{{ $animal->gender }}"
                         species="{{ $animal->species }}"
@@ -114,16 +160,20 @@
                     />
                 @endforeach
         </div>
+
         <x-buttons.button_link_icons
             icon="arrow_right"
             class="button-green flex-row-reverse self-end"
+            href="{{route('animals')}}"
         >
             {{ __('homepage.animals_section.see_all') }}
         </x-buttons.button_link_icons>
+
         @else
             <p>Aucun animal de disponible</p>
         @endif
     </x-layouts.section>
+
 
     <div class="bg-lighthoneyyellow/40 shadow-[inset_2px_4px_30px_rgba(0,0,0,0.1)] py-10">
         <x-layouts.section title="{{__('homepage.faq_section.title')}}" class="relative">

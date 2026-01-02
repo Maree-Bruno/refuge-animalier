@@ -62,7 +62,7 @@ const openDeleteConfirm = animal => {
 const destroyAnimal = () => {
     if (!animalToDelete.value) return;
 
-    router.delete(`/animals/${animalToDelete.value.id}`, {
+    router.delete(`/admin/animals/${animalToDelete.value.id}`, {
         onSuccess: () => {
             toast.success({text: 'Animal supprimé avec succès'})
             showDeleteConfirm.value = false;
@@ -72,7 +72,7 @@ const destroyAnimal = () => {
 };
 
 const animalColumns = [
-    {key: "photo", label: "Photo"},
+    {key: "photo", label: "Photo", sortable:false},
     {key: "name", label: "Nom"},
     {key: "admission_date", label: "Admission"},
     {key: "chip", label: "Puce"},
@@ -167,7 +167,7 @@ const handleSort = ({key, order}) => {
                         :src="getUrl(row)"
                         :srcset="getSrcset(row)"
                         class="w-8 h-8 object-cover rounded-full"
-                        alt="photo de {{row.name}}"
+                        alt="photo de {{row.name}}😁"
                         loading="lazy"
                     />
                 </template>

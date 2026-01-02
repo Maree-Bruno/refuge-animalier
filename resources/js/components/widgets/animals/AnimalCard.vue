@@ -3,6 +3,7 @@ import VenusIcon from "@/components/widgets/svg/VenusIcon.vue";
 import MarsIcon from "@/components/widgets/svg/MarsIcon.vue";
 import { computed } from "vue";
 import { useFormatDate } from "@/composables/useFormatDate";
+import { useAnimalImage } from "@/composables/useAnimalImage";
 
 const props = defineProps({
     animal: { type: Object, required: true }
@@ -11,6 +12,7 @@ const props = defineProps({
 const emit = defineEmits(["click"]);
 
 const { formatDate } = useFormatDate();
+const { getUrl, getSrcset } = useAnimalImage();
 
 const statusClass = computed(() => {
     switch (props.animal.status) {
@@ -23,23 +25,9 @@ const statusClass = computed(() => {
     }
 });
 
-const imageUrl = computed(() => {
-    const pic = props.animal.pictures?.[0];
-    return pic
-        ? `/images/animals/variants/300x300/${pic}`
-        : "/images/billy.webp";
-});
+const imageUrl = computed(() => getUrl(props.animal, "sm"));
 
-const imageSrcset = computed(() => {
-    const pic = props.animal.pictures?.[0];
-    return pic
-        ? `
-      /images/animals/variants/300x300/${pic} 300w,
-      /images/animals/variants/600x600/${pic} 600w,
-      /images/animals/variants/900x900/${pic} 900w
-    `
-        : "";
-});
+const imageSrcset = computed(() => getSrcset(props.animal));
 </script>
 
 <template>

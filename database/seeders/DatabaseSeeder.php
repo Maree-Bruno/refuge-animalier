@@ -19,21 +19,23 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'name' => 'Admin',
-            'email' => 'test@example.com',
-            'phone' => '0495793947',
+        $elise = User::factory()->create([
+            'name' => 'Elise',
+            'email' => 'elise@happypaws.be',
+            'phone' => '0495290875',
             'role' => 'admin',
             'password' => bcrypt('password')
         ]);
 
-        $volunteer = User::factory()->create([
-            'name' => 'Volunteer',
-            'email' => 'test@test.com',
-            'phone' => '0498283383',
+        $thomas = User::factory()->create([
+            'name' => 'Thomas',
+            'email' => 'thomas@happypaws.be',
+            'phone' => '0498189069',
             'role' => 'volunteer',
             'password' => bcrypt('password')
         ]);
+
+        $volunteer = $thomas;
 
         $coatNames = ['Blanc', 'Noir', 'Doré', 'Tâché', 'Tricolore', 'Brun'];
         $coats = collect();
@@ -113,35 +115,50 @@ class DatabaseSeeder extends Seeder
             'Stérilisation programmée pour la semaine prochaine.',
         ];
 
-        $animals = collect();
-        for ($i = 0; $i < 100; $i++) {
-            $race = Race::inRandomOrder()->first();
+        $statuses = [
+            'In progress' => 10,
+            'Validated' => 12,
+            'Adopted' => 8,
+        ];
 
-            $animal = Animal::factory()->create([
-                'race_id' => $race->id,
-                'coat_id' => $coats->random()->id,
-                'user_id' => $volunteer->id,
-            ]);
+        $animals = collect();
+        $animalIndex = 0;
+
+        foreach ($statuses as $status => $count) {
+            for ($i = 0; $i < $count; $i++) {
+                $race = Race::inRandomOrder()->first();
+
+                $published = $status === 'Validated' ? (bool)rand(0, 1) : false;
+
+                $animal = Animal::factory()->create([
+                    'race_id' => $race->id,
+                    'coat_id' => $coats->random()->id,
+                    'user_id' => $volunteer->id,
+                    'status' => $status,
+                    'published' => $published,
+                ]);
 
             $compatibleVaccines = $race->specie->vaccines;
-            if ($compatibleVaccines->count() > 0) {
-                $animal->vaccines()->attach(
-                    $compatibleVaccines->random(rand(0, $compatibleVaccines->count()))->pluck('id')->toArray()
-                );
+                if ($compatibleVaccines->count() > 0) {
+                    $animal->vaccines()->attach(
+                        $compatibleVaccines->random(rand(0, $compatibleVaccines->count()))->pluck('id')->toArray()
+                    );
+                }
+
+                $randomSuitableTypes = $suitableTypes->random(rand(1, 4));
+                $animal->suitableTypes()->attach($randomSuitableTypes->pluck('id')->toArray());
+
+                $numberOfNotes = rand(1, 3);
+                for ($j = 0; $j < $numberOfNotes; $j++) {
+                    $animal->notes()->create([
+                        'title' => $noteTitles[array_rand($noteTitles)],
+                        'content' => $noteContents[array_rand($noteContents)],
+                    ]);
+                }
+
+                $animals->push($animal);
+                $animalIndex++;
             }
-
-            $randomSuitableTypes = $suitableTypes->random(rand(1, 4));
-            $animal->suitableTypes()->attach($randomSuitableTypes->pluck('id')->toArray());
-
-            $numberOfNotes = rand(1, 3);
-            for ($j = 0; $j < $numberOfNotes; $j++) {
-                $animal->notes()->create([
-                    'title' => $noteTitles[array_rand($noteTitles)],
-                    'content' => $noteContents[array_rand($noteContents)],
-                ]);
-            }
-
-            $animals->push($animal);
         }
 
         $adopters = Adopter::factory(10)->create();

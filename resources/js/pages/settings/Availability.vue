@@ -49,7 +49,7 @@ const toast = useToasterStore();
 const saveAvailability = () => {
     isSaving.value = true;
 
-    router.patch('/settings/availability', {
+    router.patch('/admin/settings/availability', {
         availability: availabilityData.value
     }, {
         preserveScroll: true,
