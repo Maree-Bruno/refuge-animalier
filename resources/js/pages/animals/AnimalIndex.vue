@@ -62,7 +62,7 @@ const openDeleteConfirm = animal => {
 const destroyAnimal = () => {
     if (!animalToDelete.value) return;
 
-    router.delete(`/animals/${animalToDelete.value.id}`, {
+    router.delete(`/admin/animals/${animalToDelete.value.id}`, {
         onSuccess: () => {
             toast.success({text: 'Animal supprimé avec succès'})
             showDeleteConfirm.value = false;
