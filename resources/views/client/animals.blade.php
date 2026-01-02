@@ -9,7 +9,7 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = asset(
+            $srcset[] = Storage::url(
                 sprintf(
                     'images/animals/variants/%sx%s/%s',
                     $size['width'],
@@ -122,8 +122,8 @@
                         : null;
 
                     $src = $photo
-                        ? asset('images/animals/originals/'.$photo)
-                        : asset('images/billy.webp');
+                        ? Storage::url('images/animals/originals/'.$photo)
+                        : Storage::url('images/billy.webp');
                 @endphp
 
                 <x-animal.card

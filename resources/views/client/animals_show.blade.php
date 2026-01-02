@@ -9,7 +9,7 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = asset(
+            $srcset[] = Storage::url(
                 sprintf(
                     'images/animals/variants/%sx%s/%s',
                     $size['width'],
@@ -40,8 +40,8 @@
         : null;
 
     $mainSrc = $mainPhoto
-        ? asset('images/animals/originals/'.$mainPhoto)
-        : asset('images/billy.webp');
+        ? Storage::url('images/animals/originals/'.$mainPhoto)
+        : Storage::url('images/billy.webp');
 @endphp
 
 
@@ -79,7 +79,7 @@
                         lg:h-[500px] lg:max-w-24 gap-5 md:min-w-[72px]">
                             @foreach (array_slice($animal->pictures, 1) as $galleryImage)
                                 <img
-                                    src="{{ asset('images/animals/originals/'.$galleryImage) }}"
+                                    src="{{ Storage::url('images/animals/originals/'.$galleryImage) }}"
                                     srcset="{{ $buildSrcset($galleryImage) }}"
                                     sizes="96px"
                                     alt="{{ $animal->name }}"
@@ -288,12 +288,12 @@
                             : null;
 
                         $src = $photo
-                            ? asset('images/animals/originals/'.$photo)
-                            : asset('images/billy.webp');
+                            ? Storage::url('images/animals/originals/'.$photo)
+                            : Storage::url('images/billy.webp');
                     @endphp
                     <x-animal.card
                         name="{{ $otherAnimal->name }}"
-                        src="{{ asset($src) }}"
+                        src="{{ Storage::url($src) }}"
                         srcset="{{ $buildSrcset($photo) }}"
                         sizes="{{ $buildSizes($photo) }}"
                         age="{{ $otherAnimal->age }}"

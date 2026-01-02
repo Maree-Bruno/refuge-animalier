@@ -42,7 +42,7 @@
                 <div class="relative group-img-homepage-1 place-self-end">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/hamster.webp') }}"
+                            src="{{ Storage::url('images/hamster.webp') }}"
                             alt="Hamster"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -55,7 +55,7 @@
                 <div class="relative group-img-homepage-2 place-self-start">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/cat.webp') }}"
+                            src="{{ Storage::url('images/cat.webp') }}"
                             alt="Chat"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -68,7 +68,7 @@
                 <div class="relative group-img-homepage-3">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ URL('images/billy.webp') }}"
+                            src="{{ Storage::url('images/billy.webp') }}"
                             alt="Chien"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -148,8 +148,8 @@
                     <x-animal.card
                         name="{{ $animal->name }}"
                         src="{{ $picture
-                        ? URL('images/animals/originals/'.$picture)
-                        : URL('images/animals/default.webp')
+                        ? Storage::url('images/animals/originals/'.$picture)
+                        : Storage::url('images/animals/default.webp')
                     }}"
                         srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
                         sizes="{{ $buildSizes($picture) }}"

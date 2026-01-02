@@ -4,7 +4,7 @@
         lg:gap-20">
             <div class="aspect-square max-h-80 place-self-center sm:max-h-none">
                 <img
-                    src="{{URL('images/cat_dog.webp')}}"
+                    src="{{Storage::url('images/cat_dog.webp')}}"
                     alt="{{ __('about.hero.title') }}"
                     class="h-full aspect-square rounded-tl-[20px] rounded-tr-[20px] rounded-bl-[500px]
                     rounded-br-[500px] object-cover object-top object-fit-fill lg:max-h-[500px]">
@@ -65,7 +65,7 @@
                     <x-about.procedure
                         :reverse="$loop->iteration % 2 == 0 ? 'true' : ''"
                         :showArrow="!$loop->last"
-                        src="{{URL('images/billy.webp')}}"
+                        src="{{Storage::url('images/billy.webp')}}"
                         :alt="$step['title']"
                         :step="$loop->iteration"
                         :title="$step['title']"
