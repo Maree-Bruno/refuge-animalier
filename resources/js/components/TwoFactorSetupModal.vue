@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts">
 import AlertError from '@/components/AlertError.vue';
 import InputError from '@/components/InputError.vue';
@@ -298,3 +299,4 @@ watch(
         </DialogContent>
     </Dialog>
 </template>
+-->

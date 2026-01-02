@@ -1,3 +1,4 @@
+/*
 //@ts-ignore
 import { qrCode, recoveryCodes, secretKey } from '@/routes/two-factor';
 import { computed, ref } from 'vue';
@@ -103,3 +104,4 @@ export const useTwoFactorAuth = () => {
         fetchRecoveryCodes,
     };
 };
+*/
