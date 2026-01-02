@@ -167,7 +167,7 @@ const handleSort = ({key, order}) => {
                         :src="getUrl(row)"
                         :srcset="getSrcset(row)"
                         class="w-8 h-8 object-cover rounded-full"
-                        alt="photo de {{row.name}}"
+                        alt="photo de {{row.name}}😁"
                         loading="lazy"
                     />
                 </template>
