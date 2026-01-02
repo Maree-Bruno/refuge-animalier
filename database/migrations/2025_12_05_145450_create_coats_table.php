@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('coats', function (Blueprint $table) {
             $table->id();
-            $table->json('name');
+            $table->string('name');
             $table->timestamps();
         });
     }
