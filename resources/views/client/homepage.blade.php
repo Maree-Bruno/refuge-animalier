@@ -1,3 +1,40 @@
+@php
+    $sizes = config('images.sizes');
+
+    $buildSrcset = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
+        }
+
+        $srcset = [];
+
+        foreach ($sizes as $size) {
+            $srcset[] = asset(
+                sprintf(
+                    'images/animals/variants/%sx%s/%s',
+                    $size['width'],
+                    $size['height'],
+                    $photo
+                )
+            ) . ' ' . $size['width'] . 'w';
+        }
+
+        return implode(', ', $srcset);
+    };
+
+    $buildSizes = function (?string $photo) use ($sizes) {
+        if (!$photo) {
+            return null;
+        }
+
+        return sprintf(
+            '(max-width: 640px) %spx, (max-width: 1024px) %spx, %spx',
+            $sizes['sm']['width'],
+            $sizes['md']['width'],
+            $sizes['lg']['width']
+        );
+    };
+@endphp
 <x-layouts.client>
     <div class="bg-lightgreenmint/40 shadow-[inset_2px_-4px_30px_rgba(0,0,0,0.1)] py-8">
         <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28">
@@ -99,18 +136,27 @@
     <x-layouts.section :title="__('homepage.animals_section.title')" class="relative">
         <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
             @if(!is_null($animals))
+
                 @foreach($animals as $animal)
+                    @php
+                        $picture = $animal->pictures[0] ?? null;
+                    @endphp
+
                     <x-animal.card
                         name="{{ $animal->name }}"
-                        src="{{ asset('images/animals/originals/'.$animal->pictures[0]) }}"
-                        srcset="{{ $buildSrcset($animal->pictures[0]) }}"
-                        sizes="{{ $buildSizes() }}"
+                        src="{{ $picture
+        ? asset('images/animals/originals/'.$picture)
+        : asset('images/animals/default.webp')
+    }}"
+                        srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
+                        sizes="{{ $buildSizes($picture) }}"
                         age="{{ $animal->age }}"
                         gender="{{ $animal->gender }}"
                         species="{{ $animal->species }}"
                         description="{{ $animal->description }}"
                         href="{{ route('animals_show', $animal) }}"
                     />
+
                 @endforeach
         </div>
         <x-buttons.button_link_icons
