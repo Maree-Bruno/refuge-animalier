@@ -1,29 +1,41 @@
 <?php
 return [
     'title' => 'Billy',
+    'back_to_animals' => 'Back to animals',
 
     'features_title' => 'Characteristics',
     'features' => [
         'age' => 'Age',
+        'years' => 'years old',
+        'gender' => 'Gender',
+        'gendermale' => 'Male',
+        'genderfemale' => 'Female',
         'race' => 'Breed',
         'species' => 'Species',
         'coat' => 'Coat',
+        'chip' => 'Microchip',
+        'admission_date' => 'Admission date',
 
         'age_value' => '1 year',
         'race_value' => 'Dog',
         'species_value' => 'Golden Retriever',
         'coat_value' => 'Beige',
 
-        'fits_for' => 'Suitable for',
-        'fits' => [
-            'dog' => 'Dog',
-            'cat' => 'Cat',
-            'baby' => 'Baby',
-            'child' => 'Child',
+        'suitable_for' => 'Suitable for',
+        'suitable' => [
+            'dog' => 'Family with dog',
+            'cat' => 'Family with cat',
+            'baby' => 'Family with baby',
+            'kid' => 'Family with child',
+            'child' => 'Family with child',
+            'apartment' => 'Apartment',
+            'house' => 'House',
+            'garden' => 'Garden',
         ],
 
-        'walk' => 'Walks',
-        'walk_text' => 'Walks are not an issue',
+        'outside' => 'Can go outside',
+        'outside_yes' => 'Yes, walks are not an issue',
+        'outside_no' => 'No, prefers to stay indoors',
     ],
 
     'description_title' => 'Description',

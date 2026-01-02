@@ -54,7 +54,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
-            <span class="text-sm font-medium">Retour aux animaux</span>
+            <span class="text-sm font-medium">{{ __('animals/client_show.back_to_animals') }}</span>
         </a>
         <h2 class="text-4xl font-bold font-quicksand text-blueslate">
             {{ $animal->name }}
@@ -105,7 +105,7 @@
                             <span
                                 class="font-quicksand font-bold">{{ __('animals/client_show.features.gender') }}</span>
                             <span
-                                class="xsmalltext">{{ __('animals/client_show.features.gender_'.$animal->sex) }}</span>
+                                class="xsmalltext">{{ __('animals/client_show.features.gender'.$animal->sex) }}</span>
                         </p>
 
                         <p class="flex flex-col">
@@ -133,12 +133,15 @@
 
                     <div class="space-y-5">
 
-                        @if($animal->suitable)
+                        @if($animal->suitableTypes && $animal->suitableTypes->count() > 0)
                             <div>
                                 <p class="font-quicksand font-bold">{{ __('animals/client_show.features.suitable_for') }}</p>
-                                <div class="space-x-2.5">
-                                    <span
-                                        class="xsmalltext">{{ __('animals/client_show.features.suitable.'.$animal->suitable) }}</span>
+                                <div class="grid grid-cols-2 gap-2">
+                                    @foreach($animal->suitableTypes as $suitableType)
+                                        <span class="xsmalltext bg-gray-100 px-3 py-1 rounded-full">
+                                            {{ __('animals/client_show.features.suitable.'.$suitableType->key) }}
+                                        </span>
+                                    @endforeach
                                 </div>
                             </div>
                         @endif

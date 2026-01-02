@@ -20,6 +20,8 @@ class PublicAnimalController extends Controller
 
     public function show(Animal $animal)
     {
+        $animal->load('suitableTypes');
+
         $otherAnimals = Animal::where('id', '!=', $animal->id)
             ->whereIn('status', [
                 AnimalStatus::VALIDATED,

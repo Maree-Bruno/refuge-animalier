@@ -1,29 +1,41 @@
 <?php
 return [
     'title' => 'Billy',
+    'back_to_animals' => 'Terug naar dieren',
 
     'features_title' => 'Kenmerken',
     'features' => [
         'age' => 'Leeftijd',
+        'years' => 'jaar',
+        'gender' => 'Geslacht',
+        'gendermale' => 'Mannelijk',
+        'genderfemale' => 'Vrouwelijk',
         'race' => 'Ras',
         'species' => 'Soort',
         'coat' => 'Vacht',
+        'chip' => 'Chip',
+        'admission_date' => 'Opnamedatum',
 
         'age_value' => '1 jaar',
         'race_value' => 'Hond',
         'species_value' => 'Golden Retriever',
         'coat_value' => 'Beige',
 
-        'fits_for' => 'Geschikt voor',
-        'fits' => [
-            'dog' => 'Hond',
-            'cat' => 'Kat',
-            'baby' => 'Baby',
-            'child' => 'Kind',
+        'suitable_for' => 'Geschikt voor',
+        'suitable' => [
+            'dog' => 'Gezin met hond',
+            'cat' => 'Gezin met kat',
+            'baby' => 'Gezin met baby',
+            'kid' => 'Gezin met kind',
+            'child' => 'Gezin met kind',
+            'apartment' => 'Appartement',
+            'house' => 'Huis',
+            'garden' => 'Tuin',
         ],
 
-        'walk' => 'Wandelen',
-        'walk_text' => 'Wandelen vormt geen probleem',
+        'outside' => 'Kan naar buiten',
+        'outside_yes' => 'Ja, wandelen vormt geen probleem',
+        'outside_no' => 'Nee, blijft liever binnen',
     ],
 
     'description_title' => 'Beschrijving',
