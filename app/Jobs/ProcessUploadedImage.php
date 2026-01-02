@@ -5,7 +5,6 @@ namespace App\Jobs;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 use Intervention\Image\Laravel\Facades\Image;
 
 class ProcessUploadedImage implements ShouldQueue

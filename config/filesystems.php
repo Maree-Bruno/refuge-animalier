@@ -61,7 +61,7 @@ return [
         ],
         'images' => [
             'driver' => env('FILESYSTEM_DISK') === 's3' ? 's3' : 'local',
-            'root' => storage_path('app/public/images'),
+            'root' => env('FILESYSTEM_DISK') === 's3' ? 'images' : storage_path('app/public/images'),
             'url' => env('FILESYSTEM_DISK') === 's3'
                 ? env('AWS_URL').'/images'
                 : env('APP_URL').'/storage/images',
@@ -75,7 +75,7 @@ return [
 
         'userimages' => [
             'driver' => env('FILESYSTEM_DISK') === 's3' ? 's3' : 'local',
-            'root' => storage_path('app/public/images'),
+            'root' => env('FILESYSTEM_DISK') === 's3' ? 'images' : storage_path('app/public/images'),
             'url' => env('FILESYSTEM_DISK') === 's3'
                 ? env('AWS_URL').'/images'
                 : env('APP_URL').'/storage/images',
