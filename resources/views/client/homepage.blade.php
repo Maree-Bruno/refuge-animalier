@@ -9,7 +9,7 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = URL(
+            $srcset[] = asset(
                 sprintf(
                     'images/animals/variants/%sx%s/%s',
                     $size['width'],
@@ -42,7 +42,7 @@
                 <div class="relative group-img-homepage-1 place-self-end">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ Storage::url('images/hamster.webp') }}"
+                            src="{{ asset('images/hamster.webp') }}"
                             alt="Hamster"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -55,7 +55,7 @@
                 <div class="relative group-img-homepage-2 place-self-start">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ Storage::url('images/cat.webp') }}"
+                            src="{{ asset('images/cat.webp') }}"
                             alt="Chat"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -68,7 +68,7 @@
                 <div class="relative group-img-homepage-3">
                     <div class="rounded-3xl overflow-hidden shadow-[0px_4px_30px_0px_rgba(0,0,0,0.25)]">
                         <img
-                            src="{{ Storage::url('images/billy.webp') }}"
+                            src="{{ asset('images/billy.webp') }}"
                             alt="Chien"
                             class="w-full h-full object-cover aspect-square lg:w-60 lg:h-auto"
                         />
@@ -149,7 +149,7 @@
                         name="{{ $animal->name }}"
                         src="{{ $picture
                         ? Storage::url('images/animals/originals/'.$picture)
-                        : Storage::url('images/animals/default.webp')
+                        : Storage::url('images/billy.webp')
                     }}"
                         srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
                         sizes="{{ $buildSizes($picture) }}"

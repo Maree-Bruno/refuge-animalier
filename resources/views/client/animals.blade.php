@@ -123,7 +123,7 @@
 
                     $src = $photo
                         ? Storage::url('images/animals/originals/'.$photo)
-                        : Storage::url('images/billy.webp');
+                        : asset('images/billy.webp');
                 @endphp
 
                 <x-animal.card
