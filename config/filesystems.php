@@ -60,31 +60,20 @@ return [
             'report' => false,
         ],
         'images' => [
-            'driver' => env('FILESYSTEM_DISK') === 's3' ? 's3' : 'local',
-            'url' => env('FILESYSTEM_DISK') === 's3'
-                ? env('AWS_URL').'/images'
-                : env('APP_URL').'/storage/images',
+            'driver' => 'local',
+            'root' => storage_path('app/public/images'),
+            'url' => env('APP_URL').'/images',
             'visibility' => 'public',
             'throw' => false,
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'endpoint' => env('AWS_ENDPOINT'),
+            'report' => false,
         ],
-
         'userimages' => [
-            'driver' => env('FILESYSTEM_DISK') === 's3' ? 's3' : 'local',
-            'url' => env('FILESYSTEM_DISK') === 's3'
-                ? env('AWS_URL').'/images'
-                : env('APP_URL').'/storage/images',
+            'driver' => 'local',
+            'root' => storage_path('app/public/images'),
+            'url' => env('APP_URL').'/images',
             'visibility' => 'public',
             'throw' => false,
-            'key' => env('AWS_ACCESS_KEY_ID'),
-            'secret' => env('AWS_SECRET_ACCESS_KEY'),
-            'region' => env('AWS_DEFAULT_REGION'),
-            'bucket' => env('AWS_BUCKET'),
-            'endpoint' => env('AWS_ENDPOINT'),
+            'report' => false,
         ],
 
 
