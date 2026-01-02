@@ -2,8 +2,11 @@ import { usePage } from '@inertiajs/vue3';
 
 export const useUserHelpers = () => {
     const page = usePage();
-    const storageUrl = () =>
-        (page.props.storage as { users: string })?.users || '/images';
+    const storageUrl = () => {
+        const url =
+            (page.props.storage as { users: string })?.users || '/images';
+        return url.endsWith('/') ? url.slice(0, -1) : url;
+    };
 
     const profileImageVariants = {
         xs: '64x64',

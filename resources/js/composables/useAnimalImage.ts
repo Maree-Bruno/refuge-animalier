@@ -2,8 +2,11 @@ import { usePage } from '@inertiajs/vue3';
 
 export function useAnimalImage() {
     const page = usePage();
-    const storageUrl = () =>
-        (page.props.storage as { animals: string })?.animals || '/images';
+    const storageUrl = () => {
+        const url =
+            (page.props.storage as { animals: string })?.animals || '/images';
+        return url.endsWith('/') ? url.slice(0, -1) : url;
+    };
 
     const getUrl = (
         animal: { pictures?: string[] },
