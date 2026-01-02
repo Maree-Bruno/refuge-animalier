@@ -9,14 +9,13 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = asset(
-                sprintf(
-                    'images/animals/variants/%sx%s/%s',
-                    $size['width'],
-                    $size['height'],
-                    $photo
-                )
-            ) . ' ' . $size['width'] . 'w';
+            $path = sprintf(
+                'animals/variants/%sx%s/%s',
+                $size['width'],
+                $size['height'],
+                $photo
+            );
+            $srcset[] = Storage::disk('images')->url($path) . ' ' . $size['width'] . 'w';
         }
 
         return implode(', ', $srcset);
@@ -148,8 +147,8 @@
                     <x-animal.card
                         name="{{ $animal->name }}"
                         src="{{ $picture
-                        ? Storage::url('images/animals/originals/'.$picture)
-                        : Storage::url('images/billy.webp')
+                        ? Storage::disk('images')->url('animals/originals/'.$picture)
+                        : asset('images/billy.webp')
                     }}"
                         srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
                         sizes="{{ $buildSizes($picture) }}"

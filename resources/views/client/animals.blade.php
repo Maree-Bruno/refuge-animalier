@@ -9,14 +9,13 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = Storage::url(
-                sprintf(
-                    'images/animals/variants/%sx%s/%s',
-                    $size['width'],
-                    $size['height'],
-                    $photo
-                )
-            ) . ' ' . $size['width'] . 'w';
+            $path = sprintf(
+                'animals/variants/%sx%s/%s',
+                $size['width'],
+                $size['height'],
+                $photo
+            );
+            $srcset[] = Storage::disk('images')->url($path) . ' ' . $size['width'] . 'w';
         }
 
         return implode(', ', $srcset);
@@ -122,7 +121,7 @@
                         : null;
 
                     $src = $photo
-                        ? Storage::url('images/animals/originals/'.$photo)
+                        ? Storage::disk('images')->url('animals/originals/'.$photo)
                         : asset('images/billy.webp');
                 @endphp
 

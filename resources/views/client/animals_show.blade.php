@@ -9,14 +9,13 @@
         $srcset = [];
 
         foreach ($sizes as $size) {
-            $srcset[] = Storage::url(
-                sprintf(
-                    'images/animals/variants/%sx%s/%s',
-                    $size['width'],
-                    $size['height'],
-                    $photo
-                )
-            ) . ' ' . $size['width'] . 'w';
+            $path = sprintf(
+                'animals/variants/%sx%s/%s',
+                $size['width'],
+                $size['height'],
+                $photo
+            );
+            $srcset[] = Storage::disk('images')->url($path) . ' ' . $size['width'] . 'w';
         }
 
         return implode(', ', $srcset);
@@ -40,8 +39,8 @@
         : null;
 
     $mainSrc = $mainPhoto
-        ? Storage::url('images/animals/originals/'.$mainPhoto)
-        : Storage::url('images/billy.webp');
+        ? Storage::disk('images')->url('animals/originals/'.$mainPhoto)
+        : asset('images/billy.webp');
 @endphp
 
 
@@ -79,7 +78,7 @@
                         lg:h-[500px] lg:max-w-24 gap-5 md:min-w-[72px]">
                             @foreach (array_slice($animal->pictures, 1) as $galleryImage)
                                 <img
-                                    src="{{ Storage::url('images/animals/originals/'.$galleryImage) }}"
+                                    src="{{ Storage::disk('images')->url('animals/originals/'.$galleryImage) }}"
                                     srcset="{{ $buildSrcset($galleryImage) }}"
                                     sizes="96px"
                                     alt="{{ $animal->name }}"
@@ -283,17 +282,17 @@
 
                 @foreach ($otherAnimals as $otherAnimal)
                     @php
-                        $photo = is_array($animal->pictures) && count($animal->pictures) > 0
-                            ? $animal->pictures[0]
+                        $photo = is_array($otherAnimal->pictures) && count($otherAnimal->pictures) > 0
+                            ? $otherAnimal->pictures[0]
                             : null;
 
                         $src = $photo
-                            ? Storage::url('images/animals/originals/'.$photo)
-                            : Storage::url('images/billy.webp');
+                            ? Storage::disk('images')->url('animals/originals/'.$photo)
+                            : asset('images/billy.webp');
                     @endphp
                     <x-animal.card
                         name="{{ $otherAnimal->name }}"
-                        src="{{ Storage::url($src) }}"
+                        src="{{ $src }}"
                         srcset="{{ $buildSrcset($photo) }}"
                         sizes="{{ $buildSizes($photo) }}"
                         age="{{ $otherAnimal->age }}"
