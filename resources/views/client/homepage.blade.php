@@ -135,9 +135,12 @@
 
     <x-layouts.section :title="__('homepage.animals_section.title')" class="relative">
         <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
-            @if(!is_null($animals))
+            @if(!is_null($animals) && $animals->isNotEmpty())
+                @php
+                    $randomAnimals = $animals->shuffle()->take(3);
+                @endphp
 
-                @foreach($animals as $animal)
+                @foreach($randomAnimals as $animal)
                     @php
                         $picture = $animal->pictures[0] ?? null;
                     @endphp
@@ -145,9 +148,9 @@
                     <x-animal.card
                         name="{{ $animal->name }}"
                         src="{{ $picture
-        ? asset('images/animals/originals/'.$picture)
-        : asset('images/animals/default.webp')
-    }}"
+                        ? asset('images/animals/originals/'.$picture)
+                        : asset('images/animals/default.webp')
+                    }}"
                         srcset="{{ $picture ? $buildSrcset($picture) : '' }}"
                         sizes="{{ $buildSizes($picture) }}"
                         age="{{ $animal->age }}"
@@ -156,19 +159,22 @@
                         description="{{ $animal->description }}"
                         href="{{ route('animals_show', $animal) }}"
                     />
-
                 @endforeach
         </div>
+
         <x-buttons.button_link_icons
             icon="arrow_right"
             class="button-green flex-row-reverse self-end"
+            href="{{route('animals')}}"
         >
             {{ __('homepage.animals_section.see_all') }}
         </x-buttons.button_link_icons>
+
         @else
             <p>Aucun animal de disponible</p>
         @endif
     </x-layouts.section>
+
 
     <div class="bg-lighthoneyyellow/40 shadow-[inset_2px_4px_30px_rgba(0,0,0,0.1)] py-10">
         <x-layouts.section title="{{__('homepage.faq_section.title')}}" class="relative">
