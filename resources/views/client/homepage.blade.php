@@ -1,4 +1,3 @@
-@php use function PHPUnit\Framework\isNull; @endphp
 <x-layouts.client>
     <div class="bg-lightgreenmint/40 shadow-[inset_2px_-4px_30px_rgba(0,0,0,0.1)] py-8">
         <section class="p-5 flex flex-col gap-6 leading-9 md:flex-row-reverse md:items-center lg:px-28">
@@ -99,7 +98,7 @@
 
     <x-layouts.section :title="__('homepage.animals_section.title')" class="relative">
         <div class="flex flex-col gap-5 items-center justify-center md:flex-row">
-            @if(!isNull($animals))
+            @if(!is_null($animals))
                 @foreach($animals as $animal)
                     <x-animal.card
                         name="{{ $animal->name }}"
