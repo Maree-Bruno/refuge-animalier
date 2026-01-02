@@ -60,7 +60,7 @@ const getProfileImageSrcset = () => {
 };
 
 const submit = () => {
-    form.patch('/settings/profile', {
+    form.patch('/admin/settings/profile', {
         forceFormData: true,
         preserveScroll: true,
         onSuccess: () => {
