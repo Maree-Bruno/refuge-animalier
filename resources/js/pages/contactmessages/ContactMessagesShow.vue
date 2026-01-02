@@ -39,7 +39,7 @@ const openDeleteConfirm = () => {
 const destroyMessage = () => {
     if (!props.message) return;
 
-    router.delete(`/contact-messages/${props.message.id}`, {
+    router.delete(`/admin/contact-messages/${props.message.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {

@@ -88,6 +88,7 @@ class AnimalController extends Controller
                 $filename = Str::uuid().'.webp';
 
                 $originalPath = Storage::disk(
+                    //s3 for prod
                     config('images.disk')
                 )->putFileAs(
                     config('images.original_path'),

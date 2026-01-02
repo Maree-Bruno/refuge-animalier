@@ -191,7 +191,7 @@ const handleSort = ({key, order}) => {
     </section>
 
     <KeepAlive>
-        <RightModal v-model="showCreateAnimal" route-key="create" route-value="create-animal">
+        <RightModal v-model="showCreateAnimal" >
             <template #header>
                 <h2 class="subsubtitle">Ajouter un animal</h2>
             </template>
@@ -207,8 +207,6 @@ const handleSort = ({key, order}) => {
 
     <CenterModal v-model="isShowModalOpen"
                  v-if="selectedRow"
-                 route-key="animal"
-                 :route-value="selectedRow?.id"
     >
         <AnimalShow :animal="selectedRow"
                     :species="species"

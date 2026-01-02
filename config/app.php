@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'domain' => env('APP_DOMAIN'),
 
     /*
     |--------------------------------------------------------------------------
@@ -53,7 +54,6 @@ return [
     */
     'base_url' => env('APP_BASEURL', 'localhost'),
     'url' => env('APP_URL', 'http://localhost'),
-    'admin_subdomain' => env('APP_ADMIN_SUBDOMAIN', 'admin'),
 
     /*
     |--------------------------------------------------------------------------

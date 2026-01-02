@@ -53,7 +53,7 @@ const getNotableLabel = (item) => {
 };
 
 const submit = () => {
-    form.post('/notes', {
+    form.post('/admin/notes', {
         preserveScroll: true,
         onSuccess: () => {
             toast.success({text: 'Note créée avec succès'});

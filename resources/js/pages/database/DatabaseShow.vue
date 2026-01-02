@@ -66,7 +66,7 @@ const availableSpecies = computed(() => {
 const updateRessource = () => {
     errors.value = {};
 
-    router.patch(`/database/${ressourceId.value}`, form.value, {
+    router.patch(`/admin/database/${ressourceId.value}`, form.value, {
         preserveScroll: true,
         onSuccess: () => {
             toast.success({text: 'La ressource a été mise à jour avec succès'});

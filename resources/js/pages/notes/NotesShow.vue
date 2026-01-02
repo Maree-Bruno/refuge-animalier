@@ -33,7 +33,7 @@ const showEdit = ref(false);
 const destroyNote = () => {
     if (!props.note) return;
 
-    router.delete(`/notes/${props.note.id}`, {
+    router.delete(`/admin/notes/${props.note.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {

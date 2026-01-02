@@ -72,7 +72,7 @@ class ContactMessageController extends Controller
         ]);
 
 
-        return back()->with('success', __('contact.request_sent'));
+        return back();
     }
     public function submitVolunteer(Request $request)
     {

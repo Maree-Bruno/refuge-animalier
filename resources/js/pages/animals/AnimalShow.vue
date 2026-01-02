@@ -113,7 +113,7 @@ const noteForm = useForm({
 });
 
 const submitNote = () => {
-    router.post('/notes', {
+    router.post('/admin/notes', {
         title: noteForm.title,
         content: noteForm.content,
         notable_type: 'App\\Models\\Animal',
@@ -141,7 +141,7 @@ const openDeleteConfirm = (note) => {
 const deleteNote = (note) => {
     if (!note) return;
 
-    router.delete(`/notes/${note.id}`, {
+    router.delete(`/admin/notes/${note.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {
@@ -170,7 +170,7 @@ const openEditNote = (note) => {
 };
 
 const submitEditNote = () => {
-    router.patch(`/notes/${editNoteForm.id}`, {
+    router.patch(`/admin/notes/${editNoteForm.id}`, {
         title: editNoteForm.title,
         content: editNoteForm.content,
     }, {

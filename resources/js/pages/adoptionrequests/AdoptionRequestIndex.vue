@@ -93,7 +93,7 @@ const openDeleteConfirm = (request) => {
 const destroyRequest = () => {
     if (!requestToDelete.value) return;
 
-    router.delete(`/adoption/${requestToDelete.value.id}`, {
+    router.delete(`/admin/adoption/${requestToDelete.value.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {

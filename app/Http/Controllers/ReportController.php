@@ -9,7 +9,6 @@ use App\Models\Specie;
 use App\Models\SuitableType;
 use App\Models\Vaccine;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -51,9 +50,6 @@ class ReportController extends Controller
             'coats' => $coats,
             'vaccines' => $vaccines,
             'filters' => $request->only(['search', 'orderby', 'dir']),
-            'can' => [
-                'publish' => Auth::user()->can('publish', Animal::class),
-            ]
         ]);
     }
 

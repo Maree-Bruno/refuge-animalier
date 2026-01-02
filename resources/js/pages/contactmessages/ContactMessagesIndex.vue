@@ -93,7 +93,7 @@ const openShowModal = (message) => {
     isShowModalOpen.value = true;
 
     if (message.status === 'nouveau') {
-        router.patch(`/contact-messages/${message.id}/status`, {
+        router.patch(`/admin/contact-messages/${message.id}/status`, {
             status: 'lu'
         }, {
             preserveScroll: true,
@@ -111,7 +111,7 @@ const openDeleteConfirm = (message) => {
 const destroyMessage = () => {
     if (!messageToDelete.value) return;
 
-    router.delete(`/contact-messages/${messageToDelete.value.id}`, {
+    router.delete(`/admin/contact-messages/${messageToDelete.value.id}`, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => {

@@ -22,7 +22,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    form.put(`/notes/${props.note.id}`, {
+    form.put(`/admin/notes/${props.note.id}`, {
         preserveScroll: true,
         onSuccess: () => {
             toast.success({text: 'Note modifiée avec succès'});
