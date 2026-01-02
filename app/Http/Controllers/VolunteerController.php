@@ -142,7 +142,7 @@ class VolunteerController extends Controller
             return null;
         }
 
-        ProcessUploadedImage::dispatch(
+        ProcessUploadedImage::dispatchSync(
             $storedPath,
             $filename,
             'userimage'
