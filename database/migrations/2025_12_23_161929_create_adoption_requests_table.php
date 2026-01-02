@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('message');
             $table->dateTime('request_date');
             $table->dateTime('adoption_date')->nullable();
-            $table->enum('status', ['submitted','pending', 'accepted', 'rejected'])->default('submited');
+            $table->enum('status', ['submitted','pending', 'accepted', 'rejected'])->default('submitted');
             $table->timestamps();
         });
     }
