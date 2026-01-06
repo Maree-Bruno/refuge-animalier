@@ -13,20 +13,18 @@ class ContactMessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'type' => $this->faker->word(),
+            'type' => $this->faker->randomElement([ContactMessage::TYPE_CONTACT, ContactMessage::TYPE_VOLUNTEER]),
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone' => $this->faker->phoneNumber(),
-            'subject' => $this->faker->word(),
-            'content' => $this->faker->word(),
-            'status' => $this->faker->word(),
-            'send_date' => $this->faker->word(),
+            'subject' => $this->faker->sentence(),
+            'message' => $this->faker->paragraph(),
+            'status' => $this->faker->randomElement([ContactMessage::STATUS_NEW, ContactMessage::STATUS_READ, ContactMessage::STATUS_ARCHIVED]),
+            'send_date' => Carbon::now(),
             'address' => $this->faker->address(),
-            'number' => $this->faker->word(),
-            'cp' => $this->faker->word(),
+            'number' => $this->faker->buildingNumber(),
+            'cp' => $this->faker->postcode(),
             'city' => $this->faker->city(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
         ];
     }
 }

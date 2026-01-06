@@ -5,18 +5,22 @@ use App\Http\Controllers\AnimalController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DatabaseController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PublicAnimalController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Settings\AvailabilityController;
 use App\Http\Controllers\VolunteerController;
+use App\Http\Middleware\SetLocale;
 use App\Http\Middleware\UserIsAdminMiddleware;
 use App\Models\Animal;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
 
-Route::group([], function () {
+Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');
+
+Route::middleware([SetLocale::class])->group(function () {
 
     //homepage
     Route::get('/', function () {
@@ -115,4 +119,3 @@ Route::prefix('admin')->group(function () {
 
     });
 });
-

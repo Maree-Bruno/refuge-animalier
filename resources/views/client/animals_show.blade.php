@@ -111,7 +111,7 @@
                         <p class="flex flex-col">
                             <span
                                 class="font-quicksand font-bold">{{ __('animals/client_show.features.species') }}</span>
-                            <span class="xsmalltext">{{ $animal->specie->name }}</span>
+                            <span class="xsmalltext">{{ is_array($animal->specie->name) ? ($animal->specie->name[app()->getLocale()] ?? $animal->specie->name['fr'] ?? $animal->specie->name['en'] ?? $animal->specie->name['nl'] ?? $animal->specie->name['de']) : $animal->specie->name }}</span>
                         </p>
 
                         <p class="flex flex-col">
@@ -172,7 +172,10 @@
             <div class="w-fit space-y-5 md:max-w-1/3">
                 <div class="container space-y-10 md:max-h-[550px] md:overflow-scroll">
                     <p class="smalltext leading-8 whitespace-pre-line">
-                        {{ __('animals/client_show.adoption_text') }}
+                        {{ __('animals/client_show.adoption_text', [
+                            'name' => $animal->name,
+                            'pronoun' => $animal->sex === 'male' ? __('animals/client_show.pronoun_male') : __('animals/client_show.pronoun_female')
+                        ]) }}
                     </p>
                 </div>
             </div>
@@ -300,7 +303,7 @@
                         sizes="{{ $buildSizes($photo) }}"
                         age="{{ $otherAnimal->age }}"
                         gender="{{ $otherAnimal->sex }}"
-                        species="{{ $otherAnimal->specie->name }}"
+                        species="{{ is_array($otherAnimal->specie->name) ? ($otherAnimal->specie->name[app()->getLocale()] ?? $otherAnimal->specie->name['fr'] ?? $otherAnimal->specie->name['en'] ?? $otherAnimal->specie->name['nl'] ?? $otherAnimal->specie->name['de']) : $otherAnimal->specie->name }}"
                         description="{{ $otherAnimal->description }}"
                         href="{{ route('animals_show', $otherAnimal) }}"
                     />
