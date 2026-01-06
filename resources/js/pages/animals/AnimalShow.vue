@@ -19,6 +19,7 @@ const props = defineProps({
     allSuitableTypes: {type: Object},
     can: Object,
 });
+
 const toast = useToasterStore();
 const { getUrl: getAnimalUrl, getSrcset: getAnimalSrcset } = useAnimalImage();
 const showCreate = ref(false);
@@ -172,6 +173,22 @@ const submitEditNote = () => {
         }
     });
 };
+const showDeleteConfirmAnimal = ref(false);
+
+const destroyAnimal = () => {
+    if (!props.animal?.id) return;
+
+    router.delete(`/admin/animals/${props.animal.id}`, {
+        preserveState: false,
+        onSuccess: () => {
+            toast.success({text: 'Animal supprimé avec succès'});
+            showDeleteConfirmAnimal.value = false;
+        },
+        onError: () => {
+            toast.error({text: 'Impossible de supprimer l\'animal.'});
+        }
+    });
+};
 
 </script>
 
@@ -201,6 +218,7 @@ const submitEditNote = () => {
                         Modifier
                     </button>
                     <button
+                        @click="showDeleteConfirmAnimal = true"
                         class="button-orange button-animation rounded-md p-2 text-sm sm:text-base font-semibold"
                     >
                         Archiver
@@ -486,6 +504,38 @@ const submitEditNote = () => {
                 </button>
                 <button
                     @click="deleteNote(noteToDelete)"
+                    class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
+                >
+                    Supprimer
+                </button>
+            </div>
+        </div>
+    </CenterModal>
+    <CenterModal v-model="showDeleteConfirmAnimal">
+        <div class="p-6">
+            <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+                <TrashIcon class="w-6 h-6 text-red-600"/>
+            </div>
+
+            <h3 class="text-lg font-semibold text-center mb-2">
+                Confirmer la suppression
+            </h3>
+
+            <p class="text-gray-600 text-center mb-6">
+                Êtes-vous sûr de vouloir supprimer
+                <span class="font-semibold">{{ animal?.name }}</span> ?
+                Cette action est irréversible et supprimera également toutes les photos associées.
+            </p>
+
+            <div class="flex gap-3 justify-end">
+                <button
+                    @click="showDeleteConfirmAnimal = false"
+                    class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                    Annuler
+                </button>
+                <button
+                    @click="destroyAnimal"
                     class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors"
                 >
                     Supprimer
