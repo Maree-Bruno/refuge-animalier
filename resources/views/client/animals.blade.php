@@ -154,7 +154,7 @@
                     :sizes="$buildSizes($photo)"
                     age="{{ $animal->age }}"
                     gender="{{ __('animals/client_index.' . $animal->sex) }}"
-                    species="{{ $animal->specie->name }}"
+                    species="{{ is_array($animal->specie->name) ? ($animal->specie->name[app()->getLocale()] ?? $animal->specie->name['fr'] ?? $animal->specie->name['en'] ?? $animal->specie->name['nl'] ?? $animal->specie->name['de']) : $animal->specie->name }}"
                     description="{{ $animal->description }}"
                     href="{{ route('animals_show', $animal) }}"
                 />

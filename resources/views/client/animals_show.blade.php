@@ -111,7 +111,7 @@
                         <p class="flex flex-col">
                             <span
                                 class="font-quicksand font-bold">{{ __('animals/client_show.features.species') }}</span>
-                            <span class="xsmalltext">{{ $animal->specie->name }}</span>
+                            <span class="xsmalltext">{{ is_array($animal->specie->name) ? ($animal->specie->name[app()->getLocale()] ?? $animal->specie->name['fr'] ?? $animal->specie->name['en'] ?? $animal->specie->name['nl'] ?? $animal->specie->name['de']) : $animal->specie->name }}</span>
                         </p>
 
                         <p class="flex flex-col">
@@ -303,7 +303,7 @@
                         sizes="{{ $buildSizes($photo) }}"
                         age="{{ $otherAnimal->age }}"
                         gender="{{ $otherAnimal->sex }}"
-                        species="{{ $otherAnimal->specie->name }}"
+                        species="{{ is_array($otherAnimal->specie->name) ? ($otherAnimal->specie->name[app()->getLocale()] ?? $otherAnimal->specie->name['fr'] ?? $otherAnimal->specie->name['en'] ?? $otherAnimal->specie->name['nl'] ?? $otherAnimal->specie->name['de']) : $otherAnimal->specie->name }}"
                         description="{{ $otherAnimal->description }}"
                         href="{{ route('animals_show', $otherAnimal) }}"
                     />
