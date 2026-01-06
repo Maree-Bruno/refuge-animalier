@@ -153,7 +153,7 @@
                     :srcset="$buildSrcset($photo)"
                     :sizes="$buildSizes($photo)"
                     age="{{ $animal->age }}"
-                    gender="{{ $animal->sex }}"
+                    gender="{{ __('animals/client_index.' . $animal->sex) }}"
                     species="{{ $animal->specie->name }}"
                     description="{{ $animal->description }}"
                     href="{{ route('animals_show', $animal) }}"

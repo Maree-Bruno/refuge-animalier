@@ -14,6 +14,9 @@
             <a href="https://linkedin.com" class="nav-item nav-item-animation rounded-md p-1">
                 <x-svg.linkedin class="svg-fillwhite"/>
             </a>
+            <div class="flex items-center gap-4">
+                <x-nav.language-switcher/>
+            </div>
         </div>
     </div>
     <div class="flex flex-col gap-2.5">

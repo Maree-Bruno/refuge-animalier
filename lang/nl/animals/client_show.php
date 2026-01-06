@@ -52,17 +52,19 @@ return [
 
     'interested_title' => 'Geïnteresseerd?',
 
-    'adoption_text' => "Billy adopteren betekent een nieuwe kans geven aan een hond die alleen maar wil liefhebben en geliefd worden.
-        Ons team staat klaar om al je vragen te beantwoorden en je te begeleiden bij de adoptieprocedure.
+    'pronoun_male' => 'hem',
+    'pronoun_female' => 'haar',
 
-        Voor je je aanvraag verstuurt, zorg ervoor dat je hem kunt bieden:
-        - tijd voor wandelingen en activiteiten,
-        - een veilige omgeving,
-        - aandacht en stabiliteit,
-        - veel genegenheid en respect.
+    'adoption_text' => ":name adopteren betekent een nieuwe kans geven aan een metgezel die alleen maar wil liefhebben en geliefd worden.
+Ons team staat klaar om al je vragen te beantwoorden en je te begeleiden bij de adoptieprocedure.
 
-        Denk je dat je de juiste match voor hem bent? Vul dan het formulier in: we nemen snel contact met je op om je adoptieplan
-        te bespreken en een ontmoeting te organiseren.",
+Voor je je aanvraag verstuurt, zorg ervoor dat je :pronoun kunt bieden:
+- tijd voor wandelingen en activiteiten,
+- een veilige omgeving,
+- aandacht en stabiliteit,
+- veel genegenheid en respect.
+
+Denk je dat je de juiste match voor :pronoun bent? Vul dan het formulier in: we nemen snel contact met je op om je adoptieplan te bespreken en een ontmoeting te organiseren.",
 
     'others_title' => 'Andere dieren die je misschien leuk vindt',
 ];

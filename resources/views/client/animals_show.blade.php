@@ -172,7 +172,10 @@
             <div class="w-fit space-y-5 md:max-w-1/3">
                 <div class="container space-y-10 md:max-h-[550px] md:overflow-scroll">
                     <p class="smalltext leading-8 whitespace-pre-line">
-                        {{ __('animals/client_show.adoption_text') }}
+                        {{ __('animals/client_show.adoption_text', [
+                            'name' => $animal->name,
+                            'pronoun' => $animal->sex === 'male' ? __('animals/client_show.pronoun_male') : __('animals/client_show.pronoun_female')
+                        ]) }}
                     </p>
                 </div>
             </div>
