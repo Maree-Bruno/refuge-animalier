@@ -53,34 +53,56 @@
             </label>
 
             <div class="faq-content">
-                <form action="" method="get" class="flex flex-col justify-center items-end">
+                <form action="{{ route('animals') }}" method="get" class="flex flex-col justify-center items-end">
                     <div class="grid grid-cols-2 gap-5 items-start w-full">
 
                         <x-form.select_label for="gender" :label="__('animals/client_index.gender')">
-                            <option value="none">{{ __('animals/client_index.select_gender') }}</option>
-                            <option value="male">{{ __('animals/client_index.male') }}</option>
-                            <option value="female">{{ __('animals/client_index.female') }}</option>
+                            <option value="none" {{ request('gender') === 'none' || !request('gender') ? 'selected' : '' }}>
+                                {{ __('animals/client_index.select_gender') }}
+                            </option>
+                            <option value="male" {{ request('gender') === 'male' ? 'selected' : '' }}>
+                                {{ __('animals/client_index.male') }}
+                            </option>
+                            <option value="female" {{ request('gender') === 'female' ? 'selected' : '' }}>
+                                {{ __('animals/client_index.female') }}
+                            </option>
                         </x-form.select_label>
 
-                        <x-form.select_label for="race" :label="__('animals/client_index.race')">
-                            <option value="none">{{ __('animals/client_index.select_race') }}</option>
-                            <option value="dog">{{ __('animals/race.animals.dog') }}</option>
-                            <option value="cat">{{ __('animals/race.animals.cat') }}</option>
-                            <option value="hamster">{{ __('animals/race.animals.hamster') }}</option>
+                        <x-form.select_label for="specie_id" :label="__('animals/client_index.species')">
+                            <option value="none" {{ request('specie_id') === 'none' || !request('specie_id') ? 'selected' : '' }}>
+                                {{ __('animals/client_index.select_species') }}
+                            </option>
+                            @foreach($species as $specie)
+                                <option value="{{ $specie->id }}" {{ request('specie_id') == $specie->id ? 'selected' : '' }}>
+                                    {{ is_array($specie->name) ? ($specie->name[app()->getLocale()] ??
+                                    $specie->name['fr'] ?? $specie->name['en'] ?? $specie->name['nl'] ??
+                                    $specie->name['de']) :
+                                    $specie->name }}
+                                </option>
+                            @endforeach
                         </x-form.select_label>
 
-                        <x-form.select_label for="species" :label="__('animals/client_index.species')">
-                            <option value="none">{{ __('animals/client_index.select_species') }}</option>
-                            <option value="golden_retriever">{{ __('animals/client_index.golden_retriever') }}</option>
-                            <option value="chihuahua">{{ __('animals/client_index.chihuahua') }}</option>
-                            <option value="shiba_inu">{{ __('animals/client_index.shiba_inu') }}</option>
+                        <x-form.select_label for="race_id" :label="__('animals/client_index.race')">
+                            <option value="none" {{ request('race_id') === 'none' || !request('race_id') ? 'selected' : '' }}>
+                                {{ __('animals/client_index.select_race') }}
+                            </option>
+                            @foreach($races as $race)
+                                <option value="{{ $race->id }}" {{ request('race_id') == $race->id ? 'selected' : '' }}>
+                                    {{ is_array($race->name) ? ($race->name[app()->getLocale()] ?? $race->name['fr']
+                                    ?? $race->name['en']?? $race->name['nl']?? $race->name['de']) : $race->name }}
+                                </option>
+                            @endforeach
                         </x-form.select_label>
 
-                        <x-form.select_label for="coat" :label="__('animals/client_index.coat')">
-                            <option value="none">{{ __('animals/client_index.select_coat') }}</option>
-                            <option value="black">{{ __('animals/client_index.black') }}</option>
-                            <option value="brown">{{ __('animals/client_index.brown') }}</option>
-                            <option value="beige">{{ __('animals/client_index.beige') }}</option>
+                        <x-form.select_label for="coat_id" :label="__('animals/client_index.coat')">
+                            <option value="none" {{ request('coat_id') === 'none' || !request('coat_id') ? 'selected' : '' }}>
+                                {{ __('animals/client_index.select_coat') }}
+                            </option>
+                            @foreach($coats as $coat)
+                                <option value="{{ $coat->id }}" {{ request('coat_id') == $coat->id ? 'selected' : '' }}>
+                                    {{ $coat->name }}
+                                </option>
+                            @endforeach
                         </x-form.select_label>
 
                         <x-form.input_label
@@ -89,24 +111,24 @@
                             name="search"
                             :label="__('animals/client_index.search')"
                             :placeholder="__('animals/client_index.search')"
-                            :value="old('search')"
+                            :value="request('search', old('search'))"
                         />
                     </div>
 
                     <div class="flex gap-5">
-                        <x-buttons.submit_button
-                            class="button-yellow text-blueslate font-semibold"
-                            icon="filter"
-                            svgclass="svg-strokeblack">
+                        <button
+                            type="submit"
+                            class="button-yellow text-blueslate font-semibold button-animation p-2 rounded-lg flex gap-2 items-center">
+                            <x-svg.filter class="svg-strokeblack"/>
                             {{ __('animals/client_index.filter_button') }}
-                        </x-buttons.submit_button>
+                        </button>
 
-                        <x-buttons.submit_button
-                            class="button-orange text-blueslate font-semibold"
-                            icon="close"
-                            svgclass="svg-strokeblack">
+                        <a
+                            href="{{ route('animals') }}"
+                            class="button-orange text-blueslate font-semibold button-animation p-2 rounded-lg flex gap-2 items-center">
+                            <x-svg.close class="svg-strokeblack"/>
                             {{ __('animals/client_index.reset_button') }}
-                        </x-buttons.submit_button>
+                        </a>
                     </div>
                 </form>
             </div>

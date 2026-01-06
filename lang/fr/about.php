@@ -4,7 +4,7 @@ return [
     'hero' => [
         'title' => 'Qui sommes-nous ?',
         'subtitle' => 'Nous sommes Happy Paws. Un refuge pour animaux responsable.',
-        'description1' => 'Nous offrons un environnement sécurisant et bienveillant aux animaux en situation d’abandon dans notre refuge situé à Passendale.',
+        'description1' => 'Nous offrons un environnement sécurisant et bienveillant aux animaux en situation d\'abandon dans notre refuge situé à Passendale.',
         'description2' => 'Chaque jour, nos équipes se mobilisent pour garantir leur santé, leur bien-être et leur offrir une seconde chance.',
     ],
 
@@ -33,28 +33,35 @@ return [
         'steps' => [
             '1' => [
                 'title' => 'Cherchez votre compagnon.',
-                'text' => "Consultez notre catalogue d’animaux disponibles à l’adoption et trouvez celui qui correspond à votre mode de vie et à votre environnement. Chaque profil est décrit avec soin pour vous aider dans votre choix.",
-                'link_label' => 'Tous nos animaux'
+                'text' => "Consultez notre catalogue d'animaux disponibles à l'adoption et trouvez celui qui correspond à votre mode de vie et à votre environnement. Chaque profil est décrit avec soin pour vous aider dans votre choix.",
+                'link_label' => 'Tous nos animaux',
+                'link_url' => '/animals',
+                'image' => 'step1.png'
             ],
             '2' => [
-                'title' => 'Remplissez votre demande d’adoption.',
-                'text' => "Complétez notre formulaire en ligne afin que nous puissions mieux comprendre votre situation, vos attentes et le cadre de vie que vous pourrez offrir à l’animal."
+                'title' => 'Remplissez votre demande d\'adoption.',
+                'text' => "Complétez notre formulaire en ligne afin que nous puissions mieux comprendre votre situation, vos attentes et le cadre de vie que vous pourrez offrir à l'animal.",
+                'image' => 'step2.png'
             ],
             '3' => [
                 'title' => 'Nous traitons votre demande.',
-                'text' => "Notre équipe analyse votre dossier avec attention. Selon le profil de l’animal, nous pouvons vous contacter pour un entretien complémentaire afin de garantir la meilleure compatibilité."
+                'text' => "Notre équipe analyse votre dossier avec attention. Selon le profil de l'animal, nous pouvons vous contacter pour un entretien complémentaire afin de garantir la meilleure compatibilité.",
+                'image' => 'step3.png'
             ],
             '4' => [
-                'title' => 'Vous rencontrez l’animal.',
-                'text' => "Nous organisons une première rencontre dans un cadre sécurisé. Vous pourrez découvrir son caractère, poser vos questions et passer un moment avec lui pour confirmer votre choix."
+                'title' => 'Vous rencontrez l\'animal.',
+                'text' => "Nous organisons une première rencontre dans un cadre sécurisé. Vous pourrez découvrir son caractère, poser vos questions et passer un moment avec lui pour confirmer votre choix.",
+                'image' => 'step4.png'
             ],
             '5' => [
                 'title' => 'Nous finalisons avec vous les derniers détails.',
-                'text' => "Signature du contrat d’adoption, conseils personnalisés, carnet de santé, alimentation recommandée… nous vous accompagnons pour une transition réussie."
+                'text' => "Signature du contrat d'adoption, conseils personnalisés, carnet de santé, alimentation recommandée… nous vous accompagnons pour une transition réussie.",
+                'image' => 'step5.png'
             ],
             '6' => [
                 'title' => 'Félicitations ! Vous vous êtes trouvé un ami pour toute sa vie !',
-                'text' => "Votre nouveau compagnon rejoint votre foyer. Nous restons disponibles après l’adoption pour vous soutenir si vous avez des questions ou besoin de conseils."
+                'text' => "Votre nouveau compagnon rejoint votre foyer. Nous restons disponibles après l'adoption pour vous soutenir si vous avez des questions ou besoin de conseils.",
+                'image' => 'step6.png'
             ],
         ],
     ],
