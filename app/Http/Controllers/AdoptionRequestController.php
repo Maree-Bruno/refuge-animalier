@@ -66,7 +66,7 @@ class AdoptionRequestController extends Controller
                     ->orderBy("adopters.{$orderBy}", $direction);
             } elseif ($orderBy === 'animal') {
                 $query->orderBy(
-                    \App\Models\Animal::select('name')
+                    Animal::select('name')
                         ->whereColumn('animals.id', 'adoption_requests.animal_id'),
                     $direction
                 );
@@ -78,13 +78,12 @@ class AdoptionRequestController extends Controller
         }
 
         $adoptionRequests = $query->paginate(10)->withQueryString();
-
-        $animals = Animal::with(['coat', 'race', 'specie', 'vaccines', 'suitableTypes'])->get();
-        $species = Specie::all();
-        $races = Race::all();
-        $coats = Coat::all();
-        $vaccines = Vaccine::all();
-        $suitableTypes = SuitableType::all();
+        $animals = Animal::select('id', 'name', 'status')->get();
+        $species = Specie::select('id', 'name')->get();
+        $races = Race::select('id', 'name', 'specie_id')->get();
+        $coats = Coat::select('id', 'name')->get();
+        $vaccines = Vaccine::select('id', 'name')->get();
+        $suitableTypes = SuitableType::select('id', 'name')->get();
 
         return Inertia::render('AdoptionRequestsIndexView', [
             'title' => "Demandes d'adoption",

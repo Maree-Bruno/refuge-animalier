@@ -12,8 +12,6 @@ use App\Models\Race;
 use App\Models\Specie;
 use App\Models\SuitableType;
 use App\Models\Vaccine;
-use App\Policies\AnimalPolicy;
-use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -24,11 +22,11 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
-        $species = Specie::all();
-        $races = Race::all();
-        $coats = Coat::all();
-        $vaccines = Vaccine::all();
-        $suitableTypes = SuitableType::all();
+        $species = Specie::select('id', 'name')->get();
+        $races = Race::select('id', 'name', 'specie_id')->get();
+        $coats = Coat::select('id', 'name')->get();
+        $vaccines = Vaccine::select('id', 'name')->get();
+        $suitableTypes = SuitableType::select('id', 'name')->get();
         $adoptedAnimals = Animal::where('status', AnimalStatus::ADOPTED)->count();
 
         $refugedAnimals = Animal::whereIn('status', [
@@ -47,7 +45,7 @@ class DashboardController extends Controller
             'animal_search',
         );
         $animals->through(fn($animal) => $animal->loadMissing([
-            'suitableTypes', 'vaccines', 'notes' => fn($q) => $q->latest()
+            'suitableTypes', 'vaccines', 'notes' => fn($q) => $q->limit(5)->latest()
         ]));
 
         $adoptionRequestsQuery = AdoptionRequest::with([
