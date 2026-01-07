@@ -39,14 +39,14 @@ return [
     ],
 
     'description_title' => 'Description',
-    'description' => 'Billy est un chien doux, affectueux et plein d'énergie. Il adore passer du temps avec les humains
-        et se montre toujours enthousiaste lorsqu'il s'agit de jouer ou de partir en promenade. Très sociable, il s'entend
-        bien avec les autres chiens et n'a aucun problème à rencontrer de nouvelles personnes.
+    'description' => 'Billy est un chien doux, affectueux et plein d\'énergie. Il adore passer du temps avec les humains
+        et se montre toujours enthousiaste lorsqu\'il s\'agit de jouer ou de partir en promenade. Très sociable, il s\'entend
+        bien avec les autres chiens et n\'a aucun problème à rencontrer de nouvelles personnes.
 
-        Il apprend vite, surtout lorsqu'on utilise des méthodes positives. Billy apprécie particulièrement les activités en
-        extérieur : courir, renifler, explorer… tout l'intéresse !
+        Il apprend vite, surtout lorsqu\'on utilise des méthodes positives. Billy apprécie particulièrement les activités en
+        extérieur : courir, renifler, explorer… tout l\'intéresse !
 
-        Malgré son énergie, il sait aussi se poser et profiter d'un moment de calme auprès de ses humains de confiance.
+        Malgré son énergie, il sait aussi se poser et profiter d\'un moment de calme auprès de ses humains de confiance.
         Billy conviendrait parfaitement à une famille active ou à une personne qui aime passer du temps dehors. Avec de la
         patience, de la bienveillance et un cadre stable, il deviendra un compagnon fidèle et équilibré.',
 
