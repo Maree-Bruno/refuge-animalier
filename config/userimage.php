@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'disk' => env('FILESYSTEM_DISK', 'local') === 's3' ? 's3' : 'images',
+    'disk' => env('FILESYSTEM_DISK', 'local') === 's3' ? 's3' : 'userimages',
     'sizes' => [
         'xs' => ['width' => 64,  'height' => 64],
         'sm' => ['width' => 128, 'height' => 128],

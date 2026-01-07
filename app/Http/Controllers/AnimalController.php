@@ -97,7 +97,7 @@ class AnimalController extends Controller
 
                 if ($originalPath) {
                     $storedImages[] = $filename;
-                    ProcessUploadedImage::dispatchSync(
+                    ProcessUploadedImage::dispatch(
                         $originalPath,
                         $filename,
                         'images'
@@ -185,7 +185,7 @@ class AnimalController extends Controller
 
                 if ($originalPath) {
                     $storedImages[] = $filename;
-                    ProcessUploadedImage::dispatchSync(
+                    ProcessUploadedImage::dispatch(
                         $originalPath,
                         $filename,
                         'images'

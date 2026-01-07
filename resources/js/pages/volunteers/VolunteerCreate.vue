@@ -86,14 +86,6 @@ onUnmounted(() => {
 <template>
     <form @submit.prevent="submitVolunteer" enctype="multipart/form-data">
         <div class="space-y-6 flex flex-col justify-center">
-            <button
-                type="button"
-                @click="seedForm"
-                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md w-fit self-end text-sm"
-            >
-                🎲 Remplir avec Faker
-            </button>
-
             <InputLabel
                 nameId="name"
                 type="text"
