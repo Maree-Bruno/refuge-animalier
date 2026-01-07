@@ -24,11 +24,11 @@ class AnimalController extends Controller
 
     public function index(Request $request)
     {
-        $species = Specie::all();
-        $races = Race::all();
-        $coats = Coat::all();
-        $vaccines = Vaccine::all();
-        $suitableTypes = SuitableType::all();
+        $species = Specie::select('id', 'name')->get();
+        $races = Race::select('id', 'name', 'specie_id')->get();
+        $coats = Coat::select('id', 'name')->get();
+        $vaccines = Vaccine::select('id', 'name')->get();
+        $suitableTypes = SuitableType::select('id', 'name')->get();
 
 
         $animals = $this->filterAndPaginate(
@@ -37,7 +37,7 @@ class AnimalController extends Controller
             ['coat', 'race', 'specie', 'vaccines', 'suitableTypes'], 'animal_search'
         );
         $animals->through(fn($animal) => $animal->loadMissing([
-            'suitableTypes', 'vaccines', 'notes' => fn($q) => $q->latest()
+            'suitableTypes', 'vaccines', 'notes' => fn($q) => $q->latest()->limit(5)
         ]));
 
         return Inertia::render('AnimalsIndexView', [
@@ -88,7 +88,6 @@ class AnimalController extends Controller
                 $filename = Str::uuid().'.webp';
 
                 $originalPath = Storage::disk(
-                    //s3 for prod
                     config('images.disk')
                 )->putFileAs(
                     config('images.original_path'),
