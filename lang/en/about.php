@@ -34,27 +34,34 @@ return [
             '1' => [
                 'title' => 'Find your companion.',
                 'text' => 'Check our catalog of animals available for adoption and find the one that suits your lifestyle and environment. Each profile is carefully described to help you choose.',
-                'link_label' => 'See all animals'
+                'link_label' => 'See all animals',
+                'link_url' => '/animals',
+                'image' => 'step1.png'
             ],
             '2' => [
                 'title' => 'Complete your adoption application.',
-                'text' => 'Fill out our online form so we can better understand your situation, expectations, and the environment you can provide for the animal.'
+                'text' => 'Fill out our online form so we can better understand your situation, expectations, and the environment you can provide for the animal.',
+                'image' => 'step2.png'
             ],
             '3' => [
                 'title' => 'We process your application.',
-                'text' => 'Our team carefully reviews your file. Depending on the animal’s profile, we may contact you for an additional interview to ensure the best compatibility.'
+                'text' => 'Our team carefully reviews your file. Depending on the animal\'s profile, we may contact you for an additional interview to ensure the best compatibility.',
+                'image' => 'step3.png'
             ],
             '4' => [
                 'title' => 'Meet the animal.',
-                'text' => 'We arrange a first meeting in a safe environment. You can learn about its character, ask questions, and spend time with it to confirm your choice.'
+                'text' => 'We arrange a first meeting in a safe environment. You can learn about its character, ask questions, and spend time with it to confirm your choice.',
+                'image' => 'step4.png'
             ],
             '5' => [
                 'title' => 'Finalize the details with you.',
-                'text' => 'Sign the adoption contract, personalized advice, health record, recommended diet… we guide you for a successful transition.'
+                'text' => 'Sign the adoption contract, personalized advice, health record, recommended diet… we guide you for a successful transition.',
+                'image' => 'step5.png'
             ],
             '6' => [
                 'title' => 'Congratulations! You have found a lifelong friend!',
-                'text' => 'Your new companion joins your home. We remain available after adoption to support you with questions or advice.'
+                'text' => 'Your new companion joins your home. We remain available after adoption to support you with questions or advice.',
+                'image' => 'step6.png'
             ],
         ],
     ],

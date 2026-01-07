@@ -51,17 +51,19 @@ return [
 
     'interested_title' => 'Interested?',
 
-    'adoption_text' => "Adopting Billy means giving a new chance to a dog who only wants to love and be loved.
-        Our team is available to answer your questions and guide you through the adoption process.
+    'pronoun_male' => 'him',
+    'pronoun_female' => 'her',
 
-        Before sending your request, please make sure you can offer him:
-        - time for walks and activities,
-        - a safe environment,
-        - attention and stability,
-        - lots of affection and respect.
+    'adoption_text' => "Adopting :name means giving a new chance to a companion who only wants to love and be loved.
+Our team is available to answer your questions and guide you through the adoption process.
 
-        If you think you are the right family for him, fill out the form: we will get back to you quickly to discuss your
-        adoption project and arrange a meeting.",
+Before sending your request, please make sure you can offer :pronoun:
+- time for walks and activities,
+- a safe environment,
+- attention and stability,
+- lots of affection and respect.
+
+If you think you are the right family for :pronoun, fill out the form: we will get back to you quickly to discuss your adoption project and arrange a meeting.",
 
     'others_title' => 'Others you might like',
 ];

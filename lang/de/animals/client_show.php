@@ -52,17 +52,19 @@ return [
 
     'interested_title' => 'Interessiert?',
 
-    'adoption_text' => "Billy zu adoptieren bedeutet, einem Hund eine zweite Chance zu geben, der nur lieben und geliebt werden möchte.
-        Unser Team steht bereit, um alle Ihre Fragen zu beantworten und Sie durch den Adoptionsprozess zu begleiten.
+    'pronoun_male' => 'ihm',
+    'pronoun_female' => 'ihr',
 
-        Bevor Sie Ihre Anfrage senden, stellen Sie sicher, dass Sie ihm bieten können:
-        - Zeit für Spaziergänge und Aktivitäten,
-        - eine sichere Umgebung,
-        - Aufmerksamkeit und Stabilität,
-        - viel Zuneigung und Respekt.
+    'adoption_text' => ":name zu adoptieren bedeutet, einem Gefährten eine zweite Chance zu geben, der nur lieben und geliebt werden möchte.
+Unser Team steht bereit, um alle Ihre Fragen zu beantworten und Sie durch den Adoptionsprozess zu begleiten.
 
-        Wenn Sie glauben, die richtige Familie für ihn zu sein, füllen Sie das Formular aus: Wir kontaktieren Sie schnell, um über Ihr
-        Adoptionsvorhaben zu sprechen und ein Treffen zu organisieren.",
+Bevor Sie Ihre Anfrage senden, stellen Sie sicher, dass Sie :pronoun bieten können:
+- Zeit für Spaziergänge und Aktivitäten,
+- eine sichere Umgebung,
+- Aufmerksamkeit und Stabilität,
+- viel Zuneigung und Respekt.
+
+Wenn Sie glauben, die richtige Familie für :pronoun zu sein, füllen Sie das Formular aus: Wir kontaktieren Sie schnell, um über Ihr Adoptionsvorhaben zu sprechen und ein Treffen zu organisieren.",
 
     'others_title' => 'Weitere Tiere, die Sie interessieren könnten',
 ];

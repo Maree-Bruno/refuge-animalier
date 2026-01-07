@@ -2,23 +2,21 @@
 
 namespace Database\Factories;
 
-use App\Models\Animal;
-use App\Models\Note;
+use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
-class NoteFactory extends Factory
+class NotificationFactory extends Factory
 {
-    protected $model = Note::class;
+    protected $model = Notification::class;
 
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence(),
-            'content' => $this->faker->text(),
-            'notable_type' => Animal::class,
-            'notable_id' => Animal::factory(),
+            'user_id' => User::factory(),
+            'message' => $this->faker->sentence(),
+            'read' => $this->faker->boolean(),
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ];

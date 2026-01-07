@@ -56,6 +56,9 @@
                             {{ __('nav/nav_items.contact') }}
                         </x-buttons.button_link_icons>
                     </li>
+                    <li class="flex items-center gap-4">
+                        <x-nav.language-switcher/>
+                    </li>
                 </ul>
             </div>
         </div>
