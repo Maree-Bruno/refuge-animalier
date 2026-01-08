@@ -27,7 +27,7 @@ class AnimalController extends Controller
         $species = Specie::select('id', 'name')->get();
         $races = Race::select('id', 'name', 'specie_id')->get();
         $coats = Coat::select('id', 'name')->get();
-        $vaccines = Vaccine::select('id', 'name')->get();
+        $vaccines = Vaccine::select('id', 'name', 'specie_id')->get();
         $suitableTypes = SuitableType::select('id', 'name')->get();
 
 
